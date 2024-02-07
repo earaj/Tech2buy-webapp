@@ -1,0 +1,63 @@
+<%- include("../partials/header.ejs") %>
+<form action="/event/add" method="post">
+    <div class="container">
+        <br>
+        <div class="row">
+            <label class="col-2 col-form-label" for="nom">Nom</label>
+            <div class="col-10">
+                <input class="form-control" type="field" name="e_name" id="e_name">
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <label class="col-2 col-form-label" for="date">Date Début</label>
+            <div class="col-10">
+                <input class="col-10 form-control" type="date" name="e_start_date" id="e_start_date">
+
+            </div>
+
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-2 col-form-label" for="datefin">Date de fin</label>
+            <div class="col-10"> <input class="col-10 form-control" type="date" name="" id="e_start_end">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-2 col-form-label" for="description">Description</label>
+            <div class="col-10">
+
+                <textarea class="form-control" id="e_desc" rows="5"></textarea>
+            </div>
+
+
+        </div>
+        <br>
+        <div class="row">
+            <label for="emplacement" class="col-2 col-form-label">Emplacement</label>
+            <div class="col-10">
+                <textarea class="form-control" id="e_location" rows="5"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-2">
+
+
+
+            </div>
+            <div class="col-10">
+                <button type="submit" class="btn btn-primary btn-lg">Sauvegarder</button>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+   
+    <%- include("../partials/footer.ejs") %>
