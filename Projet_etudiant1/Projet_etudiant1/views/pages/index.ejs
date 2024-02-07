@@ -1,0 +1,43 @@
+<%- include ("../partials/header.ejs") %>
+
+<a href="/event/add" class = "btn btn-success">Ajouter événement</a>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th scope="col" class="col-1">ID</th>
+                <th scope="col" class="col-1">Name</th> 
+                <th scope="col" class="col-2">Description</th>
+                <th scope="col" class="col-2">Location</th>
+                <th scope="col" class="col-2">Actions</th>
+
+            </tr>
+        </thead>
+            <tbody>
+                <% items.forEach(function(item){ %>
+                    <tr>
+                      <td style="width: 49%"><%= item.E_ID %></td>
+                      <td style="width: 49%"><%= item.E_NAME %></td>
+                      <td style="width: 20%"><%= item.E_DESC %></td>
+                      <td style="width: 10%"><%= item.E_LOCATION %></td>
+                      <td>
+                        <div class="btn-group">
+                            <a href="/event/edit/<%= item.E_ID %>" class = "btn btn-success rounded-0">Edit</a>
+                            <a href="/event/edit/:id" class = "btn btn-danger rounded-0">Delete</a> 
+                        </div>
+                    </td>
+
+                      
+                    </tr>
+                    <%}); %>
+            </tbody>
+        
+    </table>
+
+
+
+
+
+<%- include ("../partials/footer.ejs") %>
