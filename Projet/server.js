@@ -63,7 +63,7 @@ app.get("/", function (req,res){
         if(err) throw err;
         res.render("pages/index", {
             siteTitle: "Application simple",
-            pageTitle: "Liste d'événements",
+            pageTitle: "Tech2Buy",
             items: result
         });
     });
@@ -141,4 +141,9 @@ app.get("/event/delete/:id", function (req,rest){
         if(err) throw err;
         res.redirect("/");
      });
+});
+
+app.get("/pageConnexion", function(req, res) {
+    res.render("pages/pageConnexion", {
+    });
 });
