@@ -1,34 +1,53 @@
 <%- include ("../partials/header.ejs") %>
+<div class="container">
+    <div class="row">
 
-<form class="form-group">
-    <div class="container">
-        <br>
-        <div class="row">
-            <h1 class="col- col-form-label" style="text-align: left; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Ouvrir une session</h1>
-    <label for="courriel">Adresse de courriel</label>
-    <input type="email" class="form-control" id="courriel" placeholder="Entree Courriel" required>
-        </div>
-        <div class="form-group">
-            <label for="motdepasse">Mot de passe</label>
-            <input type="password" class="form-control" placeholder="Entree mot de passe" >
-        </div>
-        
+<div class="col-8">
+    <!--Mettre saisir connexion ici -->
+    <br>
+    <a href="./index">
+        <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
+
+    </a>   
+    <center>
+        <h1>Ouvrir une session</h1>
+        <b>
+            
+        </b>
+
+    </center>
+    <br><br><br><br><br><br>
+    <div class="form-group input-group-lg">
+        <label for="courriel">Adresse de courriel</label>
+        <input type="email" class="form-control input-lg" id="courriel"  required>
+    </div><br>
+    <div class="form-group input-group-lg">
+        <label for="motdepasse">Mot de passe</label>
+            <input type="password" class="form-control input-group-lg"  required>
+    </div><br>
+<div>
+   
+</div>
+</div>
+<div class="col-4">
+    <!--Mettre image ici-->
+<h1>allo</h1>
+</div>
+
+
+
+
+
+
+</div>
+<div class="row">
+    <div class="col-1"></div>
+        <button type="button"  class="col-6 btn btn-primary  btn-block">Ouvrir une session</button>
     </div>
     
-</form>
+    
 
-<div class="fixed-bottom container-fluid">
-    <div class="row">
-        <div class="col"></div>
-        <div class="col-2">
-            <button class="btn custom-button btn-outline-primary">S'inscrire dès aujourd'hui</button>
-            <p class="mb-9"></p>
-            <p class="mb-9">Vous êtes déja membre TECH2BUY?</p>
-            
-            <a href="./pageConnexion">
-                <button class="btn btn-primary custom-button">Se connecter</button></a>
-        </div>
-    </div>
-    </div>
+</div>
+
 
     <%- include ("../partials/footer.ejs") %>

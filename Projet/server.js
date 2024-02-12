@@ -143,8 +143,13 @@ app.get("/event/delete/:id", function (req,rest){
         res.redirect("/");
      });
 });
-
+//Permet aller au page connexion
 app.get("/pageConnexion", function(req, res) {
     res.render("pages/pageConnexion", {
+    });
+});
+//permet aller au page index
+app.get("/index", function(req, res) {
+    res.render("pages/index", {
     });
 });
