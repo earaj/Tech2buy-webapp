@@ -38,6 +38,7 @@ app.use("/js", express.static(_dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(_dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static("./views/Images"));
 /*
     Connection au server MySQL
 */
@@ -63,7 +64,7 @@ app.get("/", function (req,res){
         if(err) throw err;
         res.render("pages/index", {
             siteTitle: "Application simple",
-            pageTitle: "Tech2Buy",
+            pageTitle: "",
             items: result
         });
     });
