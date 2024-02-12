@@ -1,0 +1,51 @@
+<style>
+    
+
+    .paragraphe-princ {
+        color: #000;
+        font-family: "Barlow Semi Condensed" sans-serif;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .custom-button {
+        width: 350px;
+        height: 74px;
+        flex-shrink: 0;
+    }
+</style>
+
+<%- include ("../partials/header.ejs") %>
+
+<a href="/event/add" class="btn btn-success">Ajouter évènement</a>
+
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col">
+      <!--imgg-->
+    </div>
+    <div class="col-md-2 offset-md-8">
+        <div style="max-width: 380px;">
+            <p class="paragraphe-princ">Commencez dès maintenant à sauver en équipement technologique</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="fixed-bottom container-fluid">
+<div class="row">
+    <div class="col"></div>
+    <div class="col-2">
+        <button class="btn custom-button btn-outline-primary">S'inscrire dès aujourd'hui</button>
+        <p class="mb-9"></p>
+        <p class="mb-9">Vous êtes déja membre TECH2BUY?</p>
+        
+        <button class="btn btn-primary custom-button">Se connecter</button>
+    </div>
+</div>
+</div>
+
+<%- include ("../partials/footer.ejs") %>
