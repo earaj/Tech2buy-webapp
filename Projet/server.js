@@ -155,3 +155,8 @@ app.get("/index", function(req, res) {
     res.render("pages/index", {
     });
 });
+
+app.get("/inscription", function(req, res) {
+    res.render("pages/inscription", {
+    });
+});
