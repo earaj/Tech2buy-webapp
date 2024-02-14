@@ -39,6 +39,8 @@ app.use("/css", express.static(_dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("./views/Images"));
+app.use(express.static("./assets"))
+app.use(express.static("./views"))
 /*
     Connection au server MySQL
 */
