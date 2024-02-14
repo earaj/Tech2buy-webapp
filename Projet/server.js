@@ -38,6 +38,9 @@ app.use("/js", express.static(_dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(_dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.static("./views/Images"));
+app.use(express.static("./assets"))
+app.use(express.static("./views"))
 /*
     Connection au server MySQL
 */
@@ -63,7 +66,7 @@ app.get("/", function (req,res){
         if(err) throw err;
         res.render("pages/index", {
             siteTitle: "Application simple",
-            pageTitle: "Liste d'événements",
+            pageTitle: "",
             items: result
         });
     });
@@ -141,4 +144,19 @@ app.get("/event/delete/:id", function (req,rest){
         if(err) throw err;
         res.redirect("/");
      });
+});
+//Permet aller au page connexion
+app.get("/pageConnexion", function(req, res) {
+    res.render("pages/pageConnexion", {
+    });
+});
+//permet aller au page index
+app.get("/index", function(req, res) {
+    res.render("pages/index", {
+    });
+});
+
+app.get("/inscription", function(req, res) {
+    res.render("pages/inscription", {
+    });
 });
