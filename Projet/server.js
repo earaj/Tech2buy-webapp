@@ -72,6 +72,15 @@ app.get("/", function (req,res){
     });
 });
 
+/*codage du Server T2B 
+app.get("/", function (req,res){
+    
+    res.render("pages/pagePrincipal", {
+        siteTitle: "Tech2Buy",
+        pageTitle: "Page d'accueil",
+    });
+});
+*/
 app.get("/event/add", function(req,res)
 {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function(err,result){
@@ -160,3 +169,10 @@ app.get("/inscription", function(req, res) {
     res.render("pages/inscription", {
     });
 });
+
+app.get("/pageAffichagePrincipale", function(req, res) {
+    res.render("pages/pageAffichagePrincipale", {
+    });
+});
+
+
