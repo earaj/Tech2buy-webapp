@@ -20,10 +20,74 @@
         background-color: #F0FAFF;
         z-index: -1;
     }
+
+    h2{
+        color: #000;
+        
+        font-family: "Barlow Semi Condensed";
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal
+    }
+
+
+    h3{
+        color: #000;
+        
+        font-family: "Barlow Semi Condensed";
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal
+    
+    }
+
+    .custom-margin-top {
+    margin-top: 100px;
+    margin-left: 70px;
+    }
+
+    .custom-margin-resume {
+    margin-top: 20px; 
+    }
+
+
+    span{
+        color: green;
+    
+    }
+
+
 </style>
 
 <body>
-    <div class="container-fluid">
+
+
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row custom-margin-top">
+        <div class="col-sm-4 col-md-2">
+            <img src="../Images/macbook air m2.jpeg" alt="Nom du Produit" class="img-fluid">
+        </div>
+        <div class="col-sm-8 col-md-9">
+            <h3>Apple MacBook Air 13.6" w/ Touch ID (2022) - Midnight (Apple M2 Chip / 256GB SSD / 8GB RAM) - English</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
+            <br>
+            <p><span>&#10003;</span> Disponible pour l'expédition</p>
+            <p><span>&#10003;</span> Disponible dans les magasins à proximité</p>
+            <br><br>
+            <h2>$1,450.39</h4>
+        </div>
+    </div>
+
+    <div class="container-fluid"> <!-- container-fluid -->
         <div class="row justify-content-center">
             <div class="col-md-3 offset-md-9">
                 <div style="max-width: 400px;">
