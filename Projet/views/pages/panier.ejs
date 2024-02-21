@@ -6,6 +6,62 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <script src="/js/bootstrap.min.js"></script>
 </head>
+    
 <header>
     <%- include("../partials/headTech2buy.ejs") %>
 </header>
+<style>
+    .background-section {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 30%;
+        background-color: #F0FAFF;
+        z-index: -1;
+    }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-3 offset-md-9">
+                <div style="max-width: 400px;">
+                    <p class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-3 offset-md-9">
+                <div style="max-width: 380px;">
+                    <p class="display-5 text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        <div style="margin-top: 300px;"></div>
+        <div class="background-section"></div>
+
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-2 offset-md-9">
+                    <a href="/pageAffichagePrincipale">
+                        <button class="btn btn-primary btn-lg custom-button">Passer à la caisse</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+    </body>
+    
+
+
+
+
+
+
+<%- include ("../partials/footer.ejs") %>

@@ -176,3 +176,7 @@ app.get("/pageAffichagePrincipale", function(req, res) {
 });
 
 
+app.get("/panier", function(req, res) {
+    res.render("pages/panier", {
+    });
+});
