@@ -5,7 +5,24 @@
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <script src="/js/bootstrap.min.js"></script>
+    
 </head>
+<script>
+        function validation() {  
+
+    var pw1 = document.getElementById("pswd1").value;  
+    var pw2 = document.getElementById("pswd2").value; 
+    if(pw1 != pw2) {  
+      document.getElementById("message2").innerHTML = "**Les mots de passe ne correspond pas**";  
+      return false;  
+    } else {  
+        window.location.href = "http://localhost:4000/pageAffichagePrincipale"; 
+        alert ("Creation de compte avec Succées!");
+    }  
+ }  
+
+
+</script>
 <style>
     .image {
         
@@ -23,6 +40,8 @@
         line-height: normal
     }
 </style>
+<form onsubmit = "return validation()">
+
 <div class="row">
     <div class="col-8" style="width: 40%;">
         <img src="pgconnex.png" style="height: 100%; width: 100%;" class="image"/>
@@ -50,15 +69,18 @@
         </div><br><br><br>
         <div class="form-group input-group-lg">
             <label for="password">Mot de passe</label>
-            <input type="password" class="form-control input-group-lg"  required>
+            <input type="password" class="form-control input-group-lg" id="pswd1" required>
+            <span id = "message2" style="color:red"> </span>
         </div><br><br>
         <div class="form-group input-group-lg">
             <label for="password">Confirmer mot de passe</label>
-            <input type="password" class="form-control input-group-lg"  required>
+            <input type="password" class="form-control input-group-lg" id="pswd2" required>
+            <span id = "message2" style="color:red"> </span>
         </div><br><br>
         <div class="col-3"></div>
-    <a class="btn btn-primary" type="button" href="./pageAffichagePrincipale" class="col-6 btn btn-primary btn-block" role="button">Ouvrir une session</a>
+        <input class="btn btn-primary" class="col-6 btn btn-primary btn-block" role="button" type = "submit" value = "Submit">
+    
     </div>
     </div>
     
-</div>
+</div></form>
