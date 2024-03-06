@@ -2,7 +2,7 @@
     Importation des modules requis
 */
 
-import express from "express";
+import express, { query } from "express";
 import session from "express-session";
 import path from "path";
 import {fileURLToPath} from "url";
@@ -29,6 +29,7 @@ console.log("serveur fonctionne sur 4000.... ! ")
 
 app.set("views", path.join(_dirname,"views"));
 app.set("view engine", "ejs");
+app.use(express.urlencoded({extended:false}))
 
 /*
     Importation de Bootstrap
@@ -180,3 +181,33 @@ app.get("/panier", function(req, res) {
     res.render("pages/panier", {
     });
 });
+
+app.post("/inscription", function(req, res) {
+    const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nomUtilisateur, courriel, motDePasse) VALUES (?, ?, ?, ?, ?)";
+    const parametres = [
+      req.body.prenom,
+      req.body.nom,
+      req.body.nomUtilisateur,
+      req.body.courriel,
+      req.body.motDePasse
+    ];
+    con.query(requete, parametres, function(err, result) {
+      if (err) throw err;
+      res.redirect("/pageConnexion");
+    });
+  });
+
+// app.post("/inscription",function(req,res){
+
+// const {prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe} = req.body;
+
+
+// const requete = "INSERT INTO utilisateur (prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe) VALUES(?, ?, ?, ?, ?, ?)";
+
+// con.query(query,[prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe], function(err,result){
+//     if(err) throw err;
+//     res.redirect("pages/pageConnexion");
+    
+// });
+// });
+
