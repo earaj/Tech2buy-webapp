@@ -2,7 +2,7 @@
     Importation des modules requis
 */
 
-import express from "express";
+import express, { query } from "express";
 import session from "express-session";
 import path from "path";
 import {fileURLToPath} from "url";
@@ -29,6 +29,7 @@ console.log("serveur fonctionne sur 4000.... ! ")
 
 app.set("views", path.join(_dirname,"views"));
 app.set("view engine", "ejs");
+app.use(express.urlencoded({extended:false}))
 
 /*
     Importation de Bootstrap
@@ -72,6 +73,15 @@ app.get("/", function (req,res){
     });
 });
 
+/*codage du Server T2B 
+app.get("/", function (req,res){
+    
+    res.render("pages/pagePrincipal", {
+        siteTitle: "Tech2Buy",
+        pageTitle: "Page d'accueil",
+    });
+});
+*/
 app.get("/event/add", function(req,res)
 {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function(err,result){
@@ -160,3 +170,63 @@ app.get("/inscription", function(req, res) {
     res.render("pages/inscription", {
     });
 });
+
+app.get("/pageAffichagePrincipale", function(req, res) {
+    res.render("pages/pageAffichagePrincipale", {
+    });
+});
+
+
+app.get("/panier", function(req, res) {
+    res.render("pages/panier", {
+    });
+});
+
+//Fonction pour la creation de compte utilisateurs
+app.post("/inscription", function(req, res) {
+    const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nomUtilisateur, courriel, motDePasse) VALUES (?, ?, ?, ?, ?)";
+    const parametres = [
+      req.body.prenom,
+      req.body.nom,
+      req.body.nomUtilisateur,
+      req.body.courriel,
+      req.body.motDePasse
+    ];
+    con.query(requete, parametres, function(err, result) {
+      if (err) throw err;
+      res.redirect("/pageConnexion");
+    });
+  });
+
+  //Fonction pour la connection au compte des utilisateurs
+  app.post("/connexion", function(req, res) {
+    const requete  = "SELECT * FROM mybd.utilisateur WHERE courriel = ? AND motDePasse = ?";
+    const parametres = [req.body.courriel, req.body.motdepasse];
+    con.query(requete, parametres, function(err, result) {
+        if (err) throw err;
+        if (result.length > 0) {
+            res.redirect("/pageAffichagePrincipale");
+        } else {
+            res.redirect("/pageConnexion");
+        }
+    });
+});
+
+
+
+
+
+// app.post("/inscription",function(req,res){
+
+// const {prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe} = req.body;
+
+
+// const requete = "INSERT INTO utilisateur (prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe) VALUES(?, ?, ?, ?, ?, ?)";
+
+// con.query(query,[prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe], function(err,result){
+//     if(err) throw err;
+//     res.redirect("pages/pageConnexion");
+    
+// });
+// });
+
