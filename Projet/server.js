@@ -182,6 +182,7 @@ app.get("/panier", function(req, res) {
     });
 });
 
+//Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nomUtilisateur, courriel, motDePasse) VALUES (?, ?, ?, ?, ?)";
     const parametres = [
@@ -196,6 +197,24 @@ app.post("/inscription", function(req, res) {
       res.redirect("/pageConnexion");
     });
   });
+
+  //Fonction pour la connection au compte des utilisateurs
+  app.post("/connexion", function(req, res) {
+    const requete  = "SELECT * FROM mybd.utilisateur WHERE courriel = ? AND motDePasse = ?";
+    const parametres = [req.body.courriel, req.body.motdepasse];
+    con.query(requete, parametres, function(err, result) {
+        if (err) throw err;
+        if (result.length > 0) {
+            res.redirect("/pageAffichagePrincipale");
+        } else {
+            res.redirect("/pageConnexion");
+        }
+    });
+});
+
+
+
+
 
 // app.post("/inscription",function(req,res){
 

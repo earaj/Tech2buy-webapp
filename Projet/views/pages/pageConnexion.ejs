@@ -8,74 +8,51 @@
 </head>
 <style>
     .image {
-        
         position: absolute;
         right: 0%;
         top: 0%;
     }
-    h1{
+    h1 {
         color: #000;
         text-align: center;
         font-family: "Barlow Semi Condensed";
         font-size: 60px;
         font-style: normal;
         font-weight: 700;
-        line-height: normal
+        line-height: normal;
     }
 </style>
-
-
-<div class="container-fluid">
-    <div class="row">
-
-<div class="col-7">
-    <!--Mettre saisir connexion ici -->
-    <br>
-    <a href="./index">
-        <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
-
-    </a>   
-    <center>
-        <h1>Ouvrir une session</h1>
-        <b>
-            
-        </b>
-
-    </center>
-    <br><br><br><br><br><br>
-    <div class="form-group input-group-lg">
-        <label for="courriel">Adresse de courriel</label>
-        <input type="email" class="form-control input-lg" id="courriel"  required>
-    </div><br>
-    <div class="form-group input-group-lg">
-        <label for="motdepasse">Mot de passe</label>
-            <input type="password" class="form-control input-group-lg"  required>
-    </div><br>
-<div>
-
-    
-<div class="row">
-    <div class="col-3"></div>
-    <a class="btn btn-primary" type="button" href="./pageAffichagePrincipale" class="col-6 btn btn-primary btn-block" role="button">Ouvrir une session</a>
-    
-    <!--
-    
-        <button type="button"  class="col-6 btn btn-primary  btn-block">Ouvrir une session</button>
-    -->
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-7">
+                <br>
+                <a href="./index">
+                    <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
+                </a>
+                <center>
+                    <h1>Ouvrir une session</h1>
+                </center>
+                <br><br><br><br><br><br>
+                <form action="/connexion" method="post">
+                    <div class="form-group input-group-lg">
+                        <label for="courriel">Adresse de courriel</label>
+                        <input type="email" class="form-control input-lg" id="courriel" name="courriel" required>
+                    </div><br>
+                    <div class="form-group input-group-lg">
+                        <label for="motdepasse">Mot de passe</label>
+                        <input type="password" class="form-control input-group-lg" id="motdepasse" name="motdepasse" required>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <button type="submit" class="btn btn-primary btn-block col-6">Ouvrir une session</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-1">
+                <img src="pgconnex.png" style="height: 100%; width: 40%;" class="image"/>
+            </div>
+        </div>
     </div>
-   
-</div>
-</div>
-<div class="col-1">
-    <img src="pgconnex.png" style="height: 100%; width: 40%;" class="image"/>
-</div>
-
-
-
-    
-    
-
-</div>
-
-
+</body>
     <%- include ("../partials/footer.ejs") %>
