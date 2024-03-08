@@ -184,13 +184,13 @@ app.get("/panier", function(req, res) {
 
 //Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
-    const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nomUtilisateur, courriel, motDePasse) VALUES (?, ?, ?, ?, ?)";
+    const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
     const parametres = [
       req.body.prenom,
       req.body.nom,
-      req.body.nomUtilisateur,
-      req.body.courriel,
-      req.body.motDePasse
+      req.body.nom_utilisateur,
+      req.body.adresse_courriel,
+      req.body.mot_de_passe
     ];
     con.query(requete, parametres, function(err, result) {
       if (err) throw err;
@@ -200,7 +200,7 @@ app.post("/inscription", function(req, res) {
 
   //Fonction pour la connection au compte des utilisateurs
   app.post("/connexion", function(req, res) {
-    const requete  = "SELECT * FROM mybd.utilisateur WHERE courriel = ? AND motDePasse = ?";
+    const requete  = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ? AND mot_de_passe = ?";
     const parametres = [req.body.courriel, req.body.motdepasse];
     con.query(requete, parametres, function(err, result) {
         if (err) throw err;
