@@ -1,0 +1,43 @@
+<!--Code qui permet montrer le header de tech2buy-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Affichage Principale</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="commun.css"/>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
+<header>
+    <!--Code qui permet montrer le header de tech2buy-->
+    <%- include("../partials/headTech2buy.ejs") %>
+</header>
+<body>
+    <div class="container">
+        <h1>Résultat de la recherche pour "<%= searchTerm %>"</h1>
+        <div class="row">
+            <% if (items.length) { %>
+                <% items.forEach(function(item) { %>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem;">
+                            <% if (item.image_url) { %>
+                                <img src="<%= item.image_url %>" class="card-img-top" alt="<%= item.nom_produit %>">
+                            <% } %>
+                            <div class="card-body">
+                                <h5 class="card-title"><%= item.nom_produit %></h5>
+                                <p class="card-text">$<%= item.prix_unitaire %></p>
+                                <p class="card-text"><%= item.description_produit %></p>
+                                <a href="#" class="btn btn-primary">Voir le produit</a>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <h3>Aucun résultat trouvé pour "<%= searchTerm %>"</h3>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

@@ -197,6 +197,19 @@ app.post("/inscription", function(req, res) {
     });
   });
 
+  app.get('/recherche', (req, res) => {
+    const searchTerm = req.query.query;
+    const query = 'SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?'; 
+    con.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, rows) => {
+        if (err) {
+            console.error('Erreur lors de la recherche :', err);
+            return res.status(500).send('Erreur interne du serveur');
+        }
+        // Renvoie une nouvelle page avec les résultats
+        res.render('pages/recherche', { items: rows, searchTerm: searchTerm });
+    });
+});
+
 // app.post("/inscription",function(req,res){
 
 // const {prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe} = req.body;
