@@ -10,7 +10,7 @@
 <script>
     function validation() {
 
-        var pw1 = document.getElementById("motDePasse").value;
+        var pw1 = document.getElementById("mot_de_passe").value;
         var pw2 = document.getElementById("pswd2").value;
         if (pw1 != pw2) {
             document.getElementById("message2").innerHTML = "**Les mots de passe ne correspond pas**";
@@ -63,16 +63,16 @@
             </div><br><br><br>
             <div class="form-group input-group-lg">
                 <label for="nomUtilisateur">Nom d'utilisateur</label>
-                <input class="form-control input-group-lg" type="text" name="nomUtilisateur" id="nomUtilisateur"
+                <input class="form-control input-group-lg" type="text" name="nom_utilisateur" id="nom_utilisateur"
                     required>
             </div><br><br><br>
             <div class="form-group input-group-lg">
                 <label for="courriel">Adresse de courriel</label>
-                <input class="form-control input-group-lg" type="email" name="courriel" id="courriel" required>
+                <input class="form-control input-group-lg" type="email" name="adresse_courriel" id="adresse_courriel" required>
             </div><br><br><br>
             <div class="form-group input-group-lg">
                 <label for="motDePasse">Mot de passe</label>
-                <input type="password" class="form-control input-group-lg" id="motDePasse" name="motDePasse" required>
+                <input type="password" class="form-control input-group-lg" id="mot_de_passe" name="mot_de_passe" required>
                 <span id="message2" style="color:red"> </span>
             </div><br><br>
             <div class="form-group input-group-lg">

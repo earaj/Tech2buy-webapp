@@ -133,11 +133,11 @@ CREATE TABLE relation_9 (
 
 CREATE TABLE utilisateur (
     id_utilisateur INT AUTO_INCREMENT PRIMARY KEY,
-    nom_utilisateur  VARCHAR(100) NOT NULL,
-    mot_de_passe     VARCHAR(30) NOT NULL,
-    adresse_courriel VARCHAR(100) NOT NULL,
     prenom           VARCHAR(100) NOT NULL,
-    nom              VARCHAR(100) NOT NULL
+    nom              VARCHAR(100) NOT NULL,
+    nom_utilisateur  VARCHAR(100) NOT NULL,
+    adresse_courriel VARCHAR(100) NOT NULL,
+    mot_de_passe     VARCHAR(30) NOT NULL
 );
 
 ALTER TABLE relation_14
