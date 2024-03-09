@@ -61,19 +61,19 @@ CREATE TABLE paiement (
 
 CREATE TABLE produit (
     id_produit               INT NOT NULL,
-    id_commande              INT NOT NULL,
     nom_produit              VARCHAR(50) NOT NULL,
     description_produit      VARCHAR(500) NOT NULL,
     prix_unitaire            INT NOT NULL,
     stock_disponible         INT NOT NULL,
-    couleur                  VARCHAR(50) NOT NULL,
-    dimensions               VARCHAR(50) NOT NULL,
-    cpu                      VARCHAR(50) NOT NULL,
-    gpu                      VARCHAR(50) NOT NULL,
-    ram                      VARCHAR(50) NOT NULL,
-    stockage                 VARCHAR(50) NOT NULL,
-    Systeme_dexploitation VARCHAR(50) NOT NULL,
-    taille_ecran             VARCHAR(50) NOT NULL,
+    couleur                  VARCHAR(50),
+    dimensions               VARCHAR(50),
+    cpu                      VARCHAR(50),
+    gpu                      VARCHAR(50),
+    ram                      VARCHAR(50),
+    stockage                 VARCHAR(50),
+    Systeme_dexploitation    VARCHAR(50),
+    taille_ecran             VARCHAR(50),
+    image_url                VARCHAR(200),
     PRIMARY KEY (id_produit)
 );
 
