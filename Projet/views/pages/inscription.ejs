@@ -12,16 +12,16 @@
 <script>
     function validation() {
 
-    var pw1 = document.getElementById("motDePasse").value;  
-    var pw2 = document.getElementById("pswd2").value; 
-    if(pw1 != pw2) {  
-      document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";  
-      return false;  
-    } else {  
-       // window.location.href = "http://localhost:4000/pageAffichagePrincipale"; 
-        alert ("Creation de compte avec Succèes!");
-    }  
- }  
+        var pw1 = document.getElementById("mot_de_passe").value;
+        var pw2 = document.getElementById("pswd2").value;
+        if (pw1 != pw2) {
+            document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
+            return false;
+        } else {
+            // window.location.href = "http://localhost:4000/pageAffichagePrincipale"; 
+            alert("Création de compte avec Succès!");
+        }
+    }
 
 
 </script>
