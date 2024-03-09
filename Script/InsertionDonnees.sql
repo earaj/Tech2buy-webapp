@@ -1,38 +1,24 @@
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (02,12,'Laptop Gaming XYZ','torquent per conubia nostra, per inceptos hymenaeos.',2500,20,'Bleu','25cm x 15cm x 35cm','core i5','RTX 3070','16gb','1to',"Windows 10","15p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (03,13,'PC Portable ABC','torquent per conubia nostra, per inceptos hymenaeos.',1300,300,'Noir','28cm x 18cm x 38cm','AMD Ryzen 7','GTX 1660','12gb','512go',"Linux Ubuntu","14p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (04,14,'Desktop XYZ','torquent per conubia nostra, per inceptos hymenaeos.',350,1200,'Gris','32cm x 22cm x 42cm','Intel Core i7','Intel HD Graphics','16gb','256go',"Windows 11","17p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (05,15,'Tablet ABC','torquent per conubia nostra, per inceptos hymenaeos.',30,2,'Vert','20cm x 10cm x 25cm','AMD Athlon','N/A','4gb','128go',"MacOS","13p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (06,16,'Mini PC XYZ','torquent per conubia nostra, per inceptos hymenaeos.',600,100,'Jaune','27cm x 17cm x 37cm','Raspberry Pi 4','N/A','8gb','64go',"Raspbian","7p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (07,17,'Smartphone ABC','torquent per conubia nostra, per inceptos hymenaeos.',100,200,'Blanc','30cm x 20cm x 40cm','ARM Cortex','N/A','2gb','32go',"Android","10p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (08,18,'Serveur XYZ','torquent per conubia nostra, per inceptos hymenaeos.',3600,7,'Orange','35cm x 25cm x 45cm','Intel Xeon','Nvidia Quadro','64gb','2to',"Windows Server","21p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (09,19,'Micro PC ABC','torquent per conubia nostra, per inceptos hymenaeos.',10,1555,'Violet','22cm x 12cm x 32cm','ARM Cortex','N/A','1gb','16go',"Linux Debian","9p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (10,111,'All-in-One XYZ','torquent per conubia nostra, per inceptos hymenaeos.',550,70,'Marron','26cm x 16cm x 36cm','Intel Core i9','Nvidia GeForce GTX','32gb','4to',"Windows 10","19p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (11,112,'Smartwatch ABC','torquent per conubia nostra, per inceptos hymenaeos.',2,5569,'Beige','40cm x 30cm x 50cm','ARM Cortex','N/A','512mb','8go',"Android","8p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (12,113,'Portable XYZ','torquent per conubia nostra, per inceptos hymenaeos.',657,10,'Turquoise','24cm x 14cm x 34cm','Intel Pentium','N/A','6gb','128go',"Windows 7","16p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (13,114,'Desktop ABC','torquent per conubia nostra, per inceptos hymenaeos.',999,1,'Argent','29cm x 19cm x 39cm','AMD Ryzen 5','AMD Radeon','24gb','2to',"Windows 11","20p");
-
-INSERT INTO mybd.produit (id_produit,id_commande,nom_produit,description_produit,prix_unitaire,stock_disponible,couleur,dimensions,cpu,gpu,ram,stockage,Systeme_dexploitation,taille_ecran)
-VALUES (14,115,'Laptop XYZ','torquent per conubia nostra, per inceptos hymenaeos.',99,160,'Rose','33cm x 23cm x 43cm','AMD Ryzen 3','AMD Radeon RX','16gb','1to',"Windows 10","22p");
+INSERT INTO mybd.produit 
+(id_produit, nom_produit, description_produit, prix_unitaire, stock_disponible, couleur, dimensions, cpu, gpu, ram, stockage, Systeme_dexploitation, taille_ecran, image_url) 
+VALUES
+(1, 'Apple MacBook Pro 13"', 'Laptop haute performance avec puce Apple M1', 1299, 5, 'Gris sidéral', '30.41x21.24x1.56 cm', 'Apple M1', 'Apple M1 intégré', '8GB', '256GB SSD', 'macOS', '13 pouces', '[MYD92LL-A-E] Apple 13-inch MacBook Pro_ Apple M1 chip with 8-core CPU and 8-core GPU, Space Gray (8GB unified memory, 512GB SSD).jpg' ),
+(2, 'Dell XPS 15', 'Puissant laptop pour les creatifs et professionnels', 1850, 4, 'Argent', '34.5x23.5x1.7 cm', 'Intel Core i7-10750H', 'NVIDIA GTX 1650 Ti', '16GB', '512GB SSD', 'Windows 10', '15.6 pouces', 'dell-xps-15-9500-2020-preview.jpg'),
+(3, 'Samsung Galaxy S21', 'Smartphone haut de gamme avec appareil photo professionnel', 799, 10, 'Phantom Gray', 'N/A', 'Exynos 2100', 'Intégré', '8GB', '128GB', 'Android 11', '6.2 pouces', 'samsung-galaxy-s21-5g-256gb.jpg'),
+(4, 'Lenovo Legion 5', 'Laptop de gaming avec performance exceptionnelle', 999, 6, 'Phantom Blue', '36.3x26.0x2.56 cm', 'AMD Ryzen 7 5800H', 'NVIDIA RTX 3060', '16GB', '512GB SSD', 'Windows 10', '15.6 pouces', 'b8cd5add-342b-4e00-860b-ac5ed4a0ed17-preview.jpg'),
+(5, 'HP Envy 13"', 'Laptop ultra-portable avec ecran tactile', 899, 8, 'Natural Silver', '30.65x21.46x1.49 cm', 'Intel Core i5-1135G7', 'Intel Iris Xe Graphics', '8GB', '256GB SSD', 'Windows 10', '13.3 pouces', 'hp-envy-13-ba1055nr-preview.jpg'),
+(6, 'Apple iPhone 12', 'Smartphone iconique avec connectivite 5G', 699, 15, 'Black', 'N/A', 'A14 Bionic', 'Intégré', '4GB', '64GB', 'iOS 14', '6.1 pouces', '[3H518V-A] Apple iPhone 12 64GB Blue (Demo).jpg'),
+(7, 'Asus ROG Zephyrus G14', 'Laptop gaming compact avec ecran Anime Matrix', 1349, 3, 'Moonlight White', '32.4x22.2x1.99 cm', 'AMD Ryzen 9 5900HS', 'NVIDIA RTX 3060', '16GB', '1TB SSD', 'Windows 10', '14 pouces', '0349d932df1558254dba8272d037471a.256p.jpg'),
+(8, 'Google Pixel 5', 'Smartphone compact avec excellente integration Google', 699, 7, 'Just Black', 'N/A', 'Qualcomm Snapdragon 765G', 'Intégré', '8GB', '128GB', 'Android 11', '6 pouces', 'google-pixel-5-128gb.jpg'),
+(9, 'Microsoft Surface Laptop 4', 'Laptop elegant avec ecran tactile PixelSense', 999, 5, 'Platinum', '30.8x22.3x1.4 cm', 'AMD Ryzen 5 4680U', 'Intégré', '8GB', '256GB SSD', 'Windows 10', '13.5 pouces', 'bda5430473f0cd29bae7cfdef4fe2e41.256p.jpg'),
+(10, 'OnePlus 9 Pro', 'Smartphone avec charge rapide et systeme de camera Hasselblad', 969, 11, 'Morning Mist', 'N/A', 'Qualcomm Snapdragon 888', 'Intégré', '12GB', '256GB', 'Android 11', '6.7 pouces', '95870_M_1.jpg'),
+(11, 'Acer Predator Helios 300', 'Laptop gaming avec technologies de refroidissement avancees', 1199, 4, 'Noir', '36.3x25.4x2.29 cm', 'Intel Core i7-10750H', 'NVIDIA RTX 3060', '16GB', '512GB SSD', 'Windows 10', '15.6 pouces', 'c9c1937e834ab4f25f6fd658317a8309.256p.jpg'),
+(12, 'Apple MacBook Air M1', 'Laptop ultra-mince avec puce Apple M1', 999, 8, 'Or', '30.41x21.24x1.61 cm', 'Apple M1', 'Apple M1 intégré', '8GB', '256GB SSD', 'macOS', '13.3 pouces', 'image_1024.jpg'),
+(13, 'Xiaomi Mi 11', 'Smartphone haut de gamme avec charge sans fil rapide', 749, 10, 'Midnight Gray', 'N/A', 'Qualcomm Snapdragon 888', 'Intégré', '8GB', '128GB', 'Android 11', '6.81 pouces', 'pms_1631271409.65358298!256x256.png'),
+(14, 'Razer Blade 15 Advanced', 'Laptop gaming premium avec ecran haute résolution', 2299, 3, 'Noir', '35.5x23.5x1.78 cm', 'Intel Core i7-10875H', 'NVIDIA RTX 3080', '16GB', '1TB SSD', 'Windows 10', '15.6 pouces', '3-preview.jpg'),
+(15, 'Samsung Galaxy Note 20 Ultra', 'Smartphone avec S-Pen pour productivite et créativite', 1299, 5, 'Mystic Bronze', 'N/A', 'Exynos 990', 'Intégré', '12GB', '256GB', 'Android 10', '6.9 pouces', 'samsung-glxy-note-20-ultra-1600749954.jpg'),
+(16, 'ASUS ZenBook Duo', 'Laptop unique avec deux ecrans pour multitache', 1499, 4, 'Céleste Blue', '32.4x22.3x1.99 cm', 'Intel Core i7-10510U', 'NVIDIA GeForce MX250', '16GB', '1TB SSD', 'Windows 10', '14 pouces', 'a2c714db18561867a516eb59fc2ed5b0.256p.jpg'),
+(17, 'Sony Xperia 1 II', 'Smartphone concu pour les amateurs de photographie', 1199, 6, 'Black', 'N/A', 'Qualcomm Snapdragon 865', 'Intégré', '8GB', '256GB', 'Android 10', '6.5 pouces', 'phuxtmzkogsqqmcaemvy.jpg'),
+(18, 'Dell Alienware m15 R4', 'Laptop gaming avec design emblematique et puissance inegalee', 2100, 2, 'Lunar Light', '36.0x27.6x2.2 cm', 'Intel Core i7-10870H', 'NVIDIA RTX 3070', '16GB', '1TB SSD', 'Windows 10', '15.6 pouces', 'dell-g15-5511-gaming-laptop-preview.jpg'),
+(19, 'Google Pixel 4a', 'Smartphone abordable avec appareil photo de haute qualite', 349, 9, 'Just Black', 'N/A', 'Qualcomm Snapdragon 730G', 'Intégré', '6GB', '128GB', 'Android 11', '5.81 pouces', 'google-pixel-4a.jpg'),
+(20, 'LG Gram 17', 'Laptop ultra-leger avec un grand écran', 1549, 3, 'Blanc', '38.1x26.6x1.78 cm', 'Intel Core i7-1065G7', 'Intel Iris Plus Graphics', '16GB', '1TB SSD', 'Windows 10', '17 pouces', 'images-1.jpg'),
+(21, 'Apple iPhone 14', 'Smartphone iconique avec connectivite 5G', 899, 15, 'White', 'N/A', 'A16 Bionic', 'Intégré', '4GB', '64GB', 'iOS 14', '6.1 pouces', '[3L225V-A] iPhone 14 128GB Purple (Demo).jpg');
