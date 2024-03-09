@@ -37,11 +37,21 @@
                 <form action="/connexion" method="post">
                     <div class="form-group input-group-lg">
                         <label for="courriel">Adresse de courriel</label>
-                        <input type="email" class="form-control input-lg" id="courriel" name="courriel" required>
+                        <input type="email" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="courriel" name="courriel" required>
+                        <% if (typeof erreur !== 'undefined') { %>
+                            <div class="invalid-feedback">
+                                Saisie incorrecte.
+                            </div>
+                        <% } %>
                     </div><br>
                     <div class="form-group input-group-lg">
                         <label for="motdepasse">Mot de passe</label>
-                        <input type="password" class="form-control input-group-lg" id="motdepasse" name="motdepasse" required>
+                        <input type="password" class="form-control input-group-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="motdepasse" name="motdepasse" required>
+                        <% if (typeof erreur !== 'undefined') { %>
+                            <div class="invalid-feedback">
+                                Saisie incorrecte.
+                            </div>
+                        <% } %>
                     </div><br>
                     <div class="row">
                         <div class="col-3"></div>

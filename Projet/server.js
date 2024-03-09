@@ -157,8 +157,7 @@ app.get("/event/delete/:id", function (req,rest){
 });
 //Permet aller au page connexion
 app.get("/pageConnexion", function(req, res) {
-    res.render("pages/pageConnexion", {
-    });
+    res.render("pages/pageConnexion", { erreur: req.query.erreur });
 });
 //permet aller au page index
 app.get("/index", function(req, res) {
@@ -207,7 +206,7 @@ app.post("/inscription", function(req, res) {
         if (result.length > 0) {
             res.redirect("/pageAffichagePrincipale");
         } else {
-            res.redirect("/pageConnexion");
+            res.redirect("/pageConnexion?erreur=1");
         }
     });
 });
@@ -224,7 +223,7 @@ app.post("/inscription", function(req, res) {
             console.error('Erreur lors de la recherche :', err);
             return res.status(500).send('Erreur interne du serveur');
         }
-        // Renvoie une nouvelle page avec les résultats
+      
         res.render('pages/recherche', { items: rows, searchTerm: searchTerm });
     });
 });
