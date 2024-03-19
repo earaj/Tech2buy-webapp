@@ -73,15 +73,7 @@ app.get("/", function (req,res){
     });
 });
 
-/*codage du Server T2B 
-app.get("/", function (req,res){
-    
-    res.render("pages/pagePrincipal", {
-        siteTitle: "Tech2Buy",
-        pageTitle: "Page d'accueil",
-    });
-});
-*/
+
 app.get("/event/add", function(req,res)
 {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function(err,result){
@@ -181,6 +173,11 @@ app.get("/panier", function(req, res) {
     });
 });
 
+app.get("/parametreUtilisateur", function(req, res) {
+    res.render("pages/parametreUtilisateur", {
+    });
+});
+
 //Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
@@ -228,17 +225,4 @@ app.post("/inscription", function(req, res) {
     });
 });
 
-// app.post("/inscription",function(req,res){
-
-// const {prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe} = req.body;
-
-
-// const requete = "INSERT INTO utilisateur (prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe) VALUES(?, ?, ?, ?, ?, ?)";
-
-// con.query(query,[prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe], function(err,result){
-//     if(err) throw err;
-//     res.redirect("pages/pageConnexion");
-    
-// });
-// });
 
