@@ -1,0 +1,33 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier</title>
+    <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="commun.css"/>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<header>
+    <%- include("../partials/headTech2buy.ejs") %>
+</header>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 offset-lg-2"></div>
+                <h1>Informations Personnelles</h1>
+                <form>
+                    <div class="col-4">
+                        <label for="username">Nom utilisateur</label>
+                        <input type="text" class="form-control" id="username" placeholder="Entrez votre nouveau nom utilisateur">
+                    </div>
+                    <br>
+                    <div class="col-4">
+                        <label for="username">Adresse courriel</label>
+                        <input type="text" class="form-control" id="adresse_courriel" placeholder="Entrez votre nouvelle adresse courriel">
+                    </div>
+                   <!--<button type="submit" class="btn btn-primary">Save</button>-->
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
