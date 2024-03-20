@@ -390,4 +390,3 @@ app.get("/panier", function(req, res) {
 
 
 
-});
