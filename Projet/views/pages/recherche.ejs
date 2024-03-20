@@ -16,6 +16,25 @@
 <body>
     <div class="container">
         <h1>Résultat de la recherche pour "<%= searchTerm %>"</h1>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Filtre
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=priceDesc">Prix</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </div>
+        <!-- <div class="dropdown mb-4">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="filterMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Filtre
+            </button>
+            <div class="dropdown-menu" aria-labelledby="filterMenuButton">
+              <a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=priceDesc">Prix</a>
+            </div>
+          </div> -->
+          
         <div class="row">
             <% if (items.length) { %>
                 <% items.forEach(function(item) { %>
@@ -39,5 +58,6 @@
             <% } %>
         </div>
     </div>
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
