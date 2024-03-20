@@ -185,6 +185,11 @@ app.get("/parametreUtilisateur", function(req, res) {
     });
 });
 
+//app.get("/detailProduit", function(req, res) {
+    //res.render("pages/detailProduit", {
+  //  });
+//});
+
 //Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
@@ -220,6 +225,18 @@ app.post("/connexion", function(req, res) {
     });
 });
 
+app.get('/detailProduit', (req, res) => {
+    const productID = req.query.id;
+    const query = 'SELECT * FROM produit WHERE id_produit = ?'; 
+    con.query(query, [productID], (err, rows) => {
+        if (err) {
+            console.error('Erreur', err);
+            return res.status(500).send('Erreur interne du serveur');
+        }
+        const produit = rows[0];
+        res.render('pages/detailProduit', { produit: produit});
+    });
+});
 
 
 //Fonction pour la recherche des produits
