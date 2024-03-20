@@ -31,6 +31,13 @@ app.set("views", path.join(_dirname,"views"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:false}))
 
+app.use(session({
+    secret: 'votreSecretIci',
+    resave: false, 
+    saveUninitialized: false, 
+    cookie: { secure: false } 
+  }));
+
 /*
     Importation de Bootstrap
 */
@@ -73,15 +80,7 @@ app.get("/", function (req,res){
     });
 });
 
-/*codage du Server T2B 
-app.get("/", function (req,res){
-    
-    res.render("pages/pagePrincipal", {
-        siteTitle: "Tech2Buy",
-        pageTitle: "Page d'accueil",
-    });
-});
-*/
+
 app.get("/event/add", function(req,res)
 {
     con.query("SELECT * FROM e_events ORDER BY e_start_date DESC", function(err,result){
@@ -181,6 +180,11 @@ app.get("/panier", function(req, res) {
     });
 });
 
+app.get("/parametreUtilisateur", function(req, res) {
+    res.render("pages/parametreUtilisateur", {
+    });
+});
+
 //Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
@@ -197,14 +201,19 @@ app.post("/inscription", function(req, res) {
     });
   });
 
-  //Fonction pour la connection au compte des utilisateurs
-  app.post("/connexion", function(req, res) {
+//Fonction pour la connection au compte des utilisateurs
+app.post("/connexion", function(req, res) {
     const requete  = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ? AND mot_de_passe = ?";
     const parametres = [req.body.courriel, req.body.motdepasse];
     con.query(requete, parametres, function(err, result) {
         if (err) throw err;
         if (result.length > 0) {
-            res.redirect("/pageAffichagePrincipale");
+            req.session.userId = result[0].id_utilisateur;
+            req.session.save(function(err) {
+                // Assurez-vous que la session est sauvegardée avant de rediriger
+                res.redirect("/pageAffichagePrincipale");
+            });
+            //res.redirect("/pageAffichagePrincipale");
         } else {
             res.redirect("/pageConnexion?erreur=1");
         }
@@ -213,9 +222,8 @@ app.post("/inscription", function(req, res) {
 
 
 
-
-
-  app.get('/recherche', (req, res) => {
+//Fonction pour la recherche des produits
+app.get('/recherche', (req, res) => {
     const searchTerm = req.query.query;
     const query = 'SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?'; 
     con.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, rows) => {
@@ -228,17 +236,109 @@ app.post("/inscription", function(req, res) {
     });
 });
 
-// app.post("/inscription",function(req,res){
 
-// const {prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe} = req.body;
+//Fonction pour les parametres de l'utilisateur
+// app.post("/parametreUtilisateur", function(req, res) {
 
+//     if (!req.session.userId) {
+//         // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+//         return res.redirect("/pageConnexion");
+//     }
+//     const requete = "UPDATE mybd.utilisateur SET nom_utilisateur = ?, adresse_courriel = ? WHERE id_utilisateur = ?";
+//     const parametres = [
+//         req.body.nom_utilisateur, // Le nouveau nom_utilisateur souhaité par l'utilisateur
+//         req.body.adresse_courriel, // La nouvelle adresse courriel souhaitée par l'utilisateur
+//         req.session.userId // L'id_utilisateur pour identifier de manière unique l'utilisateur à mettre à jour
+//     ];
+//     con.query(requete, parametres, function(err, result) {
+//         if (err) throw err;
+//         res.redirect("/pageAffichagePrincipale");
+//     });
+// });
 
-// const requete = "INSERT INTO utilisateur (prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe) VALUES(?, ?, ?, ?, ?, ?)";
+app.post("/parametreUtilisateur", function(req, res) {
 
-// con.query(query,[prenom,nom,nom_utilisateur,adresse_courriel,mot_de_passe], function(err,result){
-//     if(err) throw err;
-//     res.redirect("pages/pageConnexion");
+    if (!req.session.userId) {
+        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        return res.redirect("/pageConnexion");
+    }
+    const requete = "UPDATE mybd.utilisateur SET nom_utilisateur = ?, adresse_courriel = ? WHERE id_utilisateur = ?";
+    const parametres = [
+        req.body.nom_utilisateur, 
+        req.body.adresse_courriel, 
+        req.session.userId 
+    ];
+    con.query(requete, parametres, function(err, result) {
+        if (err) throw err;
+
+        const requeteAdresse = "SELECT * FROM mybd.adresse_de_livraison WHERE id_utilisateur = ?";
+        con.query(requeteAdresse, [req.session.userId], function(err, result) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send("Erreur lors de la vérification de l'adresse.");
+            }
     
-// });
-// });
+            let queryAdresse = "";
+            let parametresAdresse = [];
+    
+            if (result.length > 0) {
+                queryAdresse = "UPDATE mybd.adresse_de_livraison SET ";
+                if (req.body.adresse) {
+                    queryAdresse += "adresse = ?, ";
+                    parametresAdresse.push(req.body.adresse);
+                }
+        
+                if (req.body.code_postal) {
+                    queryAdresse += "code_postal = ?, ";
+                    parametresAdresse.push(req.body.code_postal);
+                }
+        
+                if (req.body.ville) {
+                    queryAdresse += "ville = ?, ";
+                    parametresAdresse.push(req.body.ville);
+                }
+        
+                if (req.body.pays) {
+                    queryAdresse += "pays = ?, ";
+                    parametresAdresse.push(req.body.pays);
+                }
+        
+                queryAdresse = queryAdresse.slice(0, -2);
+        
+                queryAdresse += " WHERE id_utilisateur = ?";
+                parametresAdresse.push(req.session.userId);
+            } else {
+                queryAdresse = "INSERT INTO mybd.adresse_de_livraison (id_utilisateur, adresse, code_postal, ville, pays) VALUES (?, ?, ?, ?, ?)";
+                parametresAdresse = [
+                    req.session.userId,
+                    req.body.adresse,
+                    req.body.code_postal,
+                    req.body.ville,
+                    req.body.pays
+                ];
+            }
+    
+            con.query(queryAdresse, parametresAdresse, function(err, result) {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send("Erreur lors de la mise à jour");
+                }
+                
+            });
+        });
+        res.redirect("/pageAffichagePrincipale");
+    });
+});
 
+
+app.get("/parametreUtilisateur", function(req, res) {
+    //Vérifiez que l'utilisateur est connecté et a un id_utilisateur stocké
+    if (req.session.userId) {
+        res.render("pages/parametreUtilisateur", {
+            id_utilisateur: req.session.userId
+        });
+    } else {
+        //Si non connecté, redirige vers la page de connexion
+        res.redirect("/pageConnexion");
+    }
+});
