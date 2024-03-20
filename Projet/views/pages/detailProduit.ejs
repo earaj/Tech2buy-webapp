@@ -4,7 +4,7 @@
     <title>Page Affichage Principale</title>
 
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="commun.css" />
+    <link rel="stylesheet" href="commun.css"/>
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
@@ -13,6 +13,26 @@
     <%- include("../partials/headTech2buy.ejs") %>
 </header>
 
+<body>
+    <div class="container">
+        <h1>Détail du produit</h1>
+        <div>
+            <h2> <%= produit.nom_produit%></h2>
+            <p>Description: <%=produit.description_produit%></p>
+            <p>Prix: <%=produit.prix_unitaire%> $</p>
+            <p>Disponible: <%=produit.stock_disponible%> </p>
+            <p>Dimensions: <%=produit.dimensions%> </p>
+            <p>Cpu: <%=produit.cpu%> </p>
+            <p>Gpu: <%=produit.gpu%> </p>
+            <p>Ram: <%=produit.ram%> </p>
+            <p>Stockage: <%=produit.stockage%> </p>
+            <p>Systeme d'exploitation: <%=produit.Systeme_dexploitation%> </p>
+            <p>Taille d'ecran: <%=produit.taille_ecran%> </p>
+            <p><img style="width: 30%; height: 50%;" src= "<%=produit.image_url%>"> </p>
+
+        </div>
+    </div>
+</body>
 
 
 <%- include("../partials/head.ejs") %>
