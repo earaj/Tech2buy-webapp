@@ -249,7 +249,10 @@ app.get('/detailProduit', (req, res) => {
 //Fonction pour la recherche des produits
 app.get('/recherche', (req, res) => {
     const searchTerm = req.query.query;
-    const query = 'SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?'; 
+    let query = 'SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?';
+    if (req.query.sortBy === 'priceDesc') {
+        query += " ORDER BY prix_unitaire DESC";
+    } 
     con.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, rows) => {
         if (err) {
             console.error('Erreur lors de la recherche :', err);
@@ -365,25 +368,6 @@ app.get("/parametreUtilisateur", function(req, res) {
         //Si non connecté, redirige vers la page de connexion
         res.redirect("/pageConnexion");
     }
-});
-
-app.get('/recherche', function(req, res) {
-    let sqlQuery = "SELECT * FROM produit WHERE nom_produit LIKE ?";
-    let params = [`%${req.query.query}%`];
-
-    // Gestion du tri par prix décroissant
-    if (req.query.sortBy === 'priceDesc') {
-        sqlQuery += " ORDER BY prix_unitaire DESC";
-    }
-
-    con.query(sqlQuery, params, function(err, products) {
-        if (err) {
-            console.error('Erreur lors de la recherche :', err);
-            return res.status(500).send('Erreur interne du serveur');
-        }
-
-        res.render('recherche', { items: products, searchTerm: req.query.query });
-    });
 });
 
 
