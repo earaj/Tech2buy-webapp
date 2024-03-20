@@ -10,6 +10,7 @@ import mysql from "mysql";
 import {body, validationResult} from "express-validator";
 import dateFormat from "dateformat";
 
+
 const app = express();
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -365,6 +366,27 @@ app.get("/parametreUtilisateur", function(req, res) {
         res.redirect("/pageConnexion");
     }
 });
+
+app.get('/recherche', function(req, res) {
+    let sqlQuery = "SELECT * FROM produit WHERE nom_produit LIKE ?";
+    let params = [`%${req.query.query}%`];
+
+    // Gestion du tri par prix décroissant
+    if (req.query.sortBy === 'priceDesc') {
+        sqlQuery += " ORDER BY prix_unitaire DESC";
+    }
+
+    con.query(sqlQuery, params, function(err, products) {
+        if (err) {
+            console.error('Erreur lors de la recherche :', err);
+            return res.status(500).send('Erreur interne du serveur');
+        }
+
+        res.render('recherche', { items: products, searchTerm: req.query.query });
+    });
+});
+
+
 
 
 //Ajouter une route POST pour gérer l'ajout d'un produit au panier
