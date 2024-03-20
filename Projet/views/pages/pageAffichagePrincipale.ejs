@@ -1,4 +1,23 @@
 <!--Code qui permet montrer le header de tech2buy-->
+<script>
+    function searchFor(term) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/recherche?query=' + term, true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                window.location.href = '/recherche?query=' + term;
+            } else {
+            
+                console.error('Erreur lors de la recherche :', xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Erreur interne du serveur');
+        };
+        xhr.send();
+    }
+ </script>
+
 <Style>
     .col{
         border-radius: 2%;
@@ -29,14 +48,14 @@
     <div class="row">
         <div class="col-6">
             <img src="../Images/1046a737566c6b5d5d354a6abfc6f6d4.png" class="border border-secondary " width="600"
-                height="500"  style="margin: 20;">
+                height="500"  style="margin: 20;" onclick="searchFor(' ');">
         </div>
         <div class="col-6">
 
             <img src="../Images/3620def07c61-headphone-comp-2.jpg" class="border border-secondary rounded float-end" width="555"
-                height="275" alt="" style="margin: 30;">
+                height="275" alt="" style="margin: 30;" onclick="searchFor('samsung');">
             <img src="../Images/Microsoft-Surface.jpeg" class="border border-secondary rounded float-end" width="270"
-                height="180" style="margin: 5" alt="">
+                height="180" style="margin: 5" alt="" onclick="searchFor('laptop');">
             <img src="../Images/Apple-TV-4K-hero-221018_big.jpg.large.jpg"
                 class="border border-secondary   rounded float-end" width="270" height="180" style="margin: 5;" alt="">
         </div>
@@ -44,7 +63,7 @@
 
     <div class="row-md p-5">
         <img src="../Images/iphone-15-pro-finish-select-202309-6-1inch.jpg" class="col-12 border border-secondary"
-            width="1000" height="550">
+            width="1000" height="550" onclick="searchFor('iphone');">
 
 
 

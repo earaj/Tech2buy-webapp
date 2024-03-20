@@ -236,6 +236,7 @@ app.get('/recherche', (req, res) => {
     });
 });
 
+
 //Fonction pour les parametres de l'utilisateur
 // app.post("/parametreUtilisateur", function(req, res) {
 
@@ -341,8 +342,3 @@ app.get("/parametreUtilisateur", function(req, res) {
         res.redirect("/pageConnexion");
     }
 });
-
-
-
-
-
