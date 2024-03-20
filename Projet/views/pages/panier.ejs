@@ -70,9 +70,29 @@
                 <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
             </div>
         </div>
+
+
+        <% if (req.session.panier && req.session.panier.length) { %>
+            <% req.session.panier.forEach(function(produit) { %>
+                <div class="row custom-margin-top">
+                    <div class="col-sm-4 col-md-2">
+                        <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
+                    </div>
+                    <div class="col-sm-8 col-md-9">
+                        <h3><%= produit.nom_produit %></h3>
+                        <p><%= produit.description_produit %></p>
+                        <!-- Autres détails du produit -->
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <h3>Votre panier est vide</h3>
+        <% } %>
+
+
     </div>
 
-    <div class="row custom-margin-top">
+    <!-- <div class="row custom-margin-top">
         <div class="col-sm-4 col-md-2">
             <img src="../Images/macbook air m2.jpeg" alt="Nom du Produit" class="img-fluid">
         </div>
@@ -85,7 +105,9 @@
             <br><br>
             <h2>$1,450.39</h4>
         </div>
-    </div>
+    </div> -->
+
+    
 
     <div class="container-fluid"> <!-- container-fluid -->
         <div class="row justify-content-center">
@@ -122,7 +144,6 @@
     
     </body>
     
-
 
 
 

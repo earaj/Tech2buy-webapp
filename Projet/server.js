@@ -50,6 +50,12 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static("./views/Images"));
 app.use(express.static("./assets"))
 app.use(express.static("./views"))
+
+app.use(function(req, res, next) {
+    res.locals.req = req;
+    next();
+});
+
 /*
     Connection au server MySQL
 */
@@ -186,6 +192,11 @@ app.get("/parametreUtilisateur", function(req, res) {
     });
 });
 
+//app.get("/detailProduit", function(req, res) {
+    //res.render("pages/detailProduit", {
+  //  });
+//});
+
 //Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
@@ -221,6 +232,18 @@ app.post("/connexion", function(req, res) {
     });
 });
 
+app.get('/detailProduit', (req, res) => {
+    const productID = req.query.id;
+    const query = 'SELECT * FROM produit WHERE id_produit = ?'; 
+    con.query(query, [productID], (err, rows) => {
+        if (err) {
+            console.error('Erreur', err);
+            return res.status(500).send('Erreur interne du serveur');
+        }
+        const produit = rows[0];
+        res.render('pages/detailProduit', { produit: produit});
+    });
+});
 
 
 //Fonction pour la recherche des produits
@@ -236,6 +259,7 @@ app.get('/recherche', (req, res) => {
         res.render('pages/recherche', { items: rows, searchTerm: searchTerm });
     });
 });
+
 
 //Fonction pour les parametres de l'utilisateur
 // app.post("/parametreUtilisateur", function(req, res) {
@@ -365,6 +389,26 @@ app.get('/recherche', function(req, res) {
 
 
 
+//Ajouter une route POST pour gérer l'ajout d'un produit au panier
+app.post("/ajouterAuPanier", function(req, res) {
+    const produit = {
+        image_url: req.body.image_url,
+        nom_produit: req.body.nom_produit,
+        description_produit: req.body.description_produit
+    };
+    //Stocker le produit dans la session de l'utilisateur
+    if (!req.session.panier) {
+        req.session.panier = [];
+    }
+    req.session.panier.push(produit);
+    res.redirect("back");
+});
+
+app.get("/panier", function(req, res) {
+    res.render("pages/panier", {
+        req: req  
+    });
+});
 
 
 
