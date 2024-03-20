@@ -49,6 +49,12 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static("./views/Images"));
 app.use(express.static("./assets"))
 app.use(express.static("./views"))
+
+app.use(function(req, res, next) {
+    res.locals.req = req;
+    next();
+});
+
 /*
     Connection au server MySQL
 */
@@ -343,6 +349,26 @@ app.get("/parametreUtilisateur", function(req, res) {
 });
 
 
+//Ajouter une route POST pour gérer l'ajout d'un produit au panier
+app.post("/ajouterAuPanier", function(req, res) {
+    const produit = {
+        image_url: req.body.image_url,
+        nom_produit: req.body.nom_produit,
+        description_produit: req.body.description_produit
+    };
+    //Stocker le produit dans la session de l'utilisateur
+    if (!req.session.panier) {
+        req.session.panier = [];
+    }
+    req.session.panier.push(produit);
+    res.redirect("back");
+});
+
+app.get("/panier", function(req, res) {
+    res.render("pages/panier", {
+        req: req  
+    });
+});
 
 
 

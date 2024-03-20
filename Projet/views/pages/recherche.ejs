@@ -29,6 +29,13 @@
                                 <p class="card-text">$<%= item.prix_unitaire %></p>
                                 <p class="card-text"><%= item.description_produit %></p>
                                 <a href="#" class="btn btn-primary">Voir le produit</a>
+                                <form action="/ajouterAuPanier" method="post">
+                                    <input type="hidden" name="image_url" value="<%= item.image_url %>">
+                                    <input type="hidden" name="nom_produit" value="<%= item.nom_produit %>">
+                                    <input type="hidden" name="description_produit" value="<%= item.description_produit %>">
+                                    <input class="btn btn-primary" class="btn btn-primary btn-block col-8"  type="submit"
+                                    value="Ajouter au panier"></button>
+                                </form>
                             </div>
                         </div>
                         <br>
@@ -39,5 +46,7 @@
             <% } %>
         </div>
     </div>
+
+    
 </body>
 </html>
