@@ -13,7 +13,9 @@ CREATE TABLE adresse_de_livraison (
     code_postal         VARCHAR(6) NOT NULL,
     ville               VARCHAR(50) NOT NULL,
     pays                VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_adresselivraison)
+    id_utilisateur      INT NOT NULL,
+    PRIMARY KEY (id_adresselivraison),
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur (id_utilisateur)
 );
 
 CREATE TABLE carte_de_credit (
