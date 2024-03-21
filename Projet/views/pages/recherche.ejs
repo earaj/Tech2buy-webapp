@@ -13,9 +13,81 @@
     <!--Code qui permet montrer le header de tech2buy-->
     <%- include("../partials/headTech2buy.ejs") %>
 </header>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  // Sélectionnez tous les éléments qui sont des sous-menus.
+  var submenuTriggers = document.querySelectorAll('.dropdown-submenu a');
+
+  submenuTriggers.forEach(function (trigger) {
+    trigger.addEventListener('click', function (e) {
+     
+     
+
+      // Fermez tous les sous-menus ouverts
+      var openSubmenus = document.querySelectorAll('.dropdown-submenu .dropdown-menu');
+      openSubmenus.forEach(function (menu) {
+        // Fermez le menu si ce n'est pas le menu actuellement cliqué
+        if (menu !== this.nextElementSibling) {
+          menu.style.display = 'none';
+        }
+      }, this); // Notez l'utilisation de "this" pour passer le contexte actuel
+
+      // Trouvez le sous-menu correspondant à ce déclencheur et basculez sa visibilité
+      var submenu = this.nextElementSibling;
+      submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+
+      // Empêchez l'événement de se propager pour éviter de fermer la liste déroulante parente
+      e.stopPropagation();
+    });
+  });
+
+  // Ajoutez un écouteur d'événements sur le document pour fermer les sous-menus quand on clique en dehors
+  document.addEventListener('click', function (e) {
+    var openSubmenus = document.querySelectorAll('.dropdown-submenu .dropdown-menu');
+    openSubmenus.forEach(function (menu) {
+      if (!menu.contains(e.target)) {
+        menu.style.display = 'none';
+      }
+    });
+  });
+});
+</script>
 <body>
     <div class="container">
+        <br>
         <h1>Résultat de la recherche pour "<%= searchTerm %>"</h1>
+        <br>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Filtre
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item" tabindex="-1">Prix</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=priceDesc">Prix Décroissant</a></li>
+                    <li><a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=priceAsc">Prix Croissant</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a class="dropdown-item" tabindex="-1">Ordre alphabétique</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=nomAsc">Ordre de A-Z</a></li>
+                      <li><a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=nomDesc">Ordre de Z-A</a></li>
+                    </ul>
+                  </li>
+              </ul>
+          </div>
+          <br>
+        <!-- <div class="dropdown mb-4">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="filterMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Filtre
+            </button>
+            <div class="dropdown-menu" aria-labelledby="filterMenuButton">
+              <a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=priceDesc">Prix</a>
+            </div>
+          </div> -->
+          
         <div class="row">
             <% if (items.length) { %>
                 <% items.forEach(function(item) { %>
@@ -46,6 +118,7 @@
             <% } %>
         </div>
     </div>
+    <script src="/js/bootstrap.bundle.min.js"></script>
 
     
 </body>
