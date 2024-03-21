@@ -41,3 +41,24 @@ button[type="submit"] {
     width: 30%;
 }
   
+.dropdown-submenu .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: -7px;
+}
+
+
+.product-name {
+    color: #0055a6; /* Couleur typique de Best Buy */
+    margin-bottom: 20px;
+}
+
+p {
+    line-height: 1.6;
+}
+
+.btn-primary {
+    background-color: #0046be; /* Bouton bleu Best Buy */
+    border-color: #0046be;
+}

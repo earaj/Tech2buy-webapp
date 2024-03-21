@@ -250,8 +250,17 @@ app.get('/detailProduit', (req, res) => {
 app.get('/recherche', (req, res) => {
     const searchTerm = req.query.query;
     let query = 'SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?';
-    if (req.query.sortBy === 'priceDesc') {
+    if (req.query.sortBy === 'priceAsc') {
+        query += " ORDER BY prix_unitaire ASC";
+    }
+    else if (req.query.sortBy === 'priceDesc') {
         query += " ORDER BY prix_unitaire DESC";
+    }
+    else if (req.query.sortBy === 'nomDesc') {
+        query += " ORDER BY nom_produit DESC";
+    }
+    else if (req.query.sortBy === 'nomAsc') {
+        query += " ORDER BY nom_produit ASC";
     } 
     con.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, rows) => {
         if (err) {
