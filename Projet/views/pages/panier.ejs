@@ -62,34 +62,28 @@
 </style>
 
 <body>
-
-
     <div class="container-fluid mt-3">
         <div class="row">
             <div class="col-12">
                 <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
             </div>
         </div>
-
-
-        <% if (req.session.panier && req.session.panier.length) { %>
-            <% req.session.panier.forEach(function(produit) { %>
+        <% if (panier && panier.length) { %>
+            <% panier.forEach(function(produit) { %>
                 <div class="row custom-margin-top">
                     <div class="col-sm-4 col-md-2">
                         <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
                     </div>
-                    <div class="col-sm-8 col-md-9">
+                    <div class="col-sm-8 col-md-10">
                         <h3><%= produit.nom_produit %></h3>
                         <p><%= produit.description_produit %></p>
-                        <!-- Autres détails du produit -->
                     </div>
                 </div>
             <% }) %>
         <% } else { %>
-            <h3>Votre panier est vide</h3>
+            <h3>Votre panier est vide.</h3>
         <% } %>
-
-
+        
     </div>
 
     <!-- <div class="row custom-margin-top">
