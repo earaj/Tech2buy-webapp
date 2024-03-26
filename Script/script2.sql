@@ -82,7 +82,7 @@ CREATE TABLE panier (
     id_panier      INT NOT NULL AUTO_INCREMENT,
     id_utilisateur INT NOT NULL,
     date_ajout     DATE NOT NULL,
-    PRIMARY KEY (id_panier)
+    PRIMARY KEY (id_panier),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 );
 
