@@ -6,7 +6,7 @@ import express, { query } from "express";
 import session from "express-session";
 import path from "path";
 import {fileURLToPath} from "url";
-import mysql from "mysql2";
+import mysql from "mysql";
 import {body, validationResult} from "express-validator";
 import dateFormat from "dateformat";
 
@@ -198,98 +198,134 @@ app.get('/recherche', (req, res) => {
 });
 
 
-//Fonction pour les parametres de l'utilisateur
-// app.post("/parametreUtilisateur", function(req, res) {
-
-//     if (!req.session.userId) {
-//         // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
-//         return res.redirect("/pageConnexion");
-//     }
-//     const requete = "UPDATE mybd.utilisateur SET nom_utilisateur = ?, adresse_courriel = ? WHERE id_utilisateur = ?";
-//     const parametres = [
-//         req.body.nom_utilisateur, // Le nouveau nom_utilisateur souhaité par l'utilisateur
-//         req.body.adresse_courriel, // La nouvelle adresse courriel souhaitée par l'utilisateur
-//         req.session.userId // L'id_utilisateur pour identifier de manière unique l'utilisateur à mettre à jour
-//     ];
-//     con.query(requete, parametres, function(err, result) {
-//         if (err) throw err;
-//         res.redirect("/pageAffichagePrincipale");
-//     });
-// });
 
 app.post("/parametreUtilisateur", function(req, res) {
-
     if (!req.session.userId) {
-        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        //Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
         return res.redirect("/pageConnexion");
     }
-    const requete = "UPDATE mybd.utilisateur SET nom_utilisateur = ?, adresse_courriel = ? WHERE id_utilisateur = ?";
-    const parametres = [
-        req.body.nom_utilisateur, 
-        req.body.adresse_courriel, 
-        req.session.userId 
-    ];
-    con.query(requete, parametres, function(err, result) {
-        if (err) throw err;
 
-        const requeteAdresse = "SELECT * FROM mybd.adresse_de_livraison WHERE id_utilisateur = ?";
-        con.query(requeteAdresse, [req.session.userId], function(err, result) {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors de la vérification de l'adresse.");
+    const requete = "SELECT * FROM mybd.utilisateur WHERE id_utilisateur = ?";
+    con.query(requete, [req.session.userId], function(err, result) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Erreur lors de la vérification de l'utilisateur.");
+        }
+
+        if (result.length > 0) {
+            let query = "UPDATE mybd.utilisateur SET ";
+            let params = [];
+            let mettreAJour = false;
+
+            if (req.body.nom_utilisateur && req.body.nom_utilisateur.trim() !== "") {
+                query += "nom_utilisateur = ?, ";
+                params.push(req.body.nom_utilisateur);
+                mettreAJour = true;
+            }
+
+            if (req.body.adresse_courriel && req.body.adresse_courriel.trim() !== "") {
+                query += "adresse_courriel = ?, ";
+                params.push(req.body.adresse_courriel);
+                mettreAJour = true;
+            }
+
+            if (mettreAJour) {
+                query = query.slice(0, -2); //Enlever la dernière virgule et espace
+                query += " WHERE id_utilisateur = ?";
+                params.push(req.session.userId);
+
+                //Exécuter la mise à jour
+                con.query(query, params, function(err, result) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send("Erreur lors de la mise à jour de l'utilisateur.");
+                    }
+                    //Continuer avec la mise à jour de l'adresse si besoin
+                    updateAddress(req, res);
+                });
+            } else {
+                //Si aucun champ utilisateur à mettre à jour, continuer directement avec l'adresse
+                updateAddress(req, res);
+            }
+        } else {
+            
+            return res.status(404).send("Utilisateur non trouvé.");
+        }
+    });
+});
+
+function updateAddress(req, res) {
+    const requeteAdresse = "SELECT * FROM mybd.adresse_de_livraison WHERE id_utilisateur = ?";
+    con.query(requeteAdresse, [req.session.userId], function(err, result) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Erreur lors de la vérification de l'adresse.");
+        }
+
+        let queryAdresse = "";
+        let parametresAdresse = [];
+        let mettreAJour = false; //Ajouté pour vérifier si une mise à jour est nécessaire
+
+        if (result.length > 0) {
+            queryAdresse = "UPDATE mybd.adresse_de_livraison SET ";
+            if (req.body.adresse) {
+                queryAdresse += "adresse = ?, ";
+                parametresAdresse.push(req.body.adresse);
+                mettreAJour = true;
             }
     
-            let queryAdresse = "";
-            let parametresAdresse = [];
+            if (req.body.code_postal) {
+                queryAdresse += "code_postal = ?, ";
+                parametresAdresse.push(req.body.code_postal);
+                mettreAJour = true;
+            }
     
-            if (result.length > 0) {
-                queryAdresse = "UPDATE mybd.adresse_de_livraison SET ";
-                if (req.body.adresse) {
-                    queryAdresse += "adresse = ?, ";
-                    parametresAdresse.push(req.body.adresse);
-                }
-        
-                if (req.body.code_postal) {
-                    queryAdresse += "code_postal = ?, ";
-                    parametresAdresse.push(req.body.code_postal);
-                }
-        
-                if (req.body.ville) {
-                    queryAdresse += "ville = ?, ";
-                    parametresAdresse.push(req.body.ville);
-                }
-        
-                if (req.body.pays) {
-                    queryAdresse += "pays = ?, ";
-                    parametresAdresse.push(req.body.pays);
-                }
-        
-                queryAdresse = queryAdresse.slice(0, -2);
-        
+            if (req.body.ville) {
+                queryAdresse += "ville = ?, ";
+                parametresAdresse.push(req.body.ville);
+                mettreAJour = true;
+            }
+    
+            if (req.body.pays) {
+                queryAdresse += "pays = ?, ";
+                parametresAdresse.push(req.body.pays);
+                mettreAJour = true;
+            }
+    
+            if (mettreAJour) {
+                queryAdresse = queryAdresse.slice(0, -2); //Enlever la dernière virgule et espace
                 queryAdresse += " WHERE id_utilisateur = ?";
                 parametresAdresse.push(req.session.userId);
-            } else {
-                queryAdresse = "INSERT INTO mybd.adresse_de_livraison (id_utilisateur, adresse, code_postal, ville, pays) VALUES (?, ?, ?, ?, ?)";
-                parametresAdresse = [
-                    req.session.userId,
-                    req.body.adresse,
-                    req.body.code_postal,
-                    req.body.ville,
-                    req.body.pays
-                ];
             }
-    
+        } else if (req.body.adresse || req.body.code_postal || req.body.ville || req.body.pays) {
+            // Insertion seulement si au moins un champ est rempli
+            queryAdresse = "INSERT INTO mybd.adresse_de_livraison (id_utilisateur, adresse, code_postal, ville, pays) VALUES (?, ?, ?, ?, ?)";
+            parametresAdresse = [
+                req.session.userId,
+                req.body.adresse,
+                req.body.code_postal,
+                req.body.ville,
+                req.body.pays
+            ];
+            mettreAJour = true;
+        }
+        if (mettreAJour) {
+            //Exécuter la requête de mise à jour ou d'insertion pour l'adresse
             con.query(queryAdresse, parametresAdresse, function(err, result) {
                 if (err) {
                     console.error(err);
-                    return res.status(500).send("Erreur lors de la mise à jour");
+                    return res.status(500).send("Erreur lors de la mise à jour de l'adresse.");
                 }
-                
+                //Redirection après mise à jour de l'adresse
+                return res.redirect("/pageAffichagePrincipale");
             });
-        });
-        res.redirect("/pageAffichagePrincipale");
+        } else {
+            return res.redirect("/pageAffichagePrincipale");
+        }
     });
-});
+}
+
+
 
 
 app.get("/parametreUtilisateur", function(req, res) {
