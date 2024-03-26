@@ -77,17 +77,8 @@
                     </ul>
                   </li>
               </ul>
-          </div>
+        </div>
           <br>
-        <!-- <div class="dropdown mb-4">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="filterMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Filtre
-            </button>
-            <div class="dropdown-menu" aria-labelledby="filterMenuButton">
-              <a class="dropdown-item" href="/recherche?query=<%= searchTerm %>&sortBy=priceDesc">Prix</a>
-            </div>
-          </div> -->
-          
         <div class="row">
             <% if (items.length) { %>
                 <% items.forEach(function(item) { %>
@@ -101,11 +92,11 @@
                                 <p class="card-text">$<%= item.prix_unitaire %></p>
                                 <p class="card-text"><%= item.description_produit %></p>
                                 <form action="/ajouterAuPanier" method="post">
+                                    <input type="hidden" name="id_produit" value="<%= item.id_produit %>">
                                     <input type="hidden" name="image_url" value="<%= item.image_url %>">
                                     <input type="hidden" name="nom_produit" value="<%= item.nom_produit %>">
                                     <input type="hidden" name="description_produit" value="<%= item.description_produit %>">
-                                    <input class="btn btn-primary" class="btn btn-primary btn-block col-8"  type="submit"
-                                    value="Ajouter au panier"></button>
+                                    <input class="btn btn-primary btn-block col-8" type="submit" value="Ajouter au panier">
                                 </form>
                                 <a href="./detailProduit?id=<%= item.id_produit%>" class="btn btn-primary">Voir le produit</a>
                             </div>
@@ -119,7 +110,5 @@
         </div>
     </div>
     <script src="/js/bootstrap.bundle.min.js"></script>
-
-    
 </body>
 </html>
