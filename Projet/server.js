@@ -127,7 +127,7 @@ app.get("/panier", function(req, res) {
     }
 
     const queryPanier = `
-        SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire
+        SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url
         FROM produit p
         JOIN detail_panier dp ON p.id_produit = dp.id_produit
         JOIN panier pa ON dp.id_panier = pa.id_panier
