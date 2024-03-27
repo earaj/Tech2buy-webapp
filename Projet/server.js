@@ -419,6 +419,16 @@ app.post("/ajouterAuPanier", function(req, res) {
     }
 });
 
+app.get("/deconnect", function(req, res) {
+
+    req.session.destroy(function(err) {
+        if(err) {
+            console.error("Erreur de deconnexion de session: ", err);
+            return res.status(500).send("Erreur de deconnexion");
+        }
+        res.redirect("/pageConnexion");
+    });
+})
 
 
 
