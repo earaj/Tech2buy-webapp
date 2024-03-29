@@ -47,11 +47,22 @@
                     <div class="form-group input-group-lg">
                         <label for="motdepasse">Mot de passe</label>
                         <input type="password" class="form-control input-group-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="motdepasse" name="motdepasse" required>
+                        <input type="checkbox" onclick="myFunction()">Afficher le mot de passe
                         <% if (typeof erreur !== 'undefined') { %>
                             <div class="invalid-feedback">
                                 Saisie incorrecte.
                             </div>
                         <% } %>
+                        <script>
+                            function myFunction() {
+                              var x = document.getElementById("motdepasse");
+                              if (x.type === "password") {
+                                x.type = "text";
+                              } else {
+                                x.type = "password";
+                              }
+                            }
+                            </script>
                     </div><br>
                     <div class="row">
                         <div class="col-3"></div>

@@ -4,7 +4,8 @@ CREATE TABLE utilisateur (
     nom              VARCHAR(100) NOT NULL,
     nom_utilisateur  VARCHAR(100) NOT NULL,
     adresse_courriel VARCHAR(100) NOT NULL,
-    mot_de_passe     VARCHAR(30) NOT NULL
+    mot_de_passe     VARCHAR(60) NOT NULL,
+    mot_de_passe_clair VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE adresse_de_livraison (

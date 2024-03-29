@@ -9,6 +9,8 @@ import {fileURLToPath} from "url";
 import mysql from "mysql";
 import {body, validationResult} from "express-validator";
 import dateFormat from "dateformat";
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
 
 
 const app = express();
@@ -70,6 +72,29 @@ const con = mysql.createConnection({
 con.connect(function(err){
     if(err) throw err;
     console.log("connected!");
+
+    //RUN CE CODE POUR HACHER LES MOTS DE PASSE EXISTANTS DES UTILISATEURS
+
+    // con.query("SELECT id_utilisateur, mot_de_passe FROM mybd.utilisateur", function (err, result) {
+    //     if (err) throw err;
+
+    //     result.forEach(user => {
+    //         bcrypt.hash(user.mot_de_passe, saltRounds, function(err, hash) {
+    //             if (err) {
+    //                 console.error("Erreur lors du hachage du mot de passe pour l'utilisateur ID:", user.id_utilisateur);
+    //                 return;
+    //             }
+
+    //             con.query("UPDATE utilisateur SET mot_de_passe = ? WHERE id_utilisateur = ?", [hash, user.id_utilisateur], function(err, result) {
+    //                 if (err) {
+    //                     console.error("Erreur lors de la mise à jour du mot de passe haché pour l'utilisateur ID:", user.id_utilisateur);
+    //                     return;
+    //                 }
+    //                 console.log("Mot de passe mis à jour pour l'utilisateur ID:", user.id_utilisateur);
+    //             });
+    //         });
+    //     });
+    // });
 });
 
 
@@ -106,14 +131,13 @@ app.get("/pageAffichagePrincipale", function(req, res) {
     });
 });
 
-
-// app.get("/panier", function(req, res) {
-//     res.render("pages/panier", {
-//     });
-// });
-
 app.get("/parametreUtilisateur", function(req, res) {
     res.render("pages/parametreUtilisateur", {
+    });
+});
+
+app.get("/MiseAJourMotDePasse", function(req, res) {
+    res.render("pages/parametresUtilisateur", {
     });
 });
 
@@ -145,36 +169,103 @@ app.get("/panier", function(req, res) {
     });
 });
 
+// //Fonction pour la creation de compte utilisateurs
+// app.post("/inscription", function(req, res) {
+//     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
+//     const parametres = [
+//       req.body.prenom,
+//       req.body.nom,
+//       req.body.nom_utilisateur,
+//       req.body.adresse_courriel,
+//       req.body.mot_de_passe
+//     ];
+//     con.query(requete, parametres, function(err, result) {
+//       if (err) throw err;
+//       res.redirect("/pageConnexion");
+//     });
+//   });
+
 //Fonction pour la creation de compte utilisateurs
 app.post("/inscription", function(req, res) {
-    const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
-    const parametres = [
-      req.body.prenom,
-      req.body.nom,
-      req.body.nom_utilisateur,
-      req.body.adresse_courriel,
-      req.body.mot_de_passe
-    ];
-    con.query(requete, parametres, function(err, result) {
-      if (err) throw err;
-      res.redirect("/pageConnexion");
+    //Hacher le mot de passe avant de l'insérer
+    bcrypt.hash(req.body.mot_de_passe, saltRounds, function(err, hash) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Erreur lors du hachage du mot de passe.");
+        }
+        
+        const requete = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe, mot_de_passe_clair) VALUES (?, ?, ?, ?, ?, ?)";
+        const parametres = [
+            req.body.prenom,
+            req.body.nom,
+            req.body.nom_utilisateur,
+            req.body.adresse_courriel,
+            hash, //Mot de passe haché
+            req.body.mot_de_passe //Mot de passe en clair
+        ];
+
+        con.query(requete, parametres, function(err, result) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
+            }
+            res.redirect("/pageConnexion");
+        });
     });
-  });
+});
 
 //Fonction pour la connection au compte des utilisateurs
+// app.post("/connexion", function(req, res) {
+//     const requete  = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ? AND mot_de_passe = ?";
+//     const parametres = [req.body.courriel, req.body.motdepasse];
+//     con.query(requete, parametres, function(err, result) {
+//         if (err) throw err;
+//         if (result.length > 0) {
+//             req.session.userId = result[0].id_utilisateur;
+//             req.session.save(function(err) {
+//                 // Assurez-vous que la session est sauvegardée avant de rediriger
+//                 res.redirect("/pageAffichagePrincipale");
+//             });
+//             //res.redirect("/pageAffichagePrincipale");
+//         } else {
+//             res.redirect("/pageConnexion?erreur=1");
+//         }
+//     });
+// });
+
+//Fonction pour la connexion au compte des utilisateurs
 app.post("/connexion", function(req, res) {
-    const requete  = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ? AND mot_de_passe = ?";
-    const parametres = [req.body.courriel, req.body.motdepasse];
-    con.query(requete, parametres, function(err, result) {
-        if (err) throw err;
+    const requete = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ?";
+    const courriel = req.body.courriel;
+    
+    con.query(requete, [courriel], function(err, result) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Erreur lors de la recherche de l'utilisateur.");
+        }
         if (result.length > 0) {
-            req.session.userId = result[0].id_utilisateur;
-            req.session.save(function(err) {
-                // Assurez-vous que la session est sauvegardée avant de rediriger
-                res.redirect("/pageAffichagePrincipale");
+            const utilisateur = result[0];
+            bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, function(err, isMatch) {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send("Erreur lors de la vérification du mot de passe.");
+                }
+                if (isMatch) {
+                    req.session.userId = utilisateur.id_utilisateur;
+                    req.session.save(function(err) {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+                        }
+                        res.redirect("/pageAffichagePrincipale");
+                    });
+                } else {
+                    //Mot de passe incorrect
+                    res.redirect("/pageConnexion?erreur=1");
+                }
             });
-            //res.redirect("/pageAffichagePrincipale");
         } else {
+            //Aucun utilisateur trouvé avec cet e-mail
             res.redirect("/pageConnexion?erreur=1");
         }
     });
@@ -240,6 +331,18 @@ app.post("/parametreUtilisateur", function(req, res) {
             let params = [];
             let mettreAJour = false;
 
+            if (req.body.prenom && req.body.prenom.trim() !== "") {
+                query += "prenom = ?, ";
+                params.push(req.body.prenom);
+                mettreAJour = true;
+            }
+
+            if (req.body.nom && req.body.nom.trim() !== "") {
+                query += "nom = ?, ";
+                params.push(req.body.nom);
+                mettreAJour = true;
+            }
+
             if (req.body.nom_utilisateur && req.body.nom_utilisateur.trim() !== "") {
                 query += "nom_utilisateur = ?, ";
                 params.push(req.body.nom_utilisateur);
@@ -249,6 +352,12 @@ app.post("/parametreUtilisateur", function(req, res) {
             if (req.body.adresse_courriel && req.body.adresse_courriel.trim() !== "") {
                 query += "adresse_courriel = ?, ";
                 params.push(req.body.adresse_courriel);
+                mettreAJour = true;
+            }
+
+            if (req.body.mot_de_passe && req.body.mot_de_passe.trim() !== "") {
+                query += "mot_de_passe = ?, ";
+                params.push(req.body.mot_de_passe);
                 mettreAJour = true;
             }
 
@@ -348,8 +457,50 @@ function updateAddress(req, res) {
     });
 }
 
+app.post("/miseAJourMotDePasse", function(req, res) {
+    if (!req.session.userId) {
+        return res.redirect("/pageConnexion");
+    }
 
+    const motDePasseActuel = req.body.mot_de_passe_actuel;
+    const nouveauMotDePasse = req.body.nouveau_mot_de_passe;
+    const confirmerNouveauMotDePasse = req.body.confirmer_nouveau_mot_de_passe;
 
+    if (nouveauMotDePasse !== confirmerNouveauMotDePasse) {
+        return res.redirect("/parametreUtilisateur?erreurConfirmationNouveauMotDePasse=Les nouveaux mots de passe ne correspondent pas.");
+    }
+
+    const requete = "SELECT mot_de_passe FROM mybd.utilisateur WHERE id_utilisateur = ?";
+    con.query(requete, [req.session.userId], function(err, result) {
+        if (err || result.length === 0) {
+            console.error(err);
+            return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la vérification de l'utilisateur.");
+        }
+
+        bcrypt.compare(motDePasseActuel, result[0].mot_de_passe, function(err, isMatch) {
+            if (err || !isMatch) {
+                return res.redirect("/parametreUtilisateur?erreurMotDePasseActuel=Le mot de passe actuel est incorrect.");
+            }
+
+            bcrypt.hash(nouveauMotDePasse, saltRounds, function(err, hashedPassword) {
+                if (err) {
+                    console.error(err);
+                    return res.redirect("/parametreUtilisateur?erreur=Erreur lors du hachage du nouveau mot de passe.");
+                }
+
+                //Mise à jour à la fois du mot de passe haché et du mot de passe en clair
+                const queryMiseAJour = "UPDATE mybd.utilisateur SET mot_de_passe = ?, mot_de_passe_clair = ? WHERE id_utilisateur = ?";
+                con.query(queryMiseAJour, [hashedPassword, nouveauMotDePasse, req.session.userId], function(err) {
+                    if (err) {
+                        console.error(err);
+                        return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la mise à jour du mot de passe.");
+                    }
+                    res.redirect("/parametreUtilisateur?passwordUpdateSuccess=true");
+                });
+            });
+        });
+    });
+});
 
 app.get("/parametreUtilisateur", function(req, res) {
     //Vérifiez que l'utilisateur est connecté et a un id_utilisateur stocké
@@ -363,7 +514,7 @@ app.get("/parametreUtilisateur", function(req, res) {
     }
 });
 
-
+//Fonction pour ajouter un produit au panier
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
         return res.redirect("/pageConnexion");
@@ -419,6 +570,7 @@ app.post("/ajouterAuPanier", function(req, res) {
     }
 });
 
+//Fonction pour déconnecter l'utilisateur
 app.get("/deconnect", function(req, res) {
 
     req.session.destroy(function(err) {
