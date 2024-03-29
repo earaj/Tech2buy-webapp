@@ -21,6 +21,10 @@
         font-weight: 700;
         line-height: normal;
     }
+
+    .is-valid {
+    border: 2px solid green;
+    }
 </style>
 <body>
     <div class="container-fluid">
@@ -75,5 +79,33 @@
             </div>
         </div>
     </div>
+    <script>
+        function validerEmail() {
+            const courriel = document.getElementById('courriel');
+            if (courriel.value.includes('@') && courriel.value.length >= 2) {
+                courriel.classList.add('is-valid');
+                courriel.classList.remove('is-invalid'); 
+            } else {
+                courriel.classList.remove('is-valid');
+                courriel.classList.add('is-invalid'); 
+            }
+        }
+        
+       
+        function validerPassword() {
+            const motdepasse = document.getElementById('motdepasse');
+            if (motdepasse.value.length >= 1) {
+                motdepasse.classList.add('is-valid');
+                motdepasse.classList.remove('is-invalid'); 
+            } else {
+                motdepasse.classList.remove('is-valid');
+                motdepasse.classList.add('is-invalid'); 
+            }
+        }
+        
+        document.getElementById('courriel').addEventListener('input', validerEmail);
+        document.getElementById('motdepasse').addEventListener('input', validerPassword);
+        </script>
+               
 </body>
     <%- include ("../partials/footer.ejs") %>
