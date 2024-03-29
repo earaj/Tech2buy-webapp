@@ -62,3 +62,12 @@ p {
     background-color: #0046be; /* Bouton bleu Best Buy */
     border-color: #0046be;
 }
+
+body{
+  background:#F0F8FF;
+  }
+
+.col{
+    border-radius: 2%;
+    color: black;
+}
