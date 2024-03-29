@@ -4,6 +4,7 @@
     <title>Application evenements</title>
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <style>
@@ -20,6 +21,10 @@
         font-style: normal;
         font-weight: 700;
         line-height: normal;
+    }
+
+    .is-valid {
+    border: 2px solid green;
     }
 </style>
 <body>
@@ -47,16 +52,28 @@
                     <div class="form-group input-group-lg">
                         <label for="motdepasse">Mot de passe</label>
                         <input type="password" class="form-control input-group-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="motdepasse" name="motdepasse" required>
+                        <input type="checkbox" onclick="myFunction()">Afficher le mot de passe
                         <% if (typeof erreur !== 'undefined') { %>
                             <div class="invalid-feedback">
                                 Saisie incorrecte.
                             </div>
                         <% } %>
+                        <script>
+                            function myFunction() {
+                              var x = document.getElementById("motdepasse");
+                              if (x.type === "password") {
+                                x.type = "text";
+                              } else {
+                                x.type = "password";
+                              }
+                            }
+                            </script>
                     </div><br>
-                    <div class="row">
-                        <div class="col-3"></div>
-                        <button type="submit" class="btn btn-primary btn-block col-6">Ouvrir une session</button>
-                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <input class="btn btn-primary btn-lg" type="submit" value="Ouvrir une session">
+                        </div>
+                    </div>                    
                 </form>
             </div>
             <div class="col-1">
@@ -64,5 +81,33 @@
             </div>
         </div>
     </div>
+    <script>
+        function validerEmail() {
+            const courriel = document.getElementById('courriel');
+            if (courriel.value.includes('@') && courriel.value.length >= 2) {
+                courriel.classList.add('is-valid');
+                courriel.classList.remove('is-invalid'); 
+            } else {
+                courriel.classList.remove('is-valid');
+                courriel.classList.add('is-invalid'); 
+            }
+        }
+        
+       
+        function validerPassword() {
+            const motdepasse = document.getElementById('motdepasse');
+            if (motdepasse.value.length >= 1) {
+                motdepasse.classList.add('is-valid');
+                motdepasse.classList.remove('is-invalid'); 
+            } else {
+                motdepasse.classList.remove('is-valid');
+                motdepasse.classList.add('is-invalid'); 
+            }
+        }
+        
+        document.getElementById('courriel').addEventListener('input', validerEmail);
+        document.getElementById('motdepasse').addEventListener('input', validerPassword);
+        </script>
+               
 </body>
     <%- include ("../partials/footer.ejs") %>

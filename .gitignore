@@ -131,3 +131,4 @@ dist
 
 /Projet/.vscode
 /Projet/node_modules
+.DS_Store

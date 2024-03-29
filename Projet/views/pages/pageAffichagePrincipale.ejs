@@ -1,49 +1,17 @@
-<!--Code qui permet montrer le header de tech2buy-->
-<script>
-    function searchFor(term) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/recherche?query=' + term, true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                window.location.href = '/recherche?query=' + term;
-            } else {
-            
-                console.error('Erreur lors de la recherche :', xhr.statusText);
-            }
-        };
-        xhr.onerror = function () {
-            console.error('Erreur interne du serveur');
-        };
-        xhr.send();
-    }
- </script>
-
-<Style>
-    .col{
-        border-radius: 2%;
-        color: black;
-    }
-</Style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Affichage Principale</title>
-
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
 </head>
-<link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
 <header>
     <!--Code qui permet montrer le header de tech2buy-->
     <%- include("../partials/headTech2buy.ejs") %>
 </header>
-
 <body>
-
-</body>
-
-</html>
 <div class="container">
     <div class="row">
         <div class="col-6">
@@ -82,4 +50,24 @@
 
     </div>
 </div>
+</body>
+<!--Code qui permet montrer le header de tech2buy-->
+<script>
+    function searchFor(term) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/recherche?query=' + term, true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                window.location.href = '/recherche?query=' + term;
+            } else {
+            
+                console.error('Erreur lors de la recherche :', xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Erreur interne du serveur');
+        };
+        xhr.send();
+    }
+ </script>
 <%- include("../partials/head.ejs") %>
