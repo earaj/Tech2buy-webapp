@@ -449,10 +449,10 @@ function updateAddress(req, res) {
                     return res.status(500).send("Erreur lors de la mise à jour de l'adresse.");
                 }
                 //Redirection après mise à jour de l'adresse
-                return res.redirect("/pageAffichagePrincipale");
+                return res.redirect("/parametreUtilisateur");
             });
         } else {
-            return res.redirect("/pageAffichagePrincipale");
+            return res.redirect("/parametreUtilisateur");
         }
     });
 }
