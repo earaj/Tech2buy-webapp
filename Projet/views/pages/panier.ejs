@@ -4,7 +4,7 @@
     <title>Panier</title>
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="commun.css"/>
+    <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <header>
@@ -21,9 +21,9 @@
         z-index: -1;
     }
 
-    h2{
+    h2 {
         color: #000;
-        
+
         font-family: "Barlow Semi Condensed";
         font-size: 40px;
         font-style: normal;
@@ -32,113 +32,104 @@
     }
 
 
-    h3{
+    h3 {
         color: #000;
-        
+
         font-family: "Barlow Semi Condensed";
         font-size: 20px;
         font-style: normal;
         font-weight: 700;
         line-height: normal
-    
     }
 
     .custom-margin-top {
-    margin-top: 100px;
-    margin-left: 70px;
+        margin-top: 100px;
+        margin-left: 70px;
     }
 
     .custom-margin-resume {
-    margin-top: 20px; 
+        margin-top: 20px;
     }
 
 
-    span{
+    span {
         color: green;
-    
+
     }
-
-
 </style>
 
 <body>
-    <div class="container-fluid mt-3">
+    <div class="container">
         <div class="row">
-            <div class="col-12">
+            <div class="col-8">
                 <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
+
+                <% if (panier && panier.length) { %>
+                    <% panier.forEach(function(produit) { %>
+                        <div class="row custom-margin-top">
+                            <div class="col-sm-4 col-md-2">
+                                <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
+                            </div>
+                            <div class="col-sm-8 col-md-10">
+                                <h3>
+                                    <%= produit.nom_produit %>
+                                </h3>
+                                <p>
+                                    <%= produit.description_produit %>
+                                </p>
+                                <p>
+                                    <%= produit.prix_unitaire %>$
+                                </p>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <h3>Votre panier est vide.</h3>
+                                <% } %>
+            </div>
+
+            <div class="col-4 bg-light">
+                <p class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</p>
+
+                <div class="bg-light">
+
+
+                    <% let prix_total=0; %>
+                        <% if (panier && panier.length) { %>
+                            <% panier.forEach(function(produit) { %>
+                                <div class="row custom-margin-top">
+                                    <div class="col-sm-4 col-md-2">
+                                    </div>
+                                    <div class="col-sm-12 col-md-12">
+                                        <h4>
+                                            <%= produit.nom_produit %>
+                                        </h4>
+                                        <p>
+                                            <%= produit.prix_unitaire %>$
+                                        </p>
+                                        <br>
+                                    </div>
+                                    <% prix_total +=produit.prix_unitaire; %>
+                                </div>
+                                <% }) %>
+                                    <% } else { %>
+                                        <h3>On dirait que c'est vide !</h3>
+                                        <% } %>
+                                            <% if (panier && panier.length){ %>
+                                                <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
+                                                <% } %>
+
+                </div>
+                <a href="/pageAffichagePrincipale">
+                    <button class="btn btn-primary btn-lg custom-button">Passer à la caisse</button>
+                </a>
+
             </div>
         </div>
-        <% if (panier && panier.length) { %>
-            <% panier.forEach(function(produit) { %>
-                <div class="row custom-margin-top">
-                    <div class="col-sm-4 col-md-2">
-                        <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
-                    </div>
-                    <div class="col-sm-8 col-md-10">
-                        <h3><%= produit.nom_produit %></h3>
-                        <p><%= produit.description_produit %></p>
-                        <p><%= produit.prix_unitaire %>$</p>
-                    </div>
-                </div>
-            <% }) %>
-        <% } else { %>
-            <h3>Votre panier est vide.</h3>
-        <% } %>
-        
     </div>
 
-    <!-- <div class="row custom-margin-top">
-        <div class="col-sm-4 col-md-2">
-            <img src="../Images/macbook air m2.jpeg" alt="Nom du Produit" class="img-fluid">
-        </div>
-        <div class="col-sm-8 col-md-9">
-            <h3>Apple MacBook Air 13.6" w/ Touch ID (2022) - Midnight (Apple M2 Chip / 256GB SSD / 8GB RAM) - English</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-            <br>
-            <p><span>&#10003;</span> Disponible pour l'expédition</p>
-            <p><span>&#10003;</span> Disponible dans les magasins à proximité</p>
-            <br><br>
-            <h2>$1,450.39</h4>
-        </div>
-    </div> -->
+</body>
 
-    
-
-    <div class="container-fluid"> <!-- container-fluid -->
-        <div class="row justify-content-center">
-            <div class="col-md-3 offset-md-9">
-                <div style="max-width: 400px;">
-                    <p class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-3 offset-md-9">
-                <div style="max-width: 380px;">
-                    <p class="display-5 text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-        <div style="margin-top: 300px;"></div>
-        <div class="background-section"></div>
-
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-md-2 offset-md-9">
-                    <a href="/pageAffichagePrincipale">
-                        <button class="btn btn-primary btn-lg custom-button">Passer à la caisse</button>
-                    </a>
-                </div>
-            </div>
-        </div>
-    
-    </body>
-    
 
 
 
