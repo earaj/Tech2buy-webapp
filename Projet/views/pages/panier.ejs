@@ -10,6 +10,9 @@
 <header>
     <%- include("../partials/headTech2buy.ejs") %>
 </header>
+<!-- <script language="javascript">
+    if(screen.width>=1000) {document.write("<style>body{zoom:80%;}</style>");}
+</script> -->
 <style>
     .background-section {
         position: fixed;
@@ -57,11 +60,10 @@
 
     }
 </style>
-
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-8">
+            <div class="col-md-7">
                 <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
 
                 <% if (panier && panier.length) { %>
@@ -87,52 +89,32 @@
                                 <h3>Votre panier est vide.</h3>
                                 <% } %>
             </div>
-
-            <div class="col-4 bg-light">
-                <p class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</p>
-
-                <div class="bg-light">
-
-
+            <div class="col-md-5"> 
+                <div class="bg-light p-3"> 
+                    <h2 class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</h2>
                     <% let prix_total=0; %>
-                        <% if (panier && panier.length) { %>
-                            <% panier.forEach(function(produit) { %>
-                                <div class="row custom-margin-top">
-                                    <div class="col-sm-4 col-md-2">
-                                    </div>
-                                    <div class="col-sm-12 col-md-12">
-                                        <h4>
-                                            <%= produit.nom_produit %>
-                                        </h4>
-                                        <p>
-                                            <%= produit.prix_unitaire %>$
-                                        </p>
-                                        <br>
-                                    </div>
-                                    <% prix_total +=produit.prix_unitaire; %>
+                    <% if (panier && panier.length) { %>
+                        <% panier.forEach(function(produit) { %>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h4><%= produit.nom_produit %></h4>
+                                    <p><%= produit.prix_unitaire %>$</p>
                                 </div>
-                                <% }) %>
-                                    <% } else { %>
-                                        <h3>On dirait que c'est vide !</h3>
-                                        <% } %>
-                                            <% if (panier && panier.length){ %>
-                                                <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
-                                                <% } %>
-
+                                <% prix_total += produit.prix_unitaire; %>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <h3>On dirait que c'est vide !</h3>
+                    <% } %>
+                    <% if (panier && panier.length){ %>
+                        <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
+                    <% } %>
+                    <a href="/pageAffichagePrincipale">
+                        <button class="btn btn-primary btn-lg">Passer à la caisse</button>
+                    </a>
                 </div>
-                <a href="/pageAffichagePrincipale">
-                    <button class="btn btn-primary btn-lg custom-button">Passer à la caisse</button>
-                </a>
-
             </div>
         </div>
     </div>
-
 </body>
-
-
-
-
-
-
 <%- include ("../partials/footer.ejs") %>
