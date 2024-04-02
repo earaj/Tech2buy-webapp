@@ -582,7 +582,30 @@ app.get("/deconnect", function(req, res) {
     });
 })
 
+//Supprimer une produit de panier
+app.post("/supprimerDuPanier", function(req, res) {
+    const idUtilisateur = req.session.userId;
+    const idProduit = req.body.id_produit;
 
+    if (!idUtilisateur || !idProduit) {
+        return res.redirect("/pageConnexion");
+    }
 
+    const querySupprimerProduit = `
+        DELETE FROM detail_panier 
+        WHERE id_panier = (
+            SELECT id_panier FROM panier WHERE id_utilisateur = ?
+        ) 
+        AND id_produit = ?
+    `;
+
+    con.query(querySupprimerProduit, [idUtilisateur, idProduit], (err, result) => {
+        if (err) {
+            console.error("Ne peut pas supprime l'article: ", err);
+            return res.redirect("/panier");
+        }
+        res.redirect("/panier");
+    });
+});
 
 
