@@ -85,6 +85,10 @@
                                 <p>Quantité: 
                                     <%= produit.quantite %>
                                 </p>
+                                <form action="/supprimerDuPanier" method="post">
+                                    <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
+                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Supprimer</button>
+                                </form>
                             </div>
                         </div>
                         <% }) %>
