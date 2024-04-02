@@ -6,7 +6,7 @@ import express, { query } from "express";
 import session from "express-session";
 import path from "path";
 import {fileURLToPath} from "url";
-import mysql from "mysql";
+import mysql from "mysql2";
 import {body, validationResult} from "express-validator";
 import dateFormat from "dateformat";
 import bcrypt from 'bcrypt';
@@ -132,7 +132,32 @@ app.get("/pageAffichagePrincipale", function(req, res) {
 });
 
 app.get("/parametreUtilisateur", function(req, res) {
-    res.render("pages/parametreUtilisateur", {
+    // Vérifier si l'utilisateur est connecté
+    if (!req.session.userId) {
+        //Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        return res.redirect("/pageConnexion");
+    }
+
+    // Définir la requête SQL pour récupérer les informations de l'utilisateur
+    const requete = "SELECT * FROM mybd.utilisateur WHERE id_utilisateur = ?";
+    
+    // Exécuter la requête SQL
+    con.query(requete, [req.session.userId], function(err, result) {
+        if (err) {
+            // Gérer l'erreur, par exemple en enregistrant dans la console et en renvoyant une réponse d'erreur
+            console.error(err);
+            return res.status(500).send("Erreur lors de la récupération des données de l'utilisateur.");
+        }
+
+        if (result.length > 0) {
+            // Si l'utilisateur est trouvé, passer ses données à la vue
+            res.render("pages/parametreUtilisateur", {
+                utilisateur: result[0]
+            });
+        } else {
+            // Si aucun utilisateur n'est trouvé, peut-être rediriger vers une autre page ou montrer un message d'erreur
+            return res.status(404).send("Utilisateur non trouvé.");
+        }
     });
 });
 
