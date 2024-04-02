@@ -151,7 +151,7 @@ app.get("/panier", function(req, res) {
     }
 
     const queryPanier = `
-        SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire
+        SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
         FROM produit p
         JOIN detail_panier dp ON p.id_produit = dp.id_produit
         JOIN panier pa ON dp.id_panier = pa.id_panier
@@ -522,7 +522,7 @@ app.post("/ajouterAuPanier", function(req, res) {
 
     const idUtilisateur = req.session.userId;
     const id_produit = req.body.id_produit; 
-    const quantite = req.body.quantite || 1; //faudra mettre un bouton de quantité pour les produits
+    const quantite = req.body.quantite || 1;
     
     if (!id_produit) {
         console.error('id_produit est null');
