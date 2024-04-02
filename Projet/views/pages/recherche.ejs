@@ -97,6 +97,8 @@
                                     <input type="hidden" name="nom_produit" value="<%= item.nom_produit %>">
                                     <input type="hidden" name="description_produit" value="<%= item.description_produit %>">
                                     <input class="btn btn-primary btn-block col-8" type="submit" value="Ajouter au panier">
+                                    <label for="quantity">Qty:</label>
+                                    <input type="number" id="quantity" name="quantite" min="1" value="1" style="width: 15%;">
                                 </form>
                                 <a href="./detailProduit?id=<%= item.id_produit%>" class="btn btn-primary">Voir le produit</a>
                             </div>
