@@ -167,6 +167,10 @@ app.get("/MiseAJourMotDePasse", function(req, res) {
     });
 });
 
+app.get("/mdpOublie", function(req, res) {
+    res.render("pages/mdpOublie", {
+    });
+});
 //Fonction pour afficher les produits
 app.get("/panier", function(req, res) {
     const idUtilisateur = req.session.userId;
