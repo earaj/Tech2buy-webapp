@@ -52,12 +52,18 @@
                     <div class="form-group input-group-lg">
                         <label for="motdepasse">Mot de passe</label>
                         <input type="password" class="form-control input-group-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="motdepasse" name="motdepasse" required>
-                        <input type="checkbox" onclick="myFunction()">Afficher le mot de passe
+                        <input style="margin-top:15px;" type="checkbox" onclick="myFunction()">Afficher le mot de passe
                         <% if (typeof erreur !== 'undefined') { %>
                             <div class="invalid-feedback">
                                 Saisie incorrecte.
                             </div>
                         <% } %>
+                        
+                            
+                        <a style="position: absolute; right: 43%; margin-top:15px; border: none; background: none; color: red;" href="mdpOublie">
+                              Oublié mot de passe
+                        </a>
+                 
                         <script>
                             function myFunction() {
                               var x = document.getElementById("motdepasse");
@@ -71,9 +77,12 @@
                     </div><br>
                     <div class="row justify-content-center">
                         <div class="col-auto">
-                            <input class="btn btn-primary btn-lg" type="submit" value="Ouvrir une session">
+                            <input class="btn btn-primary btn-lg" type="submit" value="Ouvrir une session"><br><br>
+                            <a href="inscription"><Center>S'inscrire</Center></a>
                         </div>
-                    </div>                    
+                        
+                    </div>
+                    
                 </form>
             </div>
             <div class="col-1">
