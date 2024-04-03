@@ -68,20 +68,28 @@
 
                 <% if (panier && panier.length) { %>
                     <% panier.forEach(function(produit) { %>
-                        <div class="row custom-margin-top">
+                        <div  class="row custom-margin-top">
                             <div class="col-sm-4 col-md-2">
                                 <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
                             </div>
                             <div class="col-sm-8 col-md-10">
-                                <h3>
+                                <a href="/detailProduit?id=<%=produit.id_produit%>">
+                                <h3 >
                                     <%= produit.nom_produit %>
-                                </h3>
+                                </h3></a>
                                 <p>
                                     <%= produit.description_produit %>
                                 </p>
                                 <p>
                                     <%= produit.prix_unitaire %>$
                                 </p>
+                                <p>Quantité: 
+                                    <%= produit.quantite %>
+                                </p>
+                                <form action="/supprimerDuPanier" method="post">
+                                    <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
+                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Supprimer</button>
+                                </form>
                             </div>
                         </div>
                         <% }) %>
@@ -97,10 +105,11 @@
                         <% panier.forEach(function(produit) { %>
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    <h4><%= produit.nom_produit %></h4>
+                                    <h4><%= produit.nom_produit %> <% if (produit.quantite > 1){ %>
+                                        (x <%= produit.quantite %>) <% }%></h4>
                                     <p><%= produit.prix_unitaire %>$</p>
                                 </div>
-                                <% prix_total += produit.prix_unitaire; %>
+                                <% prix_total += produit.prix_unitaire * produit.quantite; %>
                             </div>
                         <% }) %>
                     <% } else { %>
