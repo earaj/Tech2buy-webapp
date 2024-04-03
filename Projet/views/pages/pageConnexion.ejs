@@ -52,12 +52,17 @@
                     <div class="form-group input-group-lg">
                         <label for="motdepasse">Mot de passe</label>
                         <input type="password" class="form-control input-group-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="motdepasse" name="motdepasse" required>
-                        <input type="checkbox" onclick="myFunction()">Afficher le mot de passe
+                        <input style="margin-top:15px;" type="checkbox" onclick="myFunction()">Afficher le mot de passe
                         <% if (typeof erreur !== 'undefined') { %>
                             <div class="invalid-feedback">
                                 Saisie incorrecte.
                             </div>
                         <% } %>
+                        
+                            
+                        <button type="submit" style="position: absolute; right: 43%; margin-top:15px; border: none; background: none; color: red;" ></i> Oublié mot de passe</button>
+                    
+                 
                         <script>
                             function myFunction() {
                               var x = document.getElementById("motdepasse");
