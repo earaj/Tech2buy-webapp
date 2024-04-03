@@ -544,6 +544,63 @@ app.get("/parametreUtilisateur", function(req, res) {
     }
 });
 
+// //Fonction pour ajouter un produit au panier
+// app.post("/ajouterAuPanier", function(req, res) {
+//     if (!req.session.userId) {
+//         return res.redirect("/pageConnexion");
+//     }
+
+//     const idUtilisateur = req.session.userId;
+//     const id_produit = req.body.id_produit; 
+//     const quantite = req.body.quantite || 1;
+    
+//     if (!id_produit) {
+//         console.error('id_produit est null');
+//         return res.status(400).send("Produit non spécifié.");
+//     }
+
+//     //Rechercher un panier existant pour l'utilisateur
+//     const queryFindPanier = "SELECT id_panier FROM panier WHERE id_utilisateur = ? LIMIT 1";
+//     con.query(queryFindPanier, [idUtilisateur], (err, paniers) => {
+//         if (err) {
+//             console.error("Erreur lors de la recherche du panier : ", err);
+//             return res.status(500).send("Erreur lors de la recherche du panier.");
+//         }
+
+//         let id_panier;
+//         if (paniers.length > 0) {
+//             id_panier = paniers[0].id_panier;
+//         } else {
+//             //S'il n'y a pas de panier, ca créer un nouveau
+//             const queryCreatePanier = "INSERT INTO panier (id_utilisateur, date_ajout) VALUES (?, NOW())";
+//             con.query(queryCreatePanier, [idUtilisateur], (err, result) => {
+//                 if (err) {
+//                     console.error("Erreur lors de la création du panier : ", err);
+//                     return res.status(500).send("Erreur lors de la création du panier.");
+//                 }
+//                 id_panier = result.insertId;
+//                 ajouterProduitAuPanier(id_panier, id_produit, quantite);
+//             });
+//         }
+
+//         if (id_panier) {
+//             ajouterProduitAuPanier(id_panier, id_produit, quantite);
+//         }
+//     });
+
+//     function ajouterProduitAuPanier(id_panier, id_produit, quantite) {
+//         const queryAjouterAuPanier = "INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)";
+//         con.query(queryAjouterAuPanier, [id_panier, id_produit, quantite], (err, result) => {
+//             if (err) {
+//                 console.error("Erreur lors de l'ajout au panier : ", err);
+//                 return res.status(500).send("Erreur lors de l'ajout au panier.");
+//             }
+//             res.redirect("back");
+//         });
+//     }
+// });
+
+
 //Fonction pour ajouter un produit au panier
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
@@ -559,46 +616,69 @@ app.post("/ajouterAuPanier", function(req, res) {
         return res.status(400).send("Produit non spécifié.");
     }
 
-    //Rechercher un panier existant pour l'utilisateur
-    const queryFindPanier = "SELECT id_panier FROM panier WHERE id_utilisateur = ? LIMIT 1";
-    con.query(queryFindPanier, [idUtilisateur], (err, paniers) => {
+    //Vérifier si le produit existe déjà dans le panier de l'utilisateur
+    const queryVerifierProduit = `
+        SELECT id_detail_panier, quantite
+        FROM detail_panier dp
+        JOIN panier p ON dp.id_panier = p.id_panier
+        WHERE p.id_utilisateur = ? AND dp.id_produit = ?
+        LIMIT 1
+    `;
+
+    con.query(queryVerifierProduit, [idUtilisateur, id_produit], (err, result) => {
         if (err) {
-            console.error("Erreur lors de la recherche du panier : ", err);
-            return res.status(500).send("Erreur lors de la recherche du panier.");
+            console.error("Erreur lors de la vérification du produit dans le panier : ", err);
+            return res.status(500).send("Erreur lors de la vérification du produit dans le panier.");
         }
 
-        let id_panier;
-        if (paniers.length > 0) {
-            id_panier = paniers[0].id_panier;
-        } else {
-            //S'il n'y a pas de panier, ca créer un nouveau
-            const queryCreatePanier = "INSERT INTO panier (id_utilisateur, date_ajout) VALUES (?, NOW())";
-            con.query(queryCreatePanier, [idUtilisateur], (err, result) => {
+        if (result.length > 0) {
+            //Si le produit existe déjà dans le panier, mettre à jour la quantité
+            const quantiteExistante = result[0].quantite;
+            const updatedQuantite = quantiteExistante + parseInt(quantite);
+
+            const queryUpdateQuantity = `
+                UPDATE detail_panier
+                SET quantite = ?
+                WHERE id_detail_panier = ?
+            `;
+
+            con.query(queryUpdateQuantity, [updatedQuantite, result[0].id_detail_panier], (err, updateResult) => {
                 if (err) {
-                    console.error("Erreur lors de la création du panier : ", err);
-                    return res.status(500).send("Erreur lors de la création du panier.");
+                    console.error("Erreur lors de la mise à jour de la quantité du produit dans le panier : ", err);
+                    return res.status(500).send("Erreur lors de la mise à jour de la quantité du produit dans le panier.");
                 }
-                id_panier = result.insertId;
-                ajouterProduitAuPanier(id_panier, id_produit, quantite);
-            });
-        }
 
-        if (id_panier) {
-            ajouterProduitAuPanier(id_panier, id_produit, quantite);
+                res.redirect("back");
+            });
+        } else {
+            //Si le produit n'existe pas dans le panier, l'ajouter
+            ajouterProduitAuPanier(idUtilisateur, id_produit, quantite);
         }
     });
 
-    function ajouterProduitAuPanier(id_panier, id_produit, quantite) {
+    function ajouterProduitAuPanier(id_utilisateur, id_produit, quantite) {
         const queryAjouterAuPanier = "INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)";
-        con.query(queryAjouterAuPanier, [id_panier, id_produit, quantite], (err, result) => {
+        //Récupérer l'ID du panier de l'utilisateur
+        const queryGetCartId = "SELECT id_panier FROM panier WHERE id_utilisateur = ? LIMIT 1";
+
+        con.query(queryGetCartId, [id_utilisateur], (err, result) => {
             if (err) {
-                console.error("Erreur lors de l'ajout au panier : ", err);
-                return res.status(500).send("Erreur lors de l'ajout au panier.");
+                console.error("Erreur lors de la récupération de l'ID du panier de l'utilisateur : ", err);
+                return res.status(500).send("Erreur lors de la récupération de l'ID du panier de l'utilisateur.");
             }
-            res.redirect("back");
+
+            const id_panier = result[0].id_panier;
+            con.query(queryAjouterAuPanier, [id_panier, id_produit, quantite], (err, insertResult) => {
+                if (err) {
+                    console.error("Erreur lors de l'ajout au panier : ", err);
+                    return res.status(500).send("Erreur lors de l'ajout au panier.");
+                }
+                res.redirect("back");
+            });
         });
     }
 });
+
 
 //Fonction pour déconnecter l'utilisateur
 app.get("/deconnect", function(req, res) {
