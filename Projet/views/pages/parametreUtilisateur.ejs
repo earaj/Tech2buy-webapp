@@ -73,7 +73,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="nom_utilisateur">Nom utilisateur</label>
-                                <input type="text" class="form-control" id="nom_utilisateur" name="nom_utilisateur" placeholder="Entrez votre nouveau nom utilisateur">
+                                <input type="text" class="form-control" id="nom_utilisateur" name="nom_utilisateur" placeholder="<%= utilisateur.nom_utilisateur %>">
                                 <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                             </div>
                         </div>
@@ -92,18 +92,18 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="prenom">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Entrez votre nouveau prénom...">
+                        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="<%= utilisateur.prenom %>">
                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="nom">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" placeholder="Entrez votre nouveau nom...">
+                        <input type="text" class="form-control" id="nom" name="nom" placeholder="<%= utilisateur.nom %>">
                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="adresse_courriel">Adresse courriel</label>
-                    <input type="email" class="form-control" id="adresse_courriel" name="adresse_courriel" placeholder="Entrez votre nouvelle adresse courriel">
+                    <input type="email" class="form-control" id="adresse_courriel" name="adresse_courriel" placeholder="<%= utilisateur.adresse_courriel %>">
                     <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                 </div>
                 <div class="form-group">
