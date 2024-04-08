@@ -9,8 +9,14 @@
 </head>
 <%- include ("../partials/header.ejs") %>
 
+<script>
+    function envoyer(){
+        alert("Un lien a été envoié")
+    }
+</script>
+
 <a href="./index">
-                    <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
+                <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
                 </a>
 <div class="row justify-content-center">
     <div class="col-auto">
@@ -30,7 +36,7 @@
         <br>
         <div class="row justify-content-center">
             <div class="col-auto">
-                <input class="btn btn-primary btn-lg" type="submit" value="Envoyer le lien">
+                <button onclick="envoyer()" class="btn btn-primary btn-lg" type="submit">Envoyer le lien</button>
             </div>
         </div><br><br><br><br><br><br><br>
         <div>
