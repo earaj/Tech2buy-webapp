@@ -166,6 +166,10 @@ app.get("/MiseAJourMotDePasse", function(req, res) {
     res.render("pages/parametresUtilisateur", {
     });
 });
+app.get("/paiement", function(req, res) {
+    res.render("pages/paiement", {
+    });
+});
 
 app.get("/mdpOublie", function(req, res) {
     res.render("pages/mdpOublie", {
