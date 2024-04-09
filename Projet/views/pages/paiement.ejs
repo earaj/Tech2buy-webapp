@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paiement</title>
+    <title>Application evenements</title>
+    <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="commun.css" />
+    <script src="/js/bootstrap.min.js"></script>
 </head>
-<header>
-    <%- include("../partials/headTech2buy.ejs") %>
-</header>
+<%- include ("../partials/header.ejs") %>
 <body>
+    <a href="./panier">
+        <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex">Annuler la transaction</label>
+    </a>
+
     
 </body>
 </html>
