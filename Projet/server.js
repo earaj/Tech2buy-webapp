@@ -99,23 +99,129 @@ con.connect(function(err){
 });
 
 
+
+// import { MongoClient } from 'mongodb';
+// const url = 'mongodb://localhost:27017'; // URL de votre serveur MongoDB
+// const dbName = 'mybd'; // Nom de votre base de données
+
+// let db;
+
+// const connectDB = async () => {
+//   try {
+//     const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+//     db = client.db(dbName);
+//     console.log("Connecté à MongoDB");
+//   } catch (err) {
+//     console.error("Erreur lors de la connexion à MongoDB", err);
+//     process.exit(1);
+//   }
+// };
+
+// const getDB = () => {
+//   if (!db) {
+//     throw Error("La base de données n'est pas encore initialisée");
+//   }
+//   return db;
+// };
+
+// export { connectDB, getDB };
+
+
+import { MongoClient } from 'mongodb';
+
+// Configuration MongoDB
+const url = 'mongodb://localhost:27017';
+const dbName = 'mybd';
+let db;
+
+async function connectDB() {
+  try {
+    const client = await MongoClient.connect(url);
+    db = client.db(dbName);
+    console.log("Connecté à MongoDB");
+
+    setupRoutes();
+  } catch (err) {
+    console.error("Erreur lors de la connexion à MongoDB", err);
+  }
+};
+
+function getDB() {
+  if (!db) {
+    throw Error("La base de données n'est pas encore initialisée");
+  }
+  return db;
+};
+
+
+function setupRoutes() {
+app.post("/inscription", async function(req, res) {
+    const db = getDB(); // Obtenez la référence de la base de données
+
+    //Vérifier d'abord si l'adresse courriel existe déjà
+    try {
+        const utilisateurExistant = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
+        if (utilisateurExistant) {
+            // Si un utilisateur existe déjà avec cette adresse courriel, renvoyez une erreur
+            return res.redirect("/inscription?erreur=emailExistant");
+        }
+
+        //Si l'utilisateur n'existe pas, hachez le mot de passe et créez l'utilisateur
+        bcrypt.hash(req.body.mot_de_passe, saltRounds, async function(err, hash) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send("Erreur lors du hachage du mot de passe.");
+            }
+
+          
+            const nouvelUtilisateur = {
+                prenom: req.body.prenom,
+                nom: req.body.nom,
+                nom_utilisateur: req.body.nom_utilisateur,
+                adresse_courriel: req.body.adresse_courriel,
+                mot_de_passe: hash, // Mot de passe haché
+                mot_de_passe_clair: req.body.mot_de_passe // Mot de passe en clair
+            };
+
+            //Essayez d'insérer le nouvel utilisateur dans la collection 'utilisateurs'
+            try {
+                await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
+                res.redirect("/pageConnexion");
+            } catch (err) {
+                // Si une erreur se produit lors de l'insertion, probablement à cause de l'index unique
+                if (err && err.code === 11000) {
+                    // Gérer spécifiquement l'erreur d'index unique
+                    return res.redirect("/inscription?erreur=emailExistant");
+                } else {
+                    console.error(err);
+                    return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
+                }
+            }
+        });
+    } catch (err) {
+        console.error("Erreur lors de la vérification de l'utilisateur:", err);
+        return res.status(500).send("Erreur serveur lors de la vérification.");
+    }
+});
+}
+
+connectDB();
+
+
+
 /*
     Description des routes
 */
 app.get("/", function (req,res){
-    
-        
-        res.render("pages/index", {
-        });
+    res.render("pages/index", {
     });
-
-
-
+});
 
 //Permet aller au page connexion
 app.get("/pageConnexion", function(req, res) {
     res.render("pages/pageConnexion", { erreur: req.query.erreur });
 });
+
 //permet aller au page index
 app.get("/index", function(req, res) {
     res.render("pages/index", {
@@ -226,50 +332,46 @@ app.get("/panier", function(req, res) {
     });
 });
 
+//Fonction pour déconnecter l'utilisateur
+app.get("/deconnect", function(req, res) {
+
+    req.session.destroy(function(err) {
+        if(err) {
+            console.error("Erreur de deconnexion de session: ", err);
+            return res.status(500).send("Erreur de deconnexion");
+        }
+        res.redirect("/pageConnexion");
+    });
+})
+//SQL
 // //Fonction pour la creation de compte utilisateurs
 // app.post("/inscription", function(req, res) {
-//     const requete  = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe) VALUES (?, ?, ?, ?, ?)";
-//     const parametres = [
-//       req.body.prenom,
-//       req.body.nom,
-//       req.body.nom_utilisateur,
-//       req.body.adresse_courriel,
-//       req.body.mot_de_passe
-//     ];
-//     con.query(requete, parametres, function(err, result) {
-//       if (err) throw err;
-//       res.redirect("/pageConnexion");
-//     });
-//   });
-
-//Fonction pour la creation de compte utilisateurs
-app.post("/inscription", function(req, res) {
-    //Hacher le mot de passe avant de l'insérer
-    bcrypt.hash(req.body.mot_de_passe, saltRounds, function(err, hash) {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Erreur lors du hachage du mot de passe.");
-        }
+//     //Hacher le mot de passe avant de l'insérer
+//     bcrypt.hash(req.body.mot_de_passe, saltRounds, function(err, hash) {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).send("Erreur lors du hachage du mot de passe.");
+//         }
         
-        const requete = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe, mot_de_passe_clair) VALUES (?, ?, ?, ?, ?, ?)";
-        const parametres = [
-            req.body.prenom,
-            req.body.nom,
-            req.body.nom_utilisateur,
-            req.body.adresse_courriel,
-            hash, //Mot de passe haché
-            req.body.mot_de_passe //Mot de passe en clair
-        ];
+//         const requete = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe, mot_de_passe_clair) VALUES (?, ?, ?, ?, ?, ?)";
+//         const parametres = [
+//             req.body.prenom,
+//             req.body.nom,
+//             req.body.nom_utilisateur,
+//             req.body.adresse_courriel,
+//             hash, //Mot de passe haché
+//             req.body.mot_de_passe //Mot de passe en clair
+//         ];
 
-        con.query(requete, parametres, function(err, result) {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
-            }
-            res.redirect("/pageConnexion");
-        });
-    });
-});
+//         con.query(requete, parametres, function(err, result) {
+//             if (err) {
+//                 console.error(err);
+//                 return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
+//             }
+//             res.redirect("/pageConnexion");
+//         });
+//     });
+// });
 
 //Fonction pour la connection au compte des utilisateurs
 // app.post("/connexion", function(req, res) {
@@ -290,43 +392,83 @@ app.post("/inscription", function(req, res) {
 //     });
 // });
 
-//Fonction pour la connexion au compte des utilisateurs
-app.post("/connexion", function(req, res) {
-    const requete = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ?";
-    const courriel = req.body.courriel;
+// //Fonction pour la connexion au compte des utilisateurs
+// app.post("/connexion", function(req, res) {
+//     const requete = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ?";
+//     const courriel = req.body.courriel;
     
-    con.query(requete, [courriel], function(err, result) {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Erreur lors de la recherche de l'utilisateur.");
+//     con.query(requete, [courriel], function(err, result) {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).send("Erreur lors de la recherche de l'utilisateur.");
+//         }
+//         if (result.length > 0) {
+//             const utilisateur = result[0];
+//             bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, function(err, isMatch) {
+//                 if (err) {
+//                     console.error(err);
+//                     return res.status(500).send("Erreur lors de la vérification du mot de passe.");
+//                 }
+//                 if (isMatch) {
+//                     req.session.userId = utilisateur.id_utilisateur;
+//                     req.session.save(function(err) {
+//                         if (err) {
+//                             console.error(err);
+//                             return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+//                         }
+//                         res.redirect("/pageAffichagePrincipale");
+//                     });
+//                 } else {
+//                     //Mot de passe incorrect
+//                     res.redirect("/pageConnexion?erreur=1");
+//                 }
+//             });
+//         } else {
+//             //Aucun utilisateur trouvé avec cet e-mail
+//             res.redirect("/pageConnexion?erreur=1");
+//         }
+//     });
+// });
+
+//NoSQL
+app.post("/connexion", async function(req, res) {
+    const courriel = req.body.courriel;
+    console.log(`Tentative de connexion pour l'email: ${courriel}`);
+
+    try {
+        const db = getDB();
+        const utilisateur = await db.collection('utilisateurs').findOne({ adresse_courriel: courriel });
+
+        if (!utilisateur) {
+            console.log("Aucun utilisateur trouvé avec cet email");
+            return res.redirect("/pageConnexion?erreur=1");
         }
-        if (result.length > 0) {
-            const utilisateur = result[0];
-            bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, function(err, isMatch) {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).send("Erreur lors de la vérification du mot de passe.");
-                }
-                if (isMatch) {
-                    req.session.userId = utilisateur.id_utilisateur;
-                    req.session.save(function(err) {
-                        if (err) {
-                            console.error(err);
-                            return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-                        }
-                        res.redirect("/pageAffichagePrincipale");
-                    });
-                } else {
-                    //Mot de passe incorrect
-                    res.redirect("/pageConnexion?erreur=1");
-                }
-            });
-        } else {
-            //Aucun utilisateur trouvé avec cet e-mail
-            res.redirect("/pageConnexion?erreur=1");
-        }
-    });
+
+        bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, (err, isMatch) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send("Erreur lors de la vérification du mot de passe.");
+            }
+            if (isMatch) {
+                req.session.userId = utilisateur._id;
+                req.session.save(err => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+                    }
+                    return res.redirect("/pageAffichagePrincipale");
+                });
+            } else {
+                console.log("Mot de passe incorrect");
+                return res.redirect("/pageConnexion?erreur=1");
+            }
+        });
+    } catch (err) {
+        console.error("Erreur lors de la recherche de l'utilisateur:", err);
+        res.status(500).send("Erreur lors de la connexion.");
+    }
 });
+
 
 app.get('/detailProduit', (req, res) => {
     const productID = req.query.id;
@@ -571,63 +713,6 @@ app.get("/parametreUtilisateur", function(req, res) {
     }
 });
 
-// //Fonction pour ajouter un produit au panier
-// app.post("/ajouterAuPanier", function(req, res) {
-//     if (!req.session.userId) {
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     const idUtilisateur = req.session.userId;
-//     const id_produit = req.body.id_produit; 
-//     const quantite = req.body.quantite || 1;
-    
-//     if (!id_produit) {
-//         console.error('id_produit est null');
-//         return res.status(400).send("Produit non spécifié.");
-//     }
-
-//     //Rechercher un panier existant pour l'utilisateur
-//     const queryFindPanier = "SELECT id_panier FROM panier WHERE id_utilisateur = ? LIMIT 1";
-//     con.query(queryFindPanier, [idUtilisateur], (err, paniers) => {
-//         if (err) {
-//             console.error("Erreur lors de la recherche du panier : ", err);
-//             return res.status(500).send("Erreur lors de la recherche du panier.");
-//         }
-
-//         let id_panier;
-//         if (paniers.length > 0) {
-//             id_panier = paniers[0].id_panier;
-//         } else {
-//             //S'il n'y a pas de panier, ca créer un nouveau
-//             const queryCreatePanier = "INSERT INTO panier (id_utilisateur, date_ajout) VALUES (?, NOW())";
-//             con.query(queryCreatePanier, [idUtilisateur], (err, result) => {
-//                 if (err) {
-//                     console.error("Erreur lors de la création du panier : ", err);
-//                     return res.status(500).send("Erreur lors de la création du panier.");
-//                 }
-//                 id_panier = result.insertId;
-//                 ajouterProduitAuPanier(id_panier, id_produit, quantite);
-//             });
-//         }
-
-//         if (id_panier) {
-//             ajouterProduitAuPanier(id_panier, id_produit, quantite);
-//         }
-//     });
-
-//     function ajouterProduitAuPanier(id_panier, id_produit, quantite) {
-//         const queryAjouterAuPanier = "INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)";
-//         con.query(queryAjouterAuPanier, [id_panier, id_produit, quantite], (err, result) => {
-//             if (err) {
-//                 console.error("Erreur lors de l'ajout au panier : ", err);
-//                 return res.status(500).send("Erreur lors de l'ajout au panier.");
-//             }
-//             res.redirect("back");
-//         });
-//     }
-// });
-
-
 //Fonction pour ajouter un produit au panier
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
@@ -705,19 +790,6 @@ app.post("/ajouterAuPanier", function(req, res) {
         });
     }
 });
-
-
-//Fonction pour déconnecter l'utilisateur
-app.get("/deconnect", function(req, res) {
-
-    req.session.destroy(function(err) {
-        if(err) {
-            console.error("Erreur de deconnexion de session: ", err);
-            return res.status(500).send("Erreur de deconnexion");
-        }
-        res.redirect("/pageConnexion");
-    });
-})
 
 //Supprimer une produit de panier
 app.post("/supprimerDuPanier", function(req, res) {
