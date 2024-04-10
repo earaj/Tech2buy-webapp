@@ -273,9 +273,32 @@ app.get("/MiseAJourMotDePasse", function(req, res) {
     });
 });
 app.get("/paiement", function(req, res) {
-    res.render("pages/paiement", {
+    const idUtilisateur = req.session.userId;
+
+    if (!idUtilisateur) {
+        // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+        return res.redirect("/pageConnexion");
+    }
+
+    const queryPanier = `
+        SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
+        FROM produit p
+        JOIN detail_panier dp ON p.id_produit = dp.id_produit
+        JOIN panier pa ON dp.id_panier = pa.id_panier
+        WHERE pa.id_utilisateur = ?
+    `;
+
+    con.query(queryPanier, [idUtilisateur], (err, produits) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des produits du panier : ", err);
+            return res.status(500).send("Erreur lors de la récupération des produits du panier.");
+        }
+
+        // Passer les données du panier à la page de paiement
+        res.render("pages/paiement", { panier: produits });
     });
 });
+
 
 app.get("/mdpOublie", function(req, res) {
     res.render("pages/mdpOublie", {
