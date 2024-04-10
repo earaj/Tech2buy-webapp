@@ -1,3 +1,6 @@
+<head>
+    <meta name="google-signin-client_id" content="842047957065-6t4t5dba6dbc02ljft6mrditoemap9sf.apps.googleusercontent.com">
+</head>
 <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
 <style>
     .paragraphe-princ {
@@ -45,6 +48,14 @@
 <%- include ("../partials/header.ejs") %>
 
     <body>
+        <script src="https://apis.google.com/js/platform.js" async defer>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+          }</script>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-1">
@@ -71,7 +82,10 @@
                     <a href="./pageConnexion">
                         <button class="btn btn-primary custom-button">Se connecter</button></a>
 <br><br>
+                        <span>
                         <a href="pageAffichagePrincipale"> <h5>Accéder sans se connecter</h5></a>
+                        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                        </span>
                 </div>
             </div>
         </div>
