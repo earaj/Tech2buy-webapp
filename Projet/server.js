@@ -183,8 +183,10 @@ app.post("/inscription", async function(req, res) {
                 mot_de_passe_clair: req.body.mot_de_passe // Mot de passe en clair
             };
 
-            //Essayez d'insérer le nouvel utilisateur dans la collection 'utilisateurs'
-            try {
+
+
+             //Essayez d'insérer le nouvel utilisateur dans la collection 'utilisateurs'
+             try {
                 await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
                 res.redirect("/pageConnexion");
             } catch (err) {
@@ -197,6 +199,38 @@ app.post("/inscription", async function(req, res) {
                     return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
                 }
             }
+
+        /////////////////////test (DON'T TOUCH, OR I WILL CUT YOUR HAND)
+            /**
+            try {
+                const utilisateur = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
+                bcrypt.compare(req.body.mot_de_passe_clair, utilisateur.mot_de_passe, (err, isMatch) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send("Erreur lors de la vérification du mot de passe.");
+                    }
+                    if (isMatch) {
+                        req.session.userId = utilisateur._id;
+                        req.session.save(err => {
+                            if (err) {
+                                console.error(err);
+                                return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+                            }
+                            return res.redirect("/pageAffichagePrincipale");
+                        });
+                    } else {
+                        console.log("Mot de passe incorrect");
+                        return res.redirect("/pageConnexion?erreur=1");
+                    }
+                });
+             } catch (err) {
+                console.error(err);
+                return res.status(500).send("Erreur lors de la recherche de l'utilisateur.");
+             }
+            
+            ///////////////////////
+        */
+           
         });
     } catch (err) {
         console.error("Erreur lors de la vérification de l'utilisateur:", err);
