@@ -49,13 +49,32 @@
 
     <body>
         <script src="https://apis.google.com/js/platform.js" async defer>
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-          }</script>
+   function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    let nomComplet = profile.getName();
+    let email = profile.getEmail();
+
+    // Construisez l'objet data avec les informations nécessaires
+    let data = { nomComplet: nomComplet, email: email };
+
+    // Utilisez Fetch API pour envoyer les données à votre serveur
+    fetch('/mdpGoogle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Redirection de l'utilisateur vers la page pour entrer le mot de passe
+        window.location.href = '/motDePasseGoogle';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+    </script>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-1">

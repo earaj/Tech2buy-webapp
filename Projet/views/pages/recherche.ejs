@@ -51,6 +51,69 @@
     });
   });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+  var sortLinks = document.querySelectorAll('.sort-link');
+  
+  sortLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      var sortMode = this.getAttribute('data-sort');
+      fetch(`/recherche?query=<%= searchTerm %>&sortBy=` + sortMode)
+        .then(response => response.json())
+        .then(data => {
+          // Mettez à jour l'affichage des résultats ici
+          updateResultsDisplay(data);
+        });
+    });
+  });
+
+  function updateResultsDisplay(items) {
+    var resultsContainer = document.querySelector('.row');
+    resultsContainer.innerHTML = ''; // Effacez les résultats précédents
+
+    items.forEach(function(item) {
+      // Créez et ajoutez ici les nouveaux éléments HTML pour chaque résultat
+      var cardHtml = `<% if (items.length) { %>
+                <% items.forEach(function(item) { %>
+                      <div class="col-md-3">
+                        <div class="card" style="width: 16rem;">
+                            <% if (item.image_url) { %>
+                                <img src="<%= item.image_url %>" class="card-img-top" alt="<%= item.nom_produit %>">
+                            <% } %>
+                            <div class="card-body">
+                                <h5 class="card-title"><%= item.nom_produit %></h5>
+                                <p class="card-text">$<%= item.prix_unitaire %></p>
+                                <p class="card-text"><%= item.description_produit %></p>
+                                <form action="/ajouterAuPanier" method="post">
+                                    <input type="hidden" name="id_produit" value="<%= item.id_produit %>">
+                                    <input type="hidden" name="image_url" value="<%= item.image_url %>">
+                                    <input type="hidden" name="nom_produit" value="<%= item.nom_produit %>">
+                                    <input type="hidden" name="description_produit" value="<%= item.description_produit %>">
+                                    <input class="btn btn-primary btn-block col-8" type="submit" value="Ajouter au panier">
+                                    <label for="quantity">Qty:</label>
+                                    <input type="number" id="quantity" name="quantite" min="1" value="1" style="width: 15%;">
+                                </form>
+                                <a href="./detailProduit?id=<%= item.id_produit%>" class="btn btn-primary">Voir le produit</a>
+                            </div>
+                        </div>
+                        <% }); %>
+            <% } else { %>
+                <h3>Aucun résultat trouvé pour "<%= searchTerm %>"</h3>
+            <% } %>`;
+      resultsContainer.innerHTML += cardHtml;
+    });
+  }
+});
+
+function recherche(searchTerm, sortBy) {
+    fetch(`/recherche?query=${encodeURIComponent(searchTerm)}&sortBy=${sortBy}`)
+        .then(response => response.json())
+        .then(data => {
+            // Traiter les données reçues (par exemple, mettre à jour le DOM avec les résultats)
+            console.log(data); // Afficher les résultats dans la console pour le debug
+        })
+        .catch(error => console.error('Erreur lors de la recherche AJAX:', error));
+}
 </script>
 <body>
     <div class="container">

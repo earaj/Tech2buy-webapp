@@ -6,7 +6,7 @@ import express, { query } from "express";
 import session from "express-session";
 import path from "path";
 import {fileURLToPath} from "url";
-import mysql from "mysql";
+import mysql from "mysql2";
 //import mysql from "mysql2";
 import {body, validationResult} from "express-validator";
 import dateFormat from "dateformat";
@@ -815,6 +815,37 @@ app.post("/supprimerDuPanier", function(req, res) {
         }
         res.redirect("/panier");
     });
+});
+
+function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    let nomComplet = profile.getName();
+    let email = profile.getEmail();
+    let [prenom, ...nomParts] = nomComplet.split(' ');
+    let nom = nomParts.join(' '); 
+    const query = `INSERT INTO utilisateurs (prenom, nom, nom_utilisateur, adresse_courriel) VALUES (?, ?, ?, ?)`;
+
+    // Utilisation de la connexion à la base de données existante
+    // Supposons que 'db' est votre client de base de données MySQL
+    db.execute(query, [prenom, nom, prenom, email], (err, results) => {
+        if (err) {
+            // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
+            console.error('Erreur lors de l\'insertion dans la base de données:', err);
+        } else {
+            // Opération réussie
+            console.log('Utilisateur ajouté avec succès dans la base de données.');
+        }
+    });
+}
+
+app.post('mdpGoogle', (req, res) => {
+    const { nomComplet, email } = req.body;
+    // Divisez le nomComplet en prénom et nom si nécessaire
+    // Stockez les informations nécessaires dans la session ou temporairement
+
+    // Redirection vers motDePasseGoogle.ejs
+    // Vous pouvez aussi passer des données à la vue si nécessaire
+    res.render('/motDePasseGoogle', { email: email });
 });
 
 
