@@ -838,14 +838,10 @@ function onSignIn(googleUser) {
     });
 }
 
-app.post('mdpGoogle', (req, res) => {
+app.post('/mdpGoogle', (req, res) => {
     const { nomComplet, email } = req.body;
-    // Divisez le nomComplet en prénom et nom si nécessaire
-    // Stockez les informations nécessaires dans la session ou temporairement
-
-    // Redirection vers motDePasseGoogle.ejs
-    // Vous pouvez aussi passer des données à la vue si nécessaire
-    res.render('/motDePasseGoogle', { email: email });
+    // Traitement des données ici, comme l'enregistrement dans la base de données
+    // Après le traitement, redirigez vers la route souhaitée
+    res.redirect('/motDePasseGoogle'); // Utilisez redirect pour une redirection côté serveur
 });
-
 

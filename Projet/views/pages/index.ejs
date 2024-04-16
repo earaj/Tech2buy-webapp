@@ -48,32 +48,32 @@
 <%- include ("../partials/header.ejs") %>
 
     <body>
-        <script src="https://apis.google.com/js/platform.js" async defer>
-   function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    let nomComplet = profile.getName();
-    let email = profile.getEmail();
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            let nomComplet = profile.getName();
+            let email = profile.getEmail();
 
-    // Construisez l'objet data avec les informations nécessaires
-    let data = { nomComplet: nomComplet, email: email };
+            // Construisez l'objet data avec les informations nécessaires
+            let data = { nomComplet: nomComplet, email: email };
 
-    // Utilisez Fetch API pour envoyer les données à votre serveur
-    fetch('/mdpGoogle', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Redirection de l'utilisateur vers la page pour entrer le mot de passe
-        window.location.href = '/motDePasseGoogle';
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-}
+            // Utilisez Fetch API pour envoyer les données à votre serveur
+            fetch('/mdpGoogle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            }
     </script>
         <div class="container-fluid">
             <div class="row">
