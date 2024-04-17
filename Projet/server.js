@@ -808,15 +808,12 @@ app.get("/parametreUtilisateur", function(req, res) {
     }
 });
 
-<<<<<<< Updated upstream
-app.post("/parametreUtilisateur", function(req, res) {
+// app.post("/parametreUtilisateur", function(req, res) {
 
-});
+// });
 
 //Fonction pour ajouter un produit au panier
-=======
 
->>>>>>> Stashed changes
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
         return res.redirect("/pageConnexion");
