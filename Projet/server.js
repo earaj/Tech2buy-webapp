@@ -968,20 +968,20 @@ app.post('mdpGoogle', (req, res) => {
 //Ne toucher pas
 
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer)
-/**
-const nodemailer = require("nodemailer");
+/** 
+const nodemailer = import('nodemailer');
+var smtpTransport = import('nodemailer-smtp-transport');
 
-
-const transporter = nodemailer.createTransport({
-    service: "Gmail", 
+var transporter = nodemailer.createTransport(smtpTransport({
+    service: 'Gmail',
+    host: 'smtp.gmail.com',
     auth: {
-        user: "email@exemple.com",
-        pass: "email-pass"
+        user: 'techbuy849@gmail.com',
+        pass: 'groupygroup'
     }
-});
+}));
 
-function envoieCourriel(email, resetLink) {
-    const mailOptions = {
+    var mailOptions = {
         from: "email@exemple.com",
         to: email,
         subject: "Reinitialisation de mot de passe",
@@ -995,12 +995,13 @@ function envoieCourriel(email, resetLink) {
             console.log("Email sent:", info.response);
         }
     });
-}
+
 //crrrre un pg
 app.post("/reset-password", function(req, res) {
     const email = req.body.courriel;
     const resetLink = "localhost:4000/"; // une page pour chnager le mot de passe
     envoieCourriel(email, resetLink);
     res.send("Envoie!");
-}); 
-*/
+}); */
+
+//https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs

@@ -12,24 +12,32 @@
 
 <script>
     function validation() {
-
-        var pw1 = document.getElementById("mot_de_passe").value;
-        var pw2 = document.getElementById("pswd2").value;
-        if (pw1 != pw2) {
-            document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
-            return false;
-        } else {
-            // window.location.href = "http://localhost:4000/pageAffichagePrincipale"; 
-            alert("Création de compte avec Succès!");
-        }
-    }
-
-
+   var pw1 = document.getElementById("mot_de_passe").value;
+   var pw2 = document.getElementById("pswd2").value;
+   // Verifier si les mot de pass correspond
+   if (pw1 !== pw2) {
+       document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
+       return false;
+   } else {
+       // Veifier si le mot de passe est fort
+       if (pw1.length < 8) {
+           document.getElementById("message2").innerHTML = "**Le mot de passe doit contenir au moins 8 caractères**";
+           return false;
+       } else if (!/[a-z]/.test(pw1) || !/[A-Z]/.test(pw1) || !/[0-9]/.test(pw1)) {
+           document.getElementById("message2").innerHTML = "**Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre**";
+           return false;
+       } else if (!/[^a-zA-Z0-9]/.test(pw1)) {
+           document.getElementById("message2").innerHTML = "**Le mot de passe doit contenir au moins un caractère spécial**";
+           return false;
+       } else {
+           alert("Création de compte avec Succès!");
+           return true;
+       }
+   }
+}
 </script>
 <style>
     .image {
-
-
         right: 0%;
         top: 0%;
     }
@@ -44,7 +52,7 @@
         line-height: normal
     }
 </style>
-<!-- <form onsubmit = "return validation()" action="/inscription" method="post"> -->
+
 <form onsubmit="return validation()" action="/inscription" method="post">
 
     <div class="row">
