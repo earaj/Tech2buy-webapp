@@ -182,55 +182,25 @@ app.post("/inscription", async function(req, res) {
                 mot_de_passe: hash, // Mot de passe haché
                 mot_de_passe_clair: req.body.mot_de_passe // Mot de passe en clair
             };
-
-
-
-             //Essayez d'insérer le nouvel utilisateur dans la collection 'utilisateurs'
-             try {
+            try {
                 await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
-                res.redirect("/pageConnexion");
+                
+                req.session.userId = nouvelUtilisateur._id;
+                req.session.save(err => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+                    }
+                    return res.redirect("/pageAffichagePrincipale");
+                });
             } catch (err) {
-                // Si une erreur se produit lors de l'insertion, probablement à cause de l'index unique
                 if (err && err.code === 11000) {
-                    // Gérer spécifiquement l'erreur d'index unique
                     return res.redirect("/inscription?erreur=emailExistant");
                 } else {
                     console.error(err);
                     return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
                 }
             }
-
-        /////////////////////test (DON'T TOUCH, OR I WILL CUT YOUR HAND)
-            /**
-            try {
-                const utilisateur = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
-                bcrypt.compare(req.body.mot_de_passe_clair, utilisateur.mot_de_passe, (err, isMatch) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).send("Erreur lors de la vérification du mot de passe.");
-                    }
-                    if (isMatch) {
-                        req.session.userId = utilisateur._id;
-                        req.session.save(err => {
-                            if (err) {
-                                console.error(err);
-                                return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-                            }
-                            return res.redirect("/pageAffichagePrincipale");
-                        });
-                    } else {
-                        console.log("Mot de passe incorrect");
-                        return res.redirect("/pageConnexion?erreur=1");
-                    }
-                });
-             } catch (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors de la recherche de l'utilisateur.");
-             }
-            
-            ///////////////////////
-        */
-           
         });
     } catch (err) {
         console.error("Erreur lors de la vérification de l'utilisateur:", err);
@@ -883,3 +853,42 @@ app.post('mdpGoogle', (req, res) => {
 });
 
 
+//Ne toucher pas
+
+//Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer)
+/**
+const nodemailer = require("nodemailer");
+
+
+const transporter = nodemailer.createTransport({
+    service: "Gmail", 
+    auth: {
+        user: "email@exemple.com",
+        pass: "email-pass"
+    }
+});
+
+function envoieCourriel(email, resetLink) {
+    const mailOptions = {
+        from: "email@exemple.com",
+        to: email,
+        subject: "Reinitialisation de mot de passe",
+        text: `Click ici pour changer votre mot de passe ${resetLink}`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.error("Error sending email:", error);
+        } else {
+            console.log("Email sent:", info.response);
+        }
+    });
+}
+//crrrre un pg
+app.post("/reset-password", function(req, res) {
+    const email = req.body.courriel;
+    const resetLink = "localhost:4000/"; // une page pour chnager le mot de passe
+    envoieCourriel(email, resetLink);
+    res.send("Envoie!");
+}); 
+*/
