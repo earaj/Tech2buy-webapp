@@ -1,23 +1,135 @@
-<nav class="navbar navbar-expand-lg navbar-light themePrincipal">
-	<a href="./pageAffichagePrincipale" class="nav-brand" style="margin-left: 5%;">
-		<img src="output-onlinepngtools 1.png" style="height: 80px; width: 200px; margin-right: 40px;" />
-	</a>
-	<ul class="navbar-nav mr-auto">
-		<li class="nav-item active" style="margin-right: 700px;">
-			<form action="/recherche" method="get">
-				<input name="query" class="nav-item form-control" type="text" placeholder="Rechercher Tech2buy">
-				<button type="cherche" style="margin-top: -30px; margin-left: 250px;">Search</button>
-			</form>
-		</li>
-	</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Site</title>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-	<a class="nav-link" href="/parametreUtilisateur" style="font-size:larger">
-		<img src="image 4.png">Paramètre d’utilisateur</a>
-	&nbsp;&nbsp;
-	<a class="nav-link " href="/panier" style="font-size:larger">
-		<img src="image 3.png"> Panier</a>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="nav-link" href="/deconnect" style="font-size: larger;">
-		<img src="logout.png" style="height: 7%; width: 7%;"> Déconnexion
-	</a>
-</nav>
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* Set background color to white */
+        }
+
+        .navbar {
+            background-color: #C0DDFF; /* Best Buy's blue color */
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            position: relative;
+            z-index: 1; /* Ensure the navbar stays on top of other content */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Add a subtle shadow for depth */
+            animation: fadeIn 1s;
+        }
+
+        .navbar-brand img {
+            height: 80px;
+            width: 200px;
+            margin-right: 40px;
+            animation: fadeIn 1s;
+        }
+
+        .navbar-nav {
+            margin-right: 700px;
+            animation: fadeIn 1s;
+        }
+
+        .nav-item form {
+            animation: fadeIn 1s;
+        }
+
+        .nav-item input[type="text"] {
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .nav-item input[type="text"]:focus {
+            outline: none;
+            border-color: #C0DDFF; /* Change border color on focus */
+        }
+
+        .nav-item button[type="cherche"] {
+            border: none;
+            background-color: #C0DDFF;
+            color: #fff;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-item button[type="cherche"]:hover {
+            background-color: #C0DDFF; /* Darken background color on hover */
+        }
+
+        .nav-link {
+            font-size: larger;
+            display: inline-block;
+            margin-right: 20px;
+            animation: fadeIn 1s;
+        }
+
+        .nav-link img {
+            height: 30px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .nav-link:hover {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a href="./pageAffichagePrincipale" class="navbar-brand" style="margin-left: 5%;">
+            <img src="output-onlinepngtools 1.png" alt="Your Logo">
+        </a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <form action="/recherche" method="get">
+                    <input name="query" class="nav-item form-control" type="text" placeholder="Rechercher Tech2buy">
+                    <button type="cherche">Search</button> </input>
+                </form>
+            </li>
+        </ul>
+
+        <a class="nav-link" href="/parametreUtilisateur">
+            <img src="image 4.png" height="60px">Paramètre d’utilisateur
+        </a>
+        <a class="nav-link" href="/panier">
+            <img src="image 3.png" height="45px">Panier
+        </a>
+        <a class="nav-link" href="/deconnect">
+            <img src="logout.png" height="30px">Déconnexion
+        </a>
+    </nav>
+</body>
+</html>

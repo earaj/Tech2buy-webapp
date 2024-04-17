@@ -276,32 +276,121 @@ app.get("/MiseAJourMotDePasse", function(req, res) {
     res.render("pages/parametresUtilisateur", {
     });
 });
-app.get("/paiement", function(req, res) {
-    const idUtilisateur = req.session.userId;
+// app.get("/paiement", function(req, res) {
+//     const idUtilisateur = req.session.userId;
 
+//     if (!idUtilisateur) {
+//         // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+//         return res.redirect("/pageConnexion");
+//     }
+
+//     const queryPanier = `
+//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
+//         FROM produit p
+//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
+//         JOIN panier pa ON dp.id_panier = pa.id_panier
+//         WHERE pa.id_utilisateur = ?
+//     `;
+
+//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
+//         if (err) {
+//             console.error("Erreur lors de la récupération des produits du panier : ", err);
+//             return res.status(500).send("Erreur lors de la récupération des produits du panier.");
+//         }
+
+//         // Passer les données du panier à la page de paiement
+//         res.render("pages/paiement", { panier: produits });
+//     });
+// });
+
+// // Modify the route handler for /paiement to pass the user's first and last name and email to the template
+// app.get("/paiement", function(req, res) {
+//     const idUtilisateur = req.session.userId;
+    
+//     if (!idUtilisateur) {
+//         // If the user is not logged in, redirect them to the login page
+//         return res.redirect("/pageConnexion");
+//     }
+
+//     const queryPanier = `
+//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
+//         FROM produit p
+//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
+//         JOIN panier pa ON dp.id_panier = pa.id_panier
+//         WHERE pa.id_utilisateur = ?
+//     `;
+
+//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
+//         if (err) {
+//             console.error("Error fetching products from cart: ", err);
+//             return res.status(500).send("Error fetching products from cart.");
+//         }
+
+//         // Pass the data to the payment page template
+//         res.render("pages/paiement", { 
+//             panier: produits,
+//             utilisateur: {
+//                 prenom: req.session.firstName,
+//                 nom: req.session.lastName,
+//                 nom_utilisateur: req.session.nom_utilisateur,
+//                 adresse_courriel: req.session.adresse_courriel
+//             }
+//         });
+//     });
+// });
+app.get("/paiement", async function(req, res) {
+    const idUtilisateur = req.session.userId;
+    
     if (!idUtilisateur) {
-        // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+        // If the user is not logged in, redirect them to the login page
         return res.redirect("/pageConnexion");
     }
 
-    const queryPanier = `
-        SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
-        FROM produit p
-        JOIN detail_panier dp ON p.id_produit = dp.id_produit
-        JOIN panier pa ON dp.id_panier = pa.id_panier
-        WHERE pa.id_utilisateur = ?
-    `;
+    try {
+        // Assuming `Panier` is your model for the shopping cart in your NoSQL database
+        const produits = await Panier.aggregate([
+            {
+                $match: { id_utilisateur: idUtilisateur }
+            },
+            {
+                $lookup: {
+                    from: "produit",
+                    localField: "id_produit",
+                    foreignField: "_id",
+                    as: "produits"
+                }
+            },
+            {
+                $unwind: "$produits"
+            },
+            {
+                $project: {
+                    _id: "$produits._id",
+                    nom_produit: "$produits.nom_produit",
+                    description_produit: "$produits.description_produit",
+                    image_url: "$produits.image_url",
+                    prix_unitaire: "$produits.prix_unitaire",
+                    quantite: "$quantite"
+                }
+            }
+        ]);
 
-    con.query(queryPanier, [idUtilisateur], (err, produits) => {
-        if (err) {
-            console.error("Erreur lors de la récupération des produits du panier : ", err);
-            return res.status(500).send("Erreur lors de la récupération des produits du panier.");
-        }
-
-        // Passer les données du panier à la page de paiement
-        res.render("pages/paiement", { panier: produits });
-    });
+        // Pass the data to the payment page template
+        res.render("pages/paiement", { 
+            panier: produits,
+            utilisateur: {
+                prenom: req.session.firstName,
+                nom: req.session.lastName,
+                nom_utilisateur: req.session.nom_utilisateur,
+                adresse_courriel: req.session.adresse_courriel
+            }
+        });
+    } catch (err) {
+        console.error("Error fetching products from cart: ", err);
+        return res.status(500).send("Error fetching products from cart.");
+    }
 });
+
 
 
 app.get("/mdpOublie", function(req, res) {
@@ -715,6 +804,10 @@ app.get("/parametreUtilisateur", function(req, res) {
         //Si non connecté, redirige vers la page de connexion
         res.redirect("/pageConnexion");
     }
+});
+
+app.post("/parametreUtilisateur", function(req, res) {
+
 });
 
 //Fonction pour ajouter un produit au panier
