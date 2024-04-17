@@ -70,6 +70,8 @@ const con = mysql.createConnection({
     database: "mybd"
 });
 
+
+
 con.connect(function(err){
     if(err) throw err;
     console.log("connected!");
@@ -127,7 +129,7 @@ con.connect(function(err){
 // export { connectDB, getDB };
 
 
-import { MongoClient } from 'mongodb';
+import { MongoClient,ObjectId } from 'mongodb';
 
 // Configuration MongoDB
 const url = 'mongodb://localhost:27017';
@@ -806,87 +808,104 @@ app.get("/parametreUtilisateur", function(req, res) {
     }
 });
 
-app.post("/parametreUtilisateur", function(req, res) {
+// app.post("/parametreUtilisateur", function(req, res) {
 
-});
+// });
 
 //Fonction pour ajouter un produit au panier
+
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
         return res.redirect("/pageConnexion");
     }
 
-    const idUtilisateur = req.session.userId;
-    const id_produit = req.body.id_produit; 
-    const quantite = req.body.quantite || 1;
-    
-    if (!id_produit) {
-        console.error('id_produit est null');
-        return res.status(400).send("Produit non spécifié.");
+    const idUtilisateurMongoDB = req.session.userId; // ID utilisateur dans MongoDB
+
+    // Assurez-vous que l'ID est au format attendu pour un ObjectId MongoDB
+    if (!ObjectId.isValid(idUtilisateurMongoDB)) {
+        console.error("ID utilisateur MongoDB invalide.");
+        return res.status(400).send("Erreur dans l'ID utilisateur.");
     }
 
-    //Vérifier si le produit existe déjà dans le panier de l'utilisateur
-    const queryVerifierProduit = `
-        SELECT id_detail_panier, quantite
-        FROM detail_panier dp
-        JOIN panier p ON dp.id_panier = p.id_panier
-        WHERE p.id_utilisateur = ? AND dp.id_produit = ?
-        LIMIT 1
-    `;
-
-    con.query(queryVerifierProduit, [idUtilisateur, id_produit], (err, result) => {
-        if (err) {
-            console.error("Erreur lors de la vérification du produit dans le panier : ", err);
-            return res.status(500).send("Erreur lors de la vérification du produit dans le panier.");
+    // Récupérer des informations d'utilisateur de MongoDB
+    db.collection('utilisateurs').findOne({ _id: new ObjectId(idUtilisateurMongoDB) }, async (err, utilisateurMongo) => {
+        if (err || !utilisateurMongo) {
+            console.error("Erreur ou utilisateur non trouvé dans MongoDB : ", err);
+            return res.status(500).send("Erreur serveur ou utilisateur non trouvé.");
         }
 
-        if (result.length > 0) {
-            //Si le produit existe déjà dans le panier, mettre à jour la quantité
-            const quantiteExistante = result[0].quantite;
-            const updatedQuantite = quantiteExistante + parseInt(quantite);
+        // À ce stade, vous avez accès aux informations de l'utilisateur de MongoDB
+        // Vous pouvez procéder avec la logique de gestion du panier en utilisant MySQL
 
-            const queryUpdateQuantity = `
-                UPDATE detail_panier
-                SET quantite = ?
-                WHERE id_detail_panier = ?
-            `;
+        const idUtilisateurSQL = utilisateurMongo._id; // Supposons que vous stockez l'ID SQL de l'utilisateur dans MongoDB
+        const id_produit = req.body.id_produit;
+        const quantite = parseInt(req.body.quantite) || 1;
 
-            con.query(queryUpdateQuantity, [updatedQuantite, result[0].id_detail_panier], (err, updateResult) => {
-                if (err) {
-                    console.error("Erreur lors de la mise à jour de la quantité du produit dans le panier : ", err);
-                    return res.status(500).send("Erreur lors de la mise à jour de la quantité du produit dans le panier.");
-                }
-
-                res.redirect("back");
-            });
-        } else {
-            //Si le produit n'existe pas dans le panier, l'ajouter
-            ajouterProduitAuPanier(idUtilisateur, id_produit, quantite);
+        if (!id_produit) {
+            console.error('id_produit est null');
+            return res.status(400).send("Produit non spécifié.");
         }
-    });
 
-    function ajouterProduitAuPanier(id_utilisateur, id_produit, quantite) {
-        const queryAjouterAuPanier = "INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)";
-        //Récupérer l'ID du panier de l'utilisateur
-        const queryGetCartId = "SELECT id_panier FROM panier WHERE id_utilisateur = ? LIMIT 1";
-
-        con.query(queryGetCartId, [id_utilisateur], (err, result) => {
+        // Vérifier d'abord si l'utilisateur a déjà un panier
+        con.query("SELECT id_panier FROM panier WHERE id_utilisateur = ?", [idUtilisateurSQL], (err, panier) => {
             if (err) {
-                console.error("Erreur lors de la récupération de l'ID du panier de l'utilisateur : ", err);
-                return res.status(500).send("Erreur lors de la récupération de l'ID du panier de l'utilisateur.");
+                console.error("Erreur lors de la récupération de l'ID du panier : ", err);
+                return res.status(500).send("Erreur serveur lors de la récupération de l'ID du panier.");
             }
 
-            const id_panier = result[0].id_panier;
-            con.query(queryAjouterAuPanier, [id_panier, id_produit, quantite], (err, insertResult) => {
-                if (err) {
-                    console.error("Erreur lors de l'ajout au panier : ", err);
-                    return res.status(500).send("Erreur lors de l'ajout au panier.");
-                }
-                res.redirect("back");
-            });
+            let id_panier;
+            if (panier.length === 0) {
+                // Si l'utilisateur n'a pas de panier, créez-en un
+                con.query("INSERT INTO panier (id_utilisateur) VALUES (?)", [idUtilisateurSQL], (err, result) => {
+                    if (err) {
+                        console.error("Erreur lors de la création du panier : ", err);
+                        return res.status(500).send("Erreur serveur lors de la création du panier.");
+                    }
+                    id_panier = result.insertId;
+                    ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
+                });
+            } else {
+                id_panier = panier[0].id_panier;
+                ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
+            }
+        });
+    });
+
+    function ajouterOuMettreAJourProduit(id_panier, id_produit, quantite) {
+        con.query("SELECT id_detail_panier, quantite FROM detail_panier WHERE id_panier = ? AND id_produit = ? LIMIT 1", 
+        [id_panier, id_produit], function(err, detailPanier) {
+            if (err) {x
+                console.error("Erreur lors de la vérification du produit dans le panier : ", err);
+                return res.status(500).send("Erreur lors de la vérification du produit dans le panier.");
+            }
+
+            if (detailPanier.length > 0) {
+                // Si le produit existe déjà, mettez à jour la quantité
+                const updatedQuantite = detailPanier[0].quantite + quantite;
+                con.query("UPDATE detail_panier SET quantite = ? WHERE id_detail_panier = ?", 
+                [updatedQuantite, detailPanier[0].id_detail_panier], function(err, updateResult) {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la quantité du produit : ", err);
+                        return res.status(500).send("Erreur lors de la mise à jour de la quantité du produit.");
+                    }
+                    res.redirect("back");
+                });
+            } else {
+                // Sinon, ajoutez le produit dans le panier
+                con.query("INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)", 
+                [id_panier, id_produit, quantite], function(err, insertResult) {
+                    if (err) {
+                        console.error("Erreur lors de l'ajout du produit au panier : ", err);
+                        return res.status(500).send("Erreur lors de l'ajout du produit au panier.");
+                    }
+                    res.redirect("back");
+                });
+            }
         });
     }
 });
+
+
 
 //Supprimer une produit de panier
 app.post("/supprimerDuPanier", function(req, res) {
