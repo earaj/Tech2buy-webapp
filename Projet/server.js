@@ -101,37 +101,13 @@ con.connect(function(err){
 });
 
 
-
-// import { MongoClient } from 'mongodb';
-// const url = 'mongodb://localhost:27017'; // URL de votre serveur MongoDB
-// const dbName = 'mybd'; // Nom de votre base de données
-
-// let db;
-
-// const connectDB = async () => {
-//   try {
-//     const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-//     db = client.db(dbName);
-//     console.log("Connecté à MongoDB");
-//   } catch (err) {
-//     console.error("Erreur lors de la connexion à MongoDB", err);
-//     process.exit(1);
-//   }
-// };
-
-// const getDB = () => {
-//   if (!db) {
-//     throw Error("La base de données n'est pas encore initialisée");
-//   }
-//   return db;
-// };
-
-// export { connectDB, getDB };
+/*
+    Connection au server MongoDB
+*/
 
 
 import { MongoClient,ObjectId } from 'mongodb';
 
-// Configuration MongoDB
 const url = 'mongodb://localhost:27017';
 const dbName = 'mybd';
 let db;
@@ -158,13 +134,13 @@ function getDB() {
 
 function setupRoutes() {
 app.post("/inscription", async function(req, res) {
-    const db = getDB(); // Obtenez la référence de la base de données
+    const db = getDB(); 
 
     //Vérifier d'abord si l'adresse courriel existe déjà
     try {
         const utilisateurExistant = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
         if (utilisateurExistant) {
-            // Si un utilisateur existe déjà avec cette adresse courriel, renvoyez une erreur
+            //Si un utilisateur existe déjà avec cette adresse courriel, renvoyez une erreur
             return res.redirect("/inscription?erreur=emailExistant");
         }
 
@@ -181,8 +157,8 @@ app.post("/inscription", async function(req, res) {
                 nom: req.body.nom,
                 nom_utilisateur: req.body.nom_utilisateur,
                 adresse_courriel: req.body.adresse_courriel,
-                mot_de_passe: hash, // Mot de passe haché
-                mot_de_passe_clair: req.body.mot_de_passe // Mot de passe en clair
+                mot_de_passe: hash, 
+                mot_de_passe_clair: req.body.mot_de_passe 
             };
             try {
                 await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
@@ -218,6 +194,7 @@ connectDB();
 /*
     Description des routes
 */
+
 app.get("/", function (req,res){
     res.render("pages/index", {
     });
@@ -245,101 +222,41 @@ app.get("/pageAffichagePrincipale", function(req, res) {
 });
 
 app.get("/parametreUtilisateur", function(req, res) {
-    // Vérifier si l'utilisateur est connecté
+    
     if (!req.session.userId) {
-        //Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        
         return res.redirect("/pageConnexion");
     }
 
-    // Définir la requête SQL pour récupérer les informations de l'utilisateur
+    //récupérer les informations de l'utilisateur
     const requete = "SELECT * FROM mybd.utilisateur WHERE id_utilisateur = ?";
     
     // Exécuter la requête SQL
     con.query(requete, [req.session.userId], function(err, result) {
         if (err) {
-            // Gérer l'erreur, par exemple en enregistrant dans la console et en renvoyant une réponse d'erreur
+            
             console.error(err);
             return res.status(500).send("Erreur lors de la récupération des données de l'utilisateur.");
         }
 
         if (result.length > 0) {
-            // Si l'utilisateur est trouvé, passer ses données à la vue
+            
             res.render("pages/parametreUtilisateur", {
                 utilisateur: result[0]
             });
         } else {
-            // Si aucun utilisateur n'est trouvé, peut-être rediriger vers une autre page ou montrer un message d'erreur
             return res.status(404).send("Utilisateur non trouvé.");
         }
     });
 });
 
+
 app.get("/MiseAJourMotDePasse", function(req, res) {
     res.render("pages/parametresUtilisateur", {
     });
 });
-// app.get("/paiement", function(req, res) {
-//     const idUtilisateur = req.session.userId;
 
-//     if (!idUtilisateur) {
-//         // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
-//         return res.redirect("/pageConnexion");
-//     }
 
-//     const queryPanier = `
-//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
-//         FROM produit p
-//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
-//         JOIN panier pa ON dp.id_panier = pa.id_panier
-//         WHERE pa.id_utilisateur = ?
-//     `;
-
-//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
-//         if (err) {
-//             console.error("Erreur lors de la récupération des produits du panier : ", err);
-//             return res.status(500).send("Erreur lors de la récupération des produits du panier.");
-//         }
-
-//         // Passer les données du panier à la page de paiement
-//         res.render("pages/paiement", { panier: produits });
-//     });
-// });
-
-// // Modify the route handler for /paiement to pass the user's first and last name and email to the template
-// app.get("/paiement", function(req, res) {
-//     const idUtilisateur = req.session.userId;
-    
-//     if (!idUtilisateur) {
-//         // If the user is not logged in, redirect them to the login page
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     const queryPanier = `
-//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
-//         FROM produit p
-//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
-//         JOIN panier pa ON dp.id_panier = pa.id_panier
-//         WHERE pa.id_utilisateur = ?
-//     `;
-
-//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
-//         if (err) {
-//             console.error("Error fetching products from cart: ", err);
-//             return res.status(500).send("Error fetching products from cart.");
-//         }
-
-//         // Pass the data to the payment page template
-//         res.render("pages/paiement", { 
-//             panier: produits,
-//             utilisateur: {
-//                 prenom: req.session.firstName,
-//                 nom: req.session.lastName,
-//                 nom_utilisateur: req.session.nom_utilisateur,
-//                 adresse_courriel: req.session.adresse_courriel
-//             }
-//         });
-//     });
-// });
 app.get("/paiement", async function(req, res) {
     const idUtilisateur = req.session.userId;
     
@@ -393,13 +310,12 @@ app.get("/paiement", async function(req, res) {
     }
 });
 
-
-
 app.get("/mdpOublie", function(req, res) {
     res.render("pages/mdpOublie", {
     });
 });
-//Fonction pour afficher les produits
+
+//Fonction pour afficher les produits SQL
 app.get("/panier", function(req, res) {
     const idUtilisateur = req.session.userId;
 
@@ -413,7 +329,7 @@ app.get("/panier", function(req, res) {
         FROM produit p
         JOIN detail_panier dp ON p.id_produit = dp.id_produit
         JOIN panier pa ON dp.id_panier = pa.id_panier
-        WHERE pa.id_utilisateur = ?
+        WHERE pa.id_session = ?
     `;
 
     con.query(queryPanier, [idUtilisateur], (err, produits) => {
@@ -425,7 +341,7 @@ app.get("/panier", function(req, res) {
         //console.log("Produits du panier :", produits);
         res.render("pages/panier", { panier: produits });
     });
-});
+});   
 
 //Fonction pour déconnecter l'utilisateur
 app.get("/deconnect", function(req, res) {
@@ -438,8 +354,8 @@ app.get("/deconnect", function(req, res) {
         res.redirect("/pageConnexion");
     });
 })
-//SQL
-// //Fonction pour la creation de compte utilisateurs
+
+// //Fonction pour la creation de compte utilisateurs SQL
 // app.post("/inscription", function(req, res) {
 //     //Hacher le mot de passe avant de l'insérer
 //     bcrypt.hash(req.body.mot_de_passe, saltRounds, function(err, hash) {
@@ -468,26 +384,7 @@ app.get("/deconnect", function(req, res) {
 //     });
 // });
 
-//Fonction pour la connection au compte des utilisateurs
-// app.post("/connexion", function(req, res) {
-//     const requete  = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ? AND mot_de_passe = ?";
-//     const parametres = [req.body.courriel, req.body.motdepasse];
-//     con.query(requete, parametres, function(err, result) {
-//         if (err) throw err;
-//         if (result.length > 0) {
-//             req.session.userId = result[0].id_utilisateur;
-//             req.session.save(function(err) {
-//                 // Assurez-vous que la session est sauvegardée avant de rediriger
-//                 res.redirect("/pageAffichagePrincipale");
-//             });
-//             //res.redirect("/pageAffichagePrincipale");
-//         } else {
-//             res.redirect("/pageConnexion?erreur=1");
-//         }
-//     });
-// });
-
-// //Fonction pour la connexion au compte des utilisateurs
+// //Fonction pour la connexion au compte des utilisateurs SQL
 // app.post("/connexion", function(req, res) {
 //     const requete = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ?";
 //     const courriel = req.body.courriel;
@@ -606,7 +503,7 @@ app.get('/recherche', (req, res) => {
 });
 
 
-
+//Fonction pour mettre à jour les paramètres de l'utilisateur
 app.post("/parametreUtilisateur", function(req, res) {
     if (!req.session.userId) {
         //Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
@@ -751,6 +648,7 @@ function updateAddress(req, res) {
     });
 }
 
+//Fonction pour la réinitialisation du mot de passe
 app.post("/miseAJourMotDePasse", function(req, res) {
     if (!req.session.userId) {
         return res.redirect("/pageConnexion");
@@ -796,6 +694,7 @@ app.post("/miseAJourMotDePasse", function(req, res) {
     });
 });
 
+
 app.get("/parametreUtilisateur", function(req, res) {
     //Vérifiez que l'utilisateur est connecté et a un id_utilisateur stocké
     if (req.session.userId) {
@@ -808,104 +707,79 @@ app.get("/parametreUtilisateur", function(req, res) {
     }
 });
 
-// app.post("/parametreUtilisateur", function(req, res) {
 
-// });
-
-//Fonction pour ajouter un produit au panier
-
+//BONNE VERSION NoSQL
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
+        console.log("Aucun utilisateur connecté");
         return res.redirect("/pageConnexion");
     }
 
-    const idUtilisateurMongoDB = req.session.userId; // ID utilisateur dans MongoDB
+    const idSession = req.session.userId;
+    console.log("ID de session:", idSession);
+    const id_produit = req.body.id_produit;
+    const quantite = parseInt(req.body.quantite) || 1;
 
-    // Assurez-vous que l'ID est au format attendu pour un ObjectId MongoDB
-    if (!ObjectId.isValid(idUtilisateurMongoDB)) {
-        console.error("ID utilisateur MongoDB invalide.");
-        return res.status(400).send("Erreur dans l'ID utilisateur.");
-    }
-
-    // Récupérer des informations d'utilisateur de MongoDB
-    db.collection('utilisateurs').findOne({ _id: new ObjectId(idUtilisateurMongoDB) }, async (err, utilisateurMongo) => {
-        if (err || !utilisateurMongo) {
-            console.error("Erreur ou utilisateur non trouvé dans MongoDB : ", err);
-            return res.status(500).send("Erreur serveur ou utilisateur non trouvé.");
+    
+    con.query("SELECT id_panier FROM panier WHERE id_session = ?", [idSession], (err, panier) => {
+        if (err) {
+            console.error("Erreur lors de la récupération de l'ID du panier :", err);
+            return res.status(500).send("Erreur serveur lors de la récupération de l'ID du panier.");
         }
 
-        // À ce stade, vous avez accès aux informations de l'utilisateur de MongoDB
-        // Vous pouvez procéder avec la logique de gestion du panier en utilisant MySQL
-
-        const idUtilisateurSQL = utilisateurMongo._id; // Supposons que vous stockez l'ID SQL de l'utilisateur dans MongoDB
-        const id_produit = req.body.id_produit;
-        const quantite = parseInt(req.body.quantite) || 1;
-
-        if (!id_produit) {
-            console.error('id_produit est null');
-            return res.status(400).send("Produit non spécifié.");
-        }
-
-        // Vérifier d'abord si l'utilisateur a déjà un panier
-        con.query("SELECT id_panier FROM panier WHERE id_utilisateur = ?", [idUtilisateurSQL], (err, panier) => {
-            if (err) {
-                console.error("Erreur lors de la récupération de l'ID du panier : ", err);
-                return res.status(500).send("Erreur serveur lors de la récupération de l'ID du panier.");
-            }
-
-            let id_panier;
-            if (panier.length === 0) {
-                // Si l'utilisateur n'a pas de panier, créez-en un
-                con.query("INSERT INTO panier (id_utilisateur) VALUES (?)", [idUtilisateurSQL], (err, result) => {
-                    if (err) {
-                        console.error("Erreur lors de la création du panier : ", err);
-                        return res.status(500).send("Erreur serveur lors de la création du panier.");
-                    }
-                    id_panier = result.insertId;
-                    ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
-                });
-            } else {
-                id_panier = panier[0].id_panier;
+        let id_panier;
+        if (panier.length === 0) {
+            console.log(`Aucun panier trouvé pour l'ID de session ${idSession}, création d'un nouveau panier.`);
+            con.query("INSERT INTO panier (id_session, date_ajout) VALUES (?, NOW())", [idSession], (err, result) => {
+                if (err) {
+                    console.error("Erreur lors de la création du panier :", err);
+                    return res.status(500).send("Erreur serveur lors de la création du panier.");
+                }
+                id_panier = result.insertId;
+                console.log(`Panier créé avec l'ID: ${id_panier}`);
                 ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
-            }
-        });
+            });
+        } else {
+            id_panier = panier[0].id_panier;
+            console.log(`Panier trouvé pour l'ID de session ${idSession} avec l'ID: ${id_panier}`);
+            ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
+        }
     });
 
     function ajouterOuMettreAJourProduit(id_panier, id_produit, quantite) {
-        con.query("SELECT id_detail_panier, quantite FROM detail_panier WHERE id_panier = ? AND id_produit = ? LIMIT 1", 
-        [id_panier, id_produit], function(err, detailPanier) {
-            if (err) {x
-                console.error("Erreur lors de la vérification du produit dans le panier : ", err);
+        console.log(`Ajout ou mise à jour du produit ${id_produit} dans le panier ${id_panier}`);
+        con.query("SELECT id_detail_panier, quantite FROM detail_panier WHERE id_panier = ? AND id_produit = ?", [id_panier, id_produit], (err, detailPanier) => {
+            if (err) {
+                console.error("Erreur lors de la vérification du produit dans le panier :", err);
                 return res.status(500).send("Erreur lors de la vérification du produit dans le panier.");
             }
 
             if (detailPanier.length > 0) {
-                // Si le produit existe déjà, mettez à jour la quantité
                 const updatedQuantite = detailPanier[0].quantite + quantite;
-                con.query("UPDATE detail_panier SET quantite = ? WHERE id_detail_panier = ?", 
-                [updatedQuantite, detailPanier[0].id_detail_panier], function(err, updateResult) {
+                console.log(`Mise à jour de la quantité pour le produit ${id_produit} dans le panier ${id_panier}`);
+                con.query("UPDATE detail_panier SET quantite = ? WHERE id_detail_panier = ?", [updatedQuantite, detailPanier[0].id_detail_panier], (err, updateResult) => {
                     if (err) {
-                        console.error("Erreur lors de la mise à jour de la quantité du produit : ", err);
+                        console.error("Erreur lors de la mise à jour de la quantité du produit :", err);
                         return res.status(500).send("Erreur lors de la mise à jour de la quantité du produit.");
                     }
+                    console.log(`Quantité mise à jour pour le produit ${id_produit}. Redirection en cours.`);
                     res.redirect("back");
                 });
             } else {
-                // Sinon, ajoutez le produit dans le panier
-                con.query("INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)", 
-                [id_panier, id_produit, quantite], function(err, insertResult) {
+                console.log(`Ajout du nouveau produit ${id_produit} dans le panier ${id_panier}`);
+                con.query("INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)", [id_panier, id_produit, quantite], (err, insertResult) => {
                     if (err) {
-                        console.error("Erreur lors de l'ajout du produit au panier : ", err);
+                        console.error("Erreur lors de l'ajout du produit au panier :", err);
                         return res.status(500).send("Erreur lors de l'ajout du produit au panier.");
                     }
+                    console.log(`Produit ${id_produit} ajouté au panier. Redirection en cours.`);
                     res.redirect("back");
                 });
             }
         });
     }
+    
 });
-
-
 
 //Supprimer une produit de panier
 app.post("/supprimerDuPanier", function(req, res) {
@@ -919,7 +793,7 @@ app.post("/supprimerDuPanier", function(req, res) {
     const querySupprimerProduit = `
         DELETE FROM detail_panier 
         WHERE id_panier = (
-            SELECT id_panier FROM panier WHERE id_utilisateur = ?
+            SELECT id_panier FROM panier WHERE id_session = ?
         ) 
         AND id_produit = ?
     `;
