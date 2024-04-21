@@ -14,9 +14,8 @@ CREATE TABLE adresse_de_livraison (
     code_postal         VARCHAR(6) NOT NULL,
     ville               VARCHAR(50) NOT NULL,
     pays                VARCHAR(50) NOT NULL,
-    id_utilisateur      INT NOT NULL,
-    PRIMARY KEY (id_adresselivraison),
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur (id_utilisateur)
+    id_session          VARCHAR(255),
+    PRIMARY KEY (id_adresselivraison)
 );
 
 CREATE TABLE carte_de_credit (
@@ -67,7 +66,7 @@ CREATE TABLE detail_panier (
     id_panier        INT NOT NULL,
     id_produit       INT NOT NULL,
     quantite         INT NOT NULL,
-    PRIMARY KEY (id_detail_panier)
+    PRIMARY KEY (id_detail_panier),
 );
 
 CREATE TABLE paiement (
@@ -81,10 +80,9 @@ CREATE TABLE paiement (
 
 CREATE TABLE panier (
     id_panier      INT NOT NULL AUTO_INCREMENT,
-    id_utilisateur INT NOT NULL,
+    id_session     VARCHAR(255),
     date_ajout     DATE NOT NULL,
-    PRIMARY KEY (id_panier),
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+    PRIMARY KEY (id_panier)
 );
 
 CREATE TABLE produit (

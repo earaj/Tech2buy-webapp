@@ -4,17 +4,19 @@
     <title>Paramètres</title>
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="commun.css"/>
+    <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <style>
-    body{
-        background:#F0F8FF;
+    body {
+        background: #F0F8FF;
     }
+
     .card {
         margin-bottom: 1.5rem;
-        box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);
+        box-shadow: 0 1px 15px 1px rgba(52, 40, 104, .08);
     }
+
     .card {
         position: relative;
         display: -ms-flexbox;
@@ -28,12 +30,15 @@
         border: 1px solid #e5e9f2;
         border-radius: .2rem;
     }
+
     .card-header:first-child {
         border-radius: calc(.2rem - 1px) calc(.2rem - 1px) 0 0;
     }
+
     .card-header {
         border-bottom-width: 1px;
     }
+
     .card-header {
         padding: .75rem 1.25rem;
         margin-bottom: 0;
@@ -47,140 +52,161 @@
 </header>
 <div class="container p-0">
     <h1 class="h3 mb-3">Paramètres</h1>
-        <div class="row">
-            <div class="col-md-5 col-xl-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Paramètres du Profile</h5>
-                    </div>
-                    <div class="list-group list-group-flush" role="tablist">
-                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#compte" role="tab">Compte</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#motdepasse" role="tab">Mot de passe</a>
-                    </a>
-                    </div>
+    <div class="row">
+        <div class="col-md-5 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Paramètres du Profile</h5>
                 </div>
-            </div>        
-    <div class="col-md-7 col-xl-8">
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="compte" role="tabpanel">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Informations publique</h5>
-                    </div>
-                    <div class="card-body">
-                    <form method="POST" action="/parametreUtilisateur">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label for="nom_utilisateur">Nom utilisateur</label>
-                                <input type="text" class="form-control" id="nom_utilisateur" name="nom_utilisateur" placeholder="<%= utilisateur.nom_utilisateur %>">
-                                <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <input class="btn btn-primary" class="btn btn-primary btn-block col-8"  type="submit" value="Sauvegarder">
-                    </form>
+                <div class="list-group list-group-flush" role="tablist">
+                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#compte"
+                        role="tab">Compte</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#motdepasse"
+                        role="tab">Mot de passe</a>
+                    </a>
                 </div>
             </div>
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Informations Privées</h5>
         </div>
-        <div class="card-body">
-            <form method="POST" action="/parametreUtilisateur">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="prenom">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="<%= utilisateur.prenom %>">
-                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+        <div class="col-md-7 col-xl-8">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="compte" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Informations publique</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="/parametreUtilisateur">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="nom_utilisateur">Nom utilisateur</label>
+                                            <input type="text" class="form-control" id="nom_utilisateur"
+                                                name="nom_utilisateur" placeholder="<%= utilisateur.nom_utilisateur %>">
+                                            <input type="hidden" name="id_utilisateur"
+                                                value="&lt;%= id_utilisateur %&gt;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-primary" class="btn btn-primary btn-block col-8" type="submit"
+                                    value="Sauvegarder">
+                            </form>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label for="nom">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" placeholder="<%= utilisateur.nom %>">
-                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Informations Privées</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="/parametreUtilisateur">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="prenom">Prénom</label>
+                                        <input type="text" class="form-control" id="prenom" name="prenom"
+                                            placeholder="<%= utilisateur.prenom %>">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="nom">Nom</label>
+                                        <input type="text" class="form-control" id="nom" name="nom"
+                                            placeholder="<%= utilisateur.nom %>">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="adresse_courriel">Adresse courriel</label>
+                                    <input type="email" class="form-control" id="adresse_courriel"
+                                        name="adresse_courriel" placeholder="<%= utilisateur.adresse_courriel %>">
+                                    <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="adresse">Adresse</label>
+                                    <input type="text" class="form-control" id="adresse" name="adresse"
+                                        placeholder="Entrez votre adresse">
+                                    <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="pays">Pays</label>
+                                        <input type="text" class="form-control" id="pays" name="pays"
+                                            placeholder="Entrez votre pays">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="ville">Ville</label>
+                                        <input type="text" class="form-control" id="ville" name="ville"
+                                            placeholder="Entrez votre ville">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputState">Province</label>
+                                        <select id="inputState" class="form-control">
+                                            <option selected="">Choisir...</option>
+                                            <option>Québec</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputZip">Code postal</label>
+                                        <input type="text" class="form-control" id="code_postal" name="code_postal"
+                                            placeholder="Entrez votre code postal">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                                    </div>
+                                </div>
+                                <br>
+                                <input class="btn btn-primary" class="btn btn-primary btn-block col-8" type="submit"
+                                    value="Sauvegarder">
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="adresse_courriel">Adresse courriel</label>
-                    <input type="email" class="form-control" id="adresse_courriel" name="adresse_courriel" placeholder="<%= utilisateur.adresse_courriel %>">
-                    <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
+                <div class="tab-pane fade" id="motdepasse" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Mot de passe</h5>
+                            <form method="POST" action="/miseAJourMotDePasse">
+                                <div class="form-group">
+                                    <label for="mot_de_passe_actuel">Mot de passe actuel</label>
+                                    <input type="password" class="form-control" id="mot_de_passe_actuel"
+                                        name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nouveau_mot_de_passe">Nouveau mot de passe</label>
+                                    <input type="password"
+                                        class="form-control <%= typeof erreurNouveauMotDePasse !== 'undefined' ? 'is-invalid' : '' %>"
+                                        id="nouveau_mot_de_passe" name="nouveau_mot_de_passe"
+                                        placeholder="Entrez votre nouveau mot de passe...">
+                                    <% if (typeof erreurNouveauMotDePasse !=='undefined' ) { %>
+                                        <div class="invalid-feedback">
+                                            <%= erreurNouveauMotDePasse %>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmer_nouveau_mot_de_passe">Confirmer le nouveau mot de
+                                        passe</label>
+                                    <input type="password"
+                                        class="form-control <%= typeof erreurConfirmationNouveauMotDePasse !== 'undefined' ? 'is-invalid' : '' %>"
+                                        id="confirmer_nouveau_mot_de_passe" name="confirmer_nouveau_mot_de_passe"
+                                        placeholder="Confirmez votre nouveau mot de passe...">
+                                    <% if (typeof erreurConfirmationNouveauMotDePasse !=='undefined' ) { %>
+                                        <div class="invalid-feedback">
+                                            <%= erreurConfirmationNouveauMotDePasse %>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <br>
+                                <input class="btn btn-primary" type="submit" value="Sauvegarder">
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="adresse">Adresse</label>
-                    <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Entrez votre adresse">
-                    <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="pays">Pays</label>
-                        <input type="text" class="form-control" id="pays" name="pays" placeholder="Entrez votre ville">
-                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
-                        </div>
-                </div>    
-                <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="ville">Ville</label>
-                            <input type="text" class="form-control" id="ville" name="ville" placeholder="Entrez votre ville">
-                            <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="inputState">Province</label>
-                            <select id="inputState" class="form-control">
-                                <option selected="">Choisir...</option>
-                                <option>Québec</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="inputZip">Code postal</label>
-                            <input type="text" class="form-control" id="code_postal" name="code_postal" placeholder="Entrez votre code postal">
-                            <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
-                        </div>
-                </div>
-                <br>
-                <input class="btn btn-primary" class="btn btn-primary btn-block col-8"  type="submit" value="Sauvegarder">
-            </form>
+            </div>
         </div>
     </div>
 </div>
-    <div class="tab-pane fade" id="motdepasse" role="tabpanel">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Mot de passe</h5>
-                <form method="POST" action="/miseAJourMotDePasse">
-                    <div class="form-group">
-                        <label for="mot_de_passe_actuel">Mot de passe actuel</label>
-                        <input type="password" class="form-control" id="mot_de_passe_actuel" name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel...">
-                    </div>
-                    <div class="form-group">
-                        <label for="nouveau_mot_de_passe">Nouveau mot de passe</label>
-                        <input type="password" class="form-control <%= typeof erreurNouveauMotDePasse !== 'undefined' ? 'is-invalid' : '' %>" id="nouveau_mot_de_passe" name="nouveau_mot_de_passe" placeholder="Entrez votre nouveau mot de passe...">
-                        <% if (typeof erreurNouveauMotDePasse !== 'undefined') { %>
-                            <div class="invalid-feedback">
-                                <%= erreurNouveauMotDePasse %>
-                            </div>
-                        <% } %>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmer_nouveau_mot_de_passe">Confirmer le nouveau mot de passe</label>
-                        <input type="password" class="form-control <%= typeof erreurConfirmationNouveauMotDePasse !== 'undefined' ? 'is-invalid' : '' %>" id="confirmer_nouveau_mot_de_passe" name="confirmer_nouveau_mot_de_passe" placeholder="Confirmez votre nouveau mot de passe...">
-                        <% if (typeof erreurConfirmationNouveauMotDePasse !== 'undefined') { %>
-                            <div class="invalid-feedback">
-                                <%= erreurConfirmationNouveauMotDePasse %>
-                            </div>
-                        <% } %>    
-                    </div>
-                    <br>
-                    <input class="btn btn-primary" type="submit" value="Sauvegarder">
-                </form>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div> 
+</div>
+</div>
+</div>
 </body>
