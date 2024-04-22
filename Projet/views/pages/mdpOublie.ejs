@@ -27,12 +27,7 @@
         <div><Center> <h5>Entrez votre adresse courriel utilisée pour<br> créer votre compte et nous vous enverrons un <br>lien de réinitialisation.</h5></Center></div>
         
         <a>Adresse de courriel</a>
-                <div class="card">
-                    <input type="email" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="courriel" name="courriel" required>
-                
-                </div>
-            </div>
-        </div>
+        <form action="/reset-password" method="POST"><div class="card"><label for="courriel">Adresse de courriel</label><input type="email" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="courriel" name="courriel" required><div class="row justify-content-center"><div class="col-auto"><button class="btn btn-primary btn-lg" type="submit">Envoyer le lien</button></div></div></div></form>
         <br>
         <div class="row justify-content-center">
             <div class="col-auto">
