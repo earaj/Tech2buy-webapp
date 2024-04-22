@@ -71,3 +71,12 @@ body{
     border-radius: 2%;
     color: black;
 }
+.background-section {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 30%;
+  background-color: #F0FAFF;
+  z-index: -1;
+}
