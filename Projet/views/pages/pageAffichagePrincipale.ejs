@@ -1,57 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Affichage Principale</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css" />
-    <script src="/js/bootstrap.min.js"></script>
-    <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed' rel='stylesheet'>
 </head>
-<header>
-    <!--Code qui permet montrer le header de tech2buy-->
-    <%- include("../partials/headTech2buy.ejs") %>
-</header>
+<style>
+.position-relative {
+position: relative;
+}
+
+.diagonal-images {
+position: absolute;
+width: 100%; /* Adjust width as needed */
+height: auto; /* Maintain aspect ratio */
+top: 0;
+left: 0;
+transform: translate(-50%, -50%) rotate(-45deg); /* Rotate image diagonally and center it */
+z-index: -1; /* Push the images behind the content */
+}
+
+.product-image1 {
+width: 40%; /* Adjust width as needed */
+height: auto; /* Maintain aspect ratio */
+top: 0; /* Position at the top */
+left: 0; /* Position at the left */
+z-index: 1; /* Bring the first image above the diagonal */
+}
+
+.product-image2 {
+width: 40%; /* Adjust width as needed */
+height: auto; /* Maintain aspect ratio */
+top: 100%; /* Position at the bottom */
+left: 50%; /* Position at the right */
+z-index: 1; /* Bring the second image above the diagonal */
+}
+
+.product-image3 {
+width: 40%; /* Adjust width as needed */
+height: auto; /* Maintain aspect ratio */
+top: 0; /* Position at the top */
+left: 50%; /* Position at the right */
+z-index: 1; /* Bring the third image above the diagonal */
+}
+</style>
+
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <img src="../Images/1046a737566c6b5d5d354a6abfc6f6d4.png" class="border border-secondary " width="600"
-                height="500"  style="margin: 20;" onclick="searchFor(' ');">
+    <header>
+        <!-- Ici, incluez le code de votre en-tête, comme avant -->
+        <%- include("../partials/headTech2buy.ejs") %>
+    </header>
+    <div class="container mt-3">
+        <!-- Début du Carousel -->
+        <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+            <!-- Wrapper pour les slides -->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="../Images/asuslaptoplineup.jpg" class="d-block w-100 " alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="../Images/iphone-15-pro-finish-select-202309-6-1inch.jpg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="../Images/samsunggalaxys24series.avif" class="d-block w-100" alt="...">
+                </div>
+            </div>
+
+            <!-- Contrôles du Carousel -->
+            <a class="carousel-control-prev" href="#featuredCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+            </a>
+            <a class="carousel-control-next" href="#featuredCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+            </a>
         </div>
-        <div class="col-6">
-
-            <img src="../Images/3620def07c61-headphone-comp-2.jpg" class="border border-secondary rounded float-end" width="555"
-                height="275" alt="" style="margin: 30;" onclick="searchFor('samsung');">
-            <img src="../Images/Microsoft-Surface.jpeg" class="border border-secondary rounded float-end" width="270"
-                height="180" style="margin: 5" alt="" onclick="searchFor('laptop');">
-            <img src="../Images/Apple-TV-4K-hero-221018_big.jpg.large.jpg"
-                class="border border-secondary   rounded float-end" width="270" height="180" style="margin: 5;" alt="">
+        <!-- Products Grid -->
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="../Images/1046a737566c6b5d5d354a6abfc6f6d4.png" class="card-img-top" alt="..." >
+                    <div class="card-body">
+                        <h5 class="card-title">Produit Apple</h5>
+                        <p class="card-text">Description produit Apple</p>
+                        <a href="#" class="btn btn-primary" onclick="searchFor('apple');">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="../Images/microsoftsurface.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Produit ordinateur portable</h5>
+                        <p class="card-text">Description pour produit ordinateur portable</p>
+                        <a href="#" class="btn btn-primary" onclick="searchFor('laptop');">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="../Images/Samsung-S22-Lineup.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Produit Samsung</h5>
+                        <p class="card-text">Description pour produit Samsung</p>
+                        <a href="#" class="btn btn-primary"onclick="searchFor('samsung');" >Voir plus</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="row-md p-5">
-        <img src="../Images/iphone-15-pro-finish-select-202309-6-1inch.jpg" class="col-12 border border-secondary"
-            width="1000" height="550" onclick="searchFor('iphone');">
-
-
-
+        <!-- Banner -->
         <div class="row">
-            <div class="col-6">
-                <h1 class="display-3">Nouveaux Téléphones. <br> Nouveaux Ordinateurs. <br> Nouveaux Écouteurs. </h1>
-                <h1 class="display-1">Chez Tech2Buy</h1>
-
-            </div>
-
-            <div class="col-6">
-                <img src="../Images/UNPK_Watch6-PR_main1.jpg" class="border border-secondary img-fluid" width="570"
-                    height="300" alt="" style="margin: 20;">
+            <div class="col-lg-12">
+                <img src="../Images/samsungmobilesimage.jpg" class="img-fluid" alt="Responsive image">
             </div>
         </div>
 
-    </div>
-</div>
+        <!-- Marketing Messages -->
+        <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+                <h2>Nouveaux Téléphones. Nouveaux Ordinateurs. Nouveaux Écouteurs.</h2>
+                <h3>Chez Tech2Buy</h3>
+            </div>
+            <div class="col-md-6">
+                <img src="../Images/UNPK_Watch6-PR_main1.jpg" class="img-fluid" alt="Responsive image">
+            </div>
+        </div>
 </body>
-<!--Code qui permet montrer le header de tech2buy-->
 <script>
     function searchFor(term) {
         var xhr = new XMLHttpRequest();
@@ -69,5 +150,6 @@
         };
         xhr.send();
     }
- </script>
-    <%- include ("../partials/footer.ejs") %>
+</script>
+<%- include ("../partials/footer.ejs") %>
+</html>
