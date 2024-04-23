@@ -11,54 +11,51 @@
     <link href='https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed' rel='stylesheet'>
 </head>
 <style>
-.position-relative {
-position: relative;
-}
+    .position-relative {
+        position: relative;
+    }
 
-.diagonal-images {
-position: absolute;
-width: 100%; /* Adjust width as needed */
-height: auto; /* Maintain aspect ratio */
-top: 0;
-left: 0;
-transform: translate(-50%, -50%) rotate(-45deg); /* Rotate image diagonally and center it */
-z-index: -1; /* Push the images behind the content */
-}
+    .diagonal-images {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        z-index: -1;
+    }
 
-.product-image1 {
-width: 40%; /* Adjust width as needed */
-height: auto; /* Maintain aspect ratio */
-top: 0; /* Position at the top */
-left: 0; /* Position at the left */
-z-index: 1; /* Bring the first image above the diagonal */
-}
+    .product-image1 {
+        width: 40%;
+        height: auto;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
 
-.product-image2 {
-width: 40%; /* Adjust width as needed */
-height: auto; /* Maintain aspect ratio */
-top: 100%; /* Position at the bottom */
-left: 50%; /* Position at the right */
-z-index: 1; /* Bring the second image above the diagonal */
-}
+    .product-image2 {
+        width: 40%;
+        height: auto;
+        top: 100%;
+        left: 50%;
+        z-index: 1;
+    }
 
-.product-image3 {
-width: 40%; /* Adjust width as needed */
-height: auto; /* Maintain aspect ratio */
-top: 0; /* Position at the top */
-left: 50%; /* Position at the right */
-z-index: 1; /* Bring the third image above the diagonal */
-}
+    .product-image3 {
+        width: 40%;
+        height: auto;
+        top: 0;
+        left: 50%;
+        z-index: 1;
+    }
 </style>
 
 <body>
     <header>
-        <!-- Ici, incluez le code de votre en-tête, comme avant -->
         <%- include("../partials/headTech2buy.ejs") %>
     </header>
     <div class="container mt-3">
-        <!-- Début du Carousel -->
         <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
-            <!-- Wrapper pour les slides -->
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img src="../Images/asuslaptoplineup.jpg" class="d-block w-100 " alt="...">
@@ -71,7 +68,6 @@ z-index: 1; /* Bring the third image above the diagonal */
                 </div>
             </div>
 
-            <!-- Contrôles du Carousel -->
             <a class="carousel-control-prev" href="#featuredCarousel" role="button" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Précédent</span>
@@ -81,11 +77,11 @@ z-index: 1; /* Bring the third image above the diagonal */
                 <span class="visually-hidden">Suivant</span>
             </a>
         </div>
-        <!-- Products Grid -->
+        <br>
         <div class="row text-center">
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="../Images/1046a737566c6b5d5d354a6abfc6f6d4.png" class="card-img-top" alt="..." >
+                    <img src="../Images/1046a737566c6b5d5d354a6abfc6f6d4.png" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Produit Apple</h5>
                         <p class="card-text">Description produit Apple</p>
@@ -109,20 +105,18 @@ z-index: 1; /* Bring the third image above the diagonal */
                     <div class="card-body">
                         <h5 class="card-title">Produit Samsung</h5>
                         <p class="card-text">Description pour produit Samsung</p>
-                        <a href="#" class="btn btn-primary"onclick="searchFor('samsung');" >Voir plus</a>
+                        <a href="#" class="btn btn-primary" onclick="searchFor('samsung');">Voir plus</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Banner -->
         <div class="row">
             <div class="col-lg-12">
                 <img src="../Images/samsungmobilesimage.jpg" class="img-fluid" alt="Responsive image">
             </div>
         </div>
 
-        <!-- Marketing Messages -->
         <div class="row mt-4">
             <div class="col-md-6 mb-3">
                 <h2>Nouveaux Téléphones. Nouveaux Ordinateurs. Nouveaux Écouteurs.</h2>
@@ -141,7 +135,7 @@ z-index: 1; /* Bring the third image above the diagonal */
             if (xhr.status === 200) {
                 window.location.href = '/recherche?query=' + term;
             } else {
-            
+
                 console.error('Erreur lors de la recherche :', xhr.statusText);
             }
         };
@@ -152,4 +146,5 @@ z-index: 1; /* Bring the third image above the diagonal */
     }
 </script>
 <%- include ("../partials/footer.ejs") %>
+
 </html>
