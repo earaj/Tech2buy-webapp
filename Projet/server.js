@@ -552,6 +552,7 @@ app.get("/deconnect", function(req, res) {
 // });
 
 //NoSQL
+/** 
 app.post("/connexion", async function(req, res) {
     const courriel = req.body.courriel;
     console.log(`Tentative de connexion pour l'email: ${courriel}`);
@@ -589,7 +590,7 @@ app.post("/connexion", async function(req, res) {
         res.status(500).send("Erreur lors de la connexion.");
     }
 });
-
+*/
 
 app.get('/detailProduit', (req, res) => {
     const productID = req.query.id;
@@ -1148,40 +1149,42 @@ app.post('mdpGoogle', (req, res) => {
 //Ne toucher pas
 
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer)
-/** 
-const nodemailer = import('nodemailer');
-var smtpTransport = import('nodemailer-smtp-transport');
 
-var transporter = nodemailer.createTransport(smtpTransport({
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
     service: 'Gmail',
     host: 'smtp.gmail.com',
     auth: {
-        user: 'techbuy849@gmail.com',
-        pass: 'groupygroup'
+        user: 'techbuy849@gmail.com',  
+        pass: 'groupygroup'           
     }
-}));
-
-    var mailOptions = {
-        from: "email@exemple.com",
-        to: email,
-        subject: "Reinitialisation de mot de passe",
-        text: `Click ici pour changer votre mot de passe ${resetLink}`
+});
+ 
+async function sendResetEmail(email, link) {
+    const mailOptions = {
+        from: 'techbuy849@gmail.com', 
+        to: email,                    
+        subject: 'Réinitialisation de votre mot de passe', 
+        html: `<p>Vous avez demandé une réinitialisation de mot de passe pour votre compte.</p>
+<p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe:</p>
+<a href="${link}">Réinitialiser le mot de passe</a>` 
     };
-
-    transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-            console.error("Error sending email:", error);
-        } else {
-            console.log("Email sent:", info.response);
-        }
-    });
-
-//crrrre un pg
-app.post("/reset-password", function(req, res) {
-    const email = req.body.courriel;
-    const resetLink = "localhost:4000/"; // une page pour chnager le mot de passe
-    envoieCourriel(email, resetLink);
-    res.send("Envoie!");
-}); */
+ 
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully!');
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+ 
+app.post('/reset-password', async (req, res) => {
+    const email = req.body.email;
+    const resetLink = `http://localhost:4000/reset-password/${email}`;
+ 
+    await sendResetEmail(email, resetLink);
+    res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
+});
 
 //https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs

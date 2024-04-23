@@ -27,12 +27,7 @@
         <div><Center> <h5>Entrez votre adresse courriel utilisée pour<br> créer votre compte et nous vous enverrons un <br>lien de réinitialisation.</h5></Center></div>
         
         <a>Adresse de courriel</a>
-                <div class="card">
-                    <input type="email" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="courriel" name="courriel" required>
-                
-                </div>
-            </div>
-        </div>
+        <form action="/reset-password" method="POST"><div class="card"><label for="courriel"></label><input type="email" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="courriel" name="courriel" required><div class="row justify-content-center"><div class="col-auto"></div></div></div></form>
         <br>
         <div class="row justify-content-center">
             <div class="col-auto">
@@ -45,5 +40,5 @@
             Toute transaction effectuée à Tech2Buy est sécurisée. Tous les renseignements personnels que vous nous fournissez seront traités en vertu de notre politique de confidentialite.
         </center>
     </div>
-    <div style="position: absolute; bottom: 0%; width: 100%;">
+    <div style="position: absolute; bottom: 0%; width: 100%; left:0%">
 <%- include ("../partials/footer.ejs") %></div>
