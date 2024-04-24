@@ -288,60 +288,6 @@ app.get("/MiseAJourMotDePasse", function(req, res) {
 });
 
 
-//     const queryPanier = `
-//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
-//         FROM produit p
-//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
-//         JOIN panier pa ON dp.id_panier = pa.id_panier
-//         WHERE pa.id_utilisateur = ?
-//     `;
-
-//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
-//         if (err) {
-//             console.error("Erreur lors de la récupération des produits du panier : ", err);
-//             return res.status(500).send("Erreur lors de la récupération des produits du panier.");
-//         }
-
-//         // Passer les données du panier à la page de paiement
-//         res.render("pages/paiement", { panier: produits });
-//     });
-// });
-
-// // Modify the route handler for /paiement to pass the user's first and last name and email to the template
-// app.get("/paiement", function(req, res) {
-//     const idUtilisateur = req.session.userId;
-    
-//     if (!idUtilisateur) {
-//         // If the user is not logged in, redirect them to the login page
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     const queryPanier = `
-//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
-//         FROM produit p
-//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
-//         JOIN panier pa ON dp.id_panier = pa.id_panier
-//         WHERE pa.id_utilisateur = ?
-//     `;
-
-//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
-//         if (err) {
-//             console.error("Error fetching products from cart: ", err);
-//             return res.status(500).send("Error fetching products from cart.");
-//         }
-
-//         // Pass the data to the payment page template
-//         res.render("pages/paiement", { 
-//             panier: produits,
-//             utilisateur: {
-//                 prenom: req.session.firstName,
-//                 nom: req.session.lastName,
-//                 nom_utilisateur: req.session.nom_utilisateur,
-//                 adresse_courriel: req.session.adresse_courriel
-//             }
-//         });
-//     });
-// });
 
 //SQL
 // app.get("/paiement", function(req, res) {
@@ -435,8 +381,6 @@ const adresse_de_livraison = {
         return res.status(500).send("Erreur lors de la récupération des informations de l'utilisateur.");
     }
 });
-
-
 
 app.get("/mdpOublie", function(req, res) {
     res.render("pages/mdpOublie", {
@@ -551,7 +495,6 @@ app.get("/deconnect", function(req, res) {
 // });
 
 //NoSQL
-/** 
 app.post("/connexion", async function(req, res) {
     const courriel = req.body.courriel;
     console.log(`Tentative de connexion pour l'email: ${courriel}`);
@@ -589,20 +532,63 @@ app.post("/connexion", async function(req, res) {
         res.status(500).send("Erreur lors de la connexion.");
     }
 });
-*/
 
-app.get('/detailProduit', (req, res) => {
-    const productID = req.query.id;
-    const query = 'SELECT * FROM produit WHERE id_produit = ?'; 
-    con.query(query, [productID], (err, rows) => {
+
+//SQL
+// app.get('/detailProduit', function(req, res){
+//     const idProduit = req.query.id;
+//     const query = 'SELECT * FROM produit WHERE id_produit = ?'; 
+//     con.query(query, [idProduit], (err, rows) => {
+//         if (err) {
+//             console.error('Erreur', err);
+//             return res.status(500).send('Erreur interne du serveur');
+//         }
+//         const produit = rows[0];
+//         res.render('pages/detailProduit', { produit: produit});
+//     });
+//     const queryCommentaire = 'SELECT * FROM commentaire WHERE id_produit = ? ORDER BY date_du_commentaire DESC';
+//     con.query(queryCommentaire, [idProduit], (err, commentaires) => {
+//         if (err) {
+//             console.error(err);
+//             // Gérez l'erreur ou affichez un message approprié
+//         }
+//     });
+// });
+
+app.get('/detailProduit', function(req, res){
+    const idProduit = req.query.id;
+    if (!idProduit) {
+        return res.status(400).send('ID du produit manquant');
+    }
+
+    const queryProduit = 'SELECT * FROM produit WHERE id_produit = ?';
+    con.query(queryProduit, [idProduit], (err, produitResults) => {
         if (err) {
-            console.error('Erreur', err);
-            return res.status(500).send('Erreur interne du serveur');
+            console.error('Erreur lors de la récupération des détails du produit:', err);
+            return res.status(500).send('Erreur interne du serveur lors de la récupération des détails du produit');
         }
-        const produit = rows[0];
-        res.render('pages/detailProduit', { produit: produit});
+
+        if (produitResults.length === 0) {
+            return res.status(404).send('Produit non trouvé.');
+        }
+
+        const produit = produitResults[0];
+
+        const queryCommentaire = 'SELECT * FROM commentaire WHERE id_produit = ? ORDER BY date_du_commentaire DESC';
+        con.query(queryCommentaire, [idProduit], (err, commentaires) => {
+            if (err) {
+                console.error('Erreur lors de la récupération des commentaires:', err);
+                return res.status(500).send('Erreur interne du serveur lors de la récupération des commentaires');
+            }
+            res.render('pages/detailProduit', {
+                produit: produit,
+                commentaires: commentaires
+            });
+        });
     });
 });
+
+
 
 
 //Fonction pour la recherche des produits
@@ -1001,17 +987,17 @@ app.post("/miseAJourMotDePasse", async function(req, res) {
 
 
 
-app.get("/parametreUtilisateur", function(req, res) {
-    //Vérifiez que l'utilisateur est connecté et a un id_utilisateur stocké
-    if (req.session.userId) {
-        res.render("pages/parametreUtilisateur", {
-            id_utilisateur: req.session.userId
-        });
-    } else {
-        //Si non connecté, redirige vers la page de connexion
-        res.redirect("/pageConnexion");
-    }
-});
+// app.get("/parametreUtilisateur", function(req, res) {
+//     //Vérifiez que l'utilisateur est connecté et a un id_utilisateur stocké
+//     if (req.session.userId) {
+//         res.render("pages/parametreUtilisateur", {
+//             id_utilisateur: req.session.userId
+//         });
+//     } else {
+//         //Si non connecté, redirige vers la page de connexion
+//         res.redirect("/pageConnexion");
+//     }
+// });
 
 
 //BONNE VERSION NoSQL
@@ -1156,47 +1142,27 @@ app.post('/reset-password', async (req, res) => {
     res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
 });
 
-
-import nodemailer from 'nodemailer';
-
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        type: 'login',
-        user: 'techbuy849@gmail.com',
-        pass: 'uevh snco rzra tpjw'
-    }
-});
-
-async function sendResetEmail(email, link) {
-    const mailOptions = {
-        from: 'techbuy849@gmail.com',
-        to: email,
-        subject: 'Réinitialisation de votre mot de passe',
-        html: `<p>Vous avez demandé une réinitialisation de mot de passe pour votre compte.</p>
-        <p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe:</p>
-        <a href="${link}">Réinitialiser le mot de passe</a>`
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log('Courriel a ete envoie!');
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
-}
-
-app.post('/reset-password', async (req, res) => {
-    const email = req.body.email;
-    const resetLink = `http://localhost:4000/reset/${email}`;
-
-    await sendResetEmail(email, resetLink);
-    res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
-});
-
-app.get('/reset/:email', (req, res) => {
-    const email = req.params.email;
-    res.render('pages/reset', { email });
-});
-
 //https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs
+
+app.post('/submitComment', function(req, res) {
+    const idProduit = req.body.idProduit;
+    const commentaireText = req.body.commentText;
+    const idUtilisateur = req.session.userId; 
+
+    if (!idProduit || !commentaireText) {
+        return res.status(400).send('Informations manquantes pour publier le commentaire.');
+    }
+
+    const query = 'INSERT INTO commentaire (id_utilisateur, id_produit, commentaire, date_du_commentaire) VALUES (?, ?, ?, NOW())';
+    
+    con.query(query, [idUtilisateur, idProduit, commentaireText], (err, result) => {
+        if (err) {
+            console.error('Erreur lors de l\'insertion du commentaire:', err);
+            return res.status(500).send('Erreur lors de l\'enregistrement du commentaire.');
+        }
+
+        res.redirect('/detailProduit?id=' + idProduit); 
+    });
+});
+
+
