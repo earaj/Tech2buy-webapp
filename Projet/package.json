@@ -19,11 +19,14 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "express-validator": "^7.0.1",
+    "google-auth-library": "^9.8.0",
+    "googleapis": "^134.0.0",
     "jquery": "^3.7.1",
     "mongodb": "^6.5.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.4",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "nodemailer-smtp-transport": "^2.7.4"
   },
   "keywords": [],
   "description": ""
