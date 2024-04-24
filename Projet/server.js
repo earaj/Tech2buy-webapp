@@ -1149,6 +1149,52 @@ app.post('/reset-password', async (req, res) => {
     res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
 });
 
+
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+service: 'gmail',
+    auth: {
+type: 'login',
+user: 'techbuy849@gmail.com',
+pass: 'uevh snco rzra tpjw'
+}
+});
+async function sendResetEmail(email, link) {
+    const mailOptions = {
+from: 'techbuy849@gmail.com',
+        to: email,
+        subject: 'Réinitialisation de votre mot de passe',
+        html: `<p>Vous avez demandé une réinitialisation de mot de passe pour votre compte.</p>
+<p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe:</p>
+<a href="${link}">Réinitialiser le mot de passe</a>`
+};
+try {
+    await transporter.sendMail(mailOptions);
+console.log('Courriel a ete envoie!');
+} catch (error) {
+console.error('Erreur:', error);
+}
+}
+
+app.post('/reset-password', async (req, res) => {
+    const email = req.body.email;
+
+const resetLink = `http://localhost:4000/reset/${email}`;
+
+await sendResetEmail(email, resetLink);
+res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
+});
+
+app.get('/reset/:email', (req, res) => {
+    const email = req.params.email;
+    res.render('pages/reset', { email });
+});
+
+
+
+
+
 //https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs
 
 app.post('/submitComment', function(req, res) {
