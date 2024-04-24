@@ -16,8 +16,9 @@
 
 <body>
   <a href="./panier">
-    <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex">Annuler la transaction</label>
+    <img src="../Images/BackArrowButton.png" height="45" alt="Back" id="pageindex" class="btn link-secondary">
   </a>
+        <label for="pageindex">Annuler la transaction</label>
 
   <div class="container">
     <form method="POST" action="/paiement">
@@ -81,7 +82,7 @@
           </div>
           <div class="mb-3">
             <label for="address">Adresse</label>
-            <input type="text" class="form-control" id="address" placeholder="Entrez votre adresse" required>
+            <input type="text" class="form-control" id="address" placeholder="Entrez votre adresse"  value="<%= adresse_de_livraison.adresse %>" required>
             <div class="invalid-feedback">L'adresse est requise.</div>
           </div>
           <div class="mb-3">
@@ -91,23 +92,17 @@
           <div class="row">
             <div class="col-md-5 mb-3">
               <label for="Pays">Pays</label>
-              <select class="custom-select d-block w-100" id="Pays" required>
-                <option value="">Choose...</option>
-                <option>Canada</option>
-              </select>
-              <div class="invalid-feedback">Veuillez sélectionner un pays valide.</div>
+              <input type="text" class="form-control" id="pays" placeholder="Entrez le nom du pays" value="<%= adresse_de_livraison.pays %>" required>
+              <div class="invalid-feedback">Le Pays est requis.</div>
             </div>
             <div class="col-md-4 mb-3">
-              <label for="province">Province</label>
-              <select class="custom-select d-block w-100" id="province" required>
-                <option value="">Choisir...</option>
-                <option>Quebec</option>
-              </select>
-              <div class="invalid-feedback">Veuillez fournir une province valide.</div>
+              <label for="ville">Ville</label>
+              <input type="text" class="form-control" id="ville" placeholder="Entrez le nom du pays" value="<%= adresse_de_livraison.ville %>" required>
+              <div class="invalid-feedback">Le ville est requis.</div>
             </div>
             <div class="col-md-3 mb-3">
-              <label for="zip">Zip</label>
-              <input type="text" class="form-control" id="zip" placeholder="" required>
+              <label for="codepostale">Code Postale</label>
+              <input type="text" class="form-control" id="codepostale" placeholder="" value="<%= adresse_de_livraison.code_postal %>" required>
               <div class="invalid-feedback">Le code ZIP est requis.</div>
             </div>
           </div>
