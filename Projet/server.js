@@ -12,6 +12,13 @@ import {body, validationResult} from "express-validator";
 import dateFormat from "dateformat";
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
+import paypal from 'paypal-rest-sdk';
+
+paypal.configure({
+    'mode': 'sandbox',
+    'client_id': 'Afll2rmOHzdsz_AXDrNJFGrUjVmsVtj9LKKpOT8ky_VBiEDne2rYVm5j8fvXfgYHpEVbnex3QZ_TgnVF',
+    'client_secret': 'EN0NTWRjsrNiVz8wk_XFYM98rwd3h8skcYN1A_90FFVy6iI58wYRg5IKPCJhTJJH8SEajQIBzfMGEVAQ'
+})
 
 
 const app = express();
@@ -1165,4 +1172,39 @@ app.post('/submitComment', function(req, res) {
     });
 });
 
+app.post('/payer', (req, res) => {
+    const { items } = req.body;
+    const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0).toFixed(2);
+    const create_payment_json = {
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "redirect_urls": {  // correction ici pour respecter la nomenclature correcte des clés PayPal API
+            "return_url": "http://localhost:4000/success",
+            "cancel_url": "http://localhost:4000/paiement"
+        },
+        "transactions": [{  // correction ici pour utiliser la clé correcte
+            "item_list": {
+                "items": items
+            },
+            "amount": {
+                "currency": "CAD",
+                "total": total
+            }
+        }]
+    };
 
+    paypal.payment.create(create_payment_json, function(error, payment){
+        if(error){
+            console.error(error);
+            return res.status(500).send('Error creating payment');
+        } else {
+            for(let i = 0; i < payment.links.length; i++){
+                if (payment.links[i].rel === 'approval_url') {
+                    return res.redirect(payment.links[i].href);
+                }
+            }
+        }
+    });
+});

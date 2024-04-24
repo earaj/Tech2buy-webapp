@@ -21,7 +21,7 @@
         <label for="pageindex">Annuler la transaction</label>
 
   <div class="container">
-    <form method="POST" action="/paiement">
+    
       <div class="py-5 text-center">
         <h2>La caisse</h2>
       </div>
@@ -56,7 +56,9 @@
             <% } %>
           </div>
         </div>
+        
         <div class="col-md-8 order-md-1">
+          <form method="POST" action="/payer">
           <h4 class="mb-3">Adresse de facturation</h4>
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -117,6 +119,15 @@
               <label class="custom-control-label" for="paypal">Paypal</label>
             </div>
           </div>
+
+          <% panier.forEach(function(item, index) { %>
+            <input type="hidden" name="items[<%= index %>][name]" value="<%= item.nom_produit %>">
+            <input type="hidden" name="items[<%= index %>][sku]" value="<%= item.id_produit %>">
+            <input type="hidden" name="items[<%= index %>][price]" value="<%= item.prix_unitaire %>">
+            <input type="hidden" name="items[<%= index %>][currency]" value="CAD">
+            <input type="hidden" name="items[<%= index %>][quantity]" value="<%= item.quantite %>">
+        <% }) %>
+
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="cc-name">Nom sur la carte</label>
@@ -144,9 +155,10 @@
           </div>
           <hr class="mb-4">
           <button class="btn btn-primary btn-lg btn-block" type="submit">Continuer à vérifier</button>
+          </form>
         </div>
       </div>
-    </form>
+   
     <footer class="my-5 pt-5 text-muted text-center text-small">
       <p class="mb-1">&copy; 2023-2024 Tech2Buy</p>
     </footer>
