@@ -399,10 +399,11 @@ app.get("/paiement", async function(req, res) {
 
         // Query to fetch products from cart (similar to your existing code)
         const queryPanier = `
-            SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
+            SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite,adl.adresse, adl.code_postal, adl.ville, adl.pays
             FROM produit p
             JOIN detail_panier dp ON p.id_produit = dp.id_produit
             JOIN panier pa ON dp.id_panier = pa.id_panier
+            LEFT JOIN adresse_de_livraison adl ON pa.id_session = adl.id_session
             WHERE pa.id_session = ?
         `;
 
@@ -411,6 +412,11 @@ app.get("/paiement", async function(req, res) {
                 console.error("Error fetching products from cart: ", err);
                 return res.status(500).send("Error fetching products from cart.");
             }
+// Assuming adresse_de_livraison is retrieved from your database
+const adresse_de_livraison = {
+    pays: "Your Country",
+    // Add other properties as needed
+};
 
             // Pass the data to the payment page template along with user information
             res.render("pages/paiement", {
@@ -420,7 +426,8 @@ app.get("/paiement", async function(req, res) {
                     nom: utilisateur.nom,
                     nom_utilisateur: utilisateur.nom_utilisateur,
                     adresse_courriel: utilisateur.adresse_courriel
-                }
+                },
+                adresse_de_livraison: produits.length > 0 ? produits[0] : null // Pass adresse_de_livraison to the template
             });
         });
     } catch (err) {
