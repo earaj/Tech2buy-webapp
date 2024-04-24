@@ -60,7 +60,7 @@
     </div>
 </div>
 
-<div class="container my-5">
+<!-- <div class="container my-5">
     <h3>Commentaires</h3>
     <% commentaires.forEach(function(commentaire) { %>
         <div class="card mb-3">
@@ -71,7 +71,41 @@
             </div>
         </div>
     <% }); %>
+</div> -->
+
+<!-- <div class="container my-5">
+    <h3>Commentaires</h3>
+    <% commentaires.forEach(function(commentaire) { %>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><%= commentaire.nom_utilisateur %></h5>
+                <p class="card-text"><%= commentaire.commentaire %></p>
+                <p class="card-text"><small class="text-muted">Posté le <%= new Date(commentaire.date_du_commentaire).toLocaleDateString() %></small></p>
+            </div>
+        </div>
+    <% }); %>
+</div> -->
+
+<div class="container my-5">
+    <h3>Commentaires</h3>
+    <% commentaires.forEach(function(commentaire) { %>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><%= commentaire.nom_utilisateur %></h5>
+                <p class="card-text"><%= commentaire.commentaire %></p>
+                <p class="card-text"><small class="text-muted">Posté le <%= new Date(commentaire.date_du_commentaire).toLocaleDateString() %></small></p>
+                <!-- Bouton de suppression -->
+                <form action="/deleteComment" method="post" style="display: inline;">
+                    <input type="hidden" name="commentId" value="<%= commentaire._id %>">
+                    <input type="hidden" name="productId" value="<%= produit.id_produit %>">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    <% }); %>
 </div>
+
+
     <script src="/js/bootstrap.min.js"></script>
 </body>
 </html>
