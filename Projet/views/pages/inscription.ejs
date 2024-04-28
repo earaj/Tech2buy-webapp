@@ -12,30 +12,39 @@
 
 <script>
     function validation() {
-   var pw1 = document.getElementById("mot_de_passe").value;
-   var pw2 = document.getElementById("pswd2").value;
-   // Verifier si les mot de pass correspond
-   if (pw1 !== pw2) {
-       document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
-       return false;
-   } else {
-       // Veifier si le mot de passe est fort
-       if (pw1.length < 8) {
-           document.getElementById("message2").innerHTML = "**Le mot de passe doit contenir au moins 8 caractères**";
-           return false;
-       } else if (!/[a-z]/.test(pw1) || !/[A-Z]/.test(pw1) || !/[0-9]/.test(pw1)) {
-           document.getElementById("message2").innerHTML = "**Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre**";
-           return false;
-       } else if (!/[^a-zA-Z0-9]/.test(pw1)) {
-           document.getElementById("message2").innerHTML = "**Le mot de passe doit contenir au moins un caractère spécial**";
-           return false;
+        var pw1 = document.getElementById("mot_de_passe").value;
+        var pw2 = document.getElementById("pswd2").value;
+        if (pw1 !== pw2) {
+            document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
+            return false;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "validate_password_endpoint", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+   if (xhr.readyState === 4) {
+       if (xhr.status === 200) {
+           var response = JSON.parse(xhr.responseText);
+           if (response.valid) {
+               alert("Création de compte avec Succès!");
+               window.location.href = "/pageAffichagePrincipale"; 
+           } else {
+               document.getElementById("message2").innerHTML = ""; 
+               response.message.forEach(function(errorMessage) {
+                   document.getElementById("message2").innerHTML += errorMessage + "<br>";
+               });
+           }
        } else {
-           alert("Création de compte avec Succès!");
-           return true;
+           // Handle server errors
+           console.error("Server error: " + xhr.status);
        }
    }
-}
-</script>
+};
+        xhr.send(JSON.stringify({ password: pw1 }));
+        return false;
+    }
+ </script>
+
 <style>
     .image {
         right: 0%;
@@ -92,8 +101,8 @@
             <div class="form-group input-group-lg">
                 <label for="password">Confirmer mot de passe</label>
                 <input type="password" class="form-control input-group-lg" id="pswd2" required>
-                <span id="message2" style="color:red"> </span>
-            </div><br><br>
+                <span id="message3" style="color:red"> </span>
+                </div><br><br>
             <div class="col-3"></div>
             <input class="btn btn-primary" class="btn btn-primary btn-block col-8" role="button" type="submit" value="S'inscrire ">
         </div>

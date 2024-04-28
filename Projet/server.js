@@ -1322,3 +1322,31 @@ app.post('/payer', (req, res) => {
         }
     });
 });
+
+
+//Valider mot de passe
+// Require necessary modules
+
+//import express from "express";
+
+
+
+//const app = express();
+
+app.use(express.json());
+
+app.post('/validate_password_endpoint', [
+    body('password').isLength({ min: 8 }).withMessage("Le mot de passe doit contenir au moins 8 caractères"),
+    body('password').matches(/[a-z]/).withMessage("Le mot de passe doit contenir au moins une lettre minuscule"),
+    body('password').matches(/[A-Z]/).withMessage("Le mot de passe doit contenir au moins une lettre majuscule"),
+    body('password').matches(/[0-9]/).withMessage("Le mot de passe doit contenir au moins un chiffre"),
+    body('password').matches(/[^a-zA-Z0-9]/).withMessage("Le mot de passe doit contenir au moins un caractère spécial")
+ ], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errorMessages = errors.array().map(error => error.msg);
+        return res.status(400).json({ valid: false, message: errorMessages });
+    } else {
+        return res.json({ valid: true });
+    }
+ });
