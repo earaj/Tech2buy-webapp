@@ -562,14 +562,50 @@ app.post("/connexion", async function(req, res) {
 //     });
 // });
 
-app.get('/detailProduit', function(req, res){
+//SQL 2
+// app.get('/detailProduit', function(req, res){
+//     const idProduit = req.query.id;
+//     if (!idProduit) {
+//         return res.status(400).send('ID du produit manquant');
+//     }
+
+//     const queryProduit = 'SELECT * FROM produit WHERE id_produit = ?';
+//     con.query(queryProduit, [idProduit], (err, produitResults) => {
+//         if (err) {
+//             console.error('Erreur lors de la récupération des détails du produit:', err);
+//             return res.status(500).send('Erreur interne du serveur lors de la récupération des détails du produit');
+//         }
+
+//         if (produitResults.length === 0) {
+//             return res.status(404).send('Produit non trouvé.');
+//         }
+
+//         const produit = produitResults[0];
+
+//         const queryCommentaire = 'SELECT * FROM commentaire WHERE id_produit = ? ORDER BY date_du_commentaire DESC';
+//         con.query(queryCommentaire, [idProduit], (err, commentaires) => {
+//             if (err) {
+//                 console.error('Erreur lors de la récupération des commentaires:', err);
+//                 return res.status(500).send('Erreur interne du serveur lors de la récupération des commentaires');
+//             }
+//             res.render('pages/detailProduit', {
+//                 produit: produit,
+//                 commentaires: commentaires
+//             });
+//         });
+//     });
+// });
+
+
+app.get('/detailProduit', async function(req, res) {
     const idProduit = req.query.id;
     if (!idProduit) {
         return res.status(400).send('ID du produit manquant');
     }
 
-    const queryProduit = 'SELECT * FROM produit WHERE id_produit = ?';
-    con.query(queryProduit, [idProduit], (err, produitResults) => {
+    const db = await getDB(); // Obtenez l'instance de la base de données MongoDB
+
+    con.query('SELECT * FROM produit WHERE id_produit = ?', [idProduit], async (err, produitResults) => {
         if (err) {
             console.error('Erreur lors de la récupération des détails du produit:', err);
             return res.status(500).send('Erreur interne du serveur lors de la récupération des détails du produit');
@@ -581,19 +617,19 @@ app.get('/detailProduit', function(req, res){
 
         const produit = produitResults[0];
 
-        const queryCommentaire = 'SELECT * FROM commentaire WHERE id_produit = ? ORDER BY date_du_commentaire DESC';
-        con.query(queryCommentaire, [idProduit], (err, commentaires) => {
-            if (err) {
-                console.error('Erreur lors de la récupération des commentaires:', err);
-                return res.status(500).send('Erreur interne du serveur lors de la récupération des commentaires');
-            }
+        try {
+            const commentaires = await db.collection('commentaires').find({ id_produit: idProduit }).toArray();
             res.render('pages/detailProduit', {
                 produit: produit,
                 commentaires: commentaires
             });
-        });
+        } catch (err) {
+            console.error('Erreur lors de la récupération des commentaires:', err);
+            return res.status(500).send('Erreur interne du serveur lors de la récupération des commentaires');
+        }
     });
 });
+
 
 
 
@@ -1197,26 +1233,58 @@ app.get('/reset/:email', (req, res) => {
 
 //https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs
 
-app.post('/submitComment', function(req, res) {
+app.post('/submitComment', async function(req, res) {
     const idProduit = req.body.idProduit;
     const commentaireText = req.body.commentText;
-    const idUtilisateur = req.session.userId; 
+    const idUtilisateur = req.session.userId;
 
-    if (!idProduit || !commentaireText) {
+    if (!idProduit || !commentaireText || !idUtilisateur) {
         return res.status(400).send('Informations manquantes pour publier le commentaire.');
     }
 
-    const query = 'INSERT INTO commentaire (id_utilisateur, id_produit, commentaire, date_du_commentaire) VALUES (?, ?, ?, NOW())';
-    
-    con.query(query, [idUtilisateur, idProduit, commentaireText], (err, result) => {
-        if (err) {
-            console.error('Erreur lors de l\'insertion du commentaire:', err);
-            return res.status(500).send('Erreur lors de l\'enregistrement du commentaire.');
+    try {
+        const db = getDB();
+        const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(idUtilisateur) });
+
+        if (!utilisateur) {
+            return res.status(404).send("Utilisateur non trouvé.");
         }
 
-        res.redirect('/detailProduit?id=' + idProduit); 
-    });
+        const nomUtilisateur = utilisateur.nom_utilisateur; 
+
+        const nouveauCommentaire = {
+            id_utilisateur: idUtilisateur,
+            nom_utilisateur: nomUtilisateur, 
+            id_produit: idProduit,
+            commentaire: commentaireText,
+            date_du_commentaire: new Date()
+        };
+
+        await db.collection('commentaires').insertOne(nouveauCommentaire);
+
+        res.redirect('/detailProduit?id=' + idProduit);
+    } catch (err) {
+        console.error('Erreur lors de l\'insertion du commentaire:', err);
+        return res.status(500).send('Erreur lors de l\'enregistrement du commentaire.');
+    }
 });
+
+
+app.post('/deleteComment', async function(req, res) {
+    const commentId = req.body.commentId;
+    const productId = req.body.productId;
+
+    try {
+        const db = getDB();
+        await db.collection('commentaires').deleteOne({ _id: new ObjectId(commentId) });
+        res.redirect('/detailProduit?id=' + productId);
+    } catch (err) {
+        console.error('Erreur lors de la suppression du commentaire:', err);
+        res.status(500).send('Erreur lors de la suppression du commentaire.');
+    }
+});
+
+
 
 app.post('/payer', (req, res) => {
     const { items } = req.body;
@@ -1254,3 +1322,31 @@ app.post('/payer', (req, res) => {
         }
     });
 });
+
+
+//Valider mot de passe
+// Require necessary modules
+
+//import express from "express";
+
+
+
+//const app = express();
+
+app.use(express.json());
+
+app.post('/validate_password_endpoint', [
+    body('password').isLength({ min: 8 }).withMessage("Le mot de passe doit contenir au moins 8 caractères"),
+    body('password').matches(/[a-z]/).withMessage("Le mot de passe doit contenir au moins une lettre minuscule"),
+    body('password').matches(/[A-Z]/).withMessage("Le mot de passe doit contenir au moins une lettre majuscule"),
+    body('password').matches(/[0-9]/).withMessage("Le mot de passe doit contenir au moins un chiffre"),
+    body('password').matches(/[^a-zA-Z0-9]/).withMessage("Le mot de passe doit contenir au moins un caractère spécial")
+ ], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errorMessages = errors.array().map(error => error.msg);
+        return res.status(400).json({ valid: false, message: errorMessages });
+    } else {
+        return res.json({ valid: true });
+    }
+ });
