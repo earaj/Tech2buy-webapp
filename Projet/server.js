@@ -140,58 +140,60 @@ function getDB() {
 
 
 function setupRoutes() {
-app.post("/inscription", async function(req, res) {
-    const db = getDB(); 
+    app.post("/inscription", async function(req, res) {
+        const db = getDB(); 
 
-    //Vérifier d'abord si l'adresse courriel existe déjà
-    try {
-        const utilisateurExistant = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
-        if (utilisateurExistant) {
-            //Si un utilisateur existe déjà avec cette adresse courriel, renvoyez une erreur
-            return res.redirect("/inscription?erreur=emailExistant");
+        const password = req.body.mot_de_passe;
+        const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+        if (!strongRegex.test(password)) {
+            return res.redirect("/inscription?erreur=motdepasseFaible");
         }
 
-        //Si l'utilisateur n'existe pas, hachez le mot de passe et créez l'utilisateur
-        bcrypt.hash(req.body.mot_de_passe, saltRounds, async function(err, hash) {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors du hachage du mot de passe.");
+        try {
+            const utilisateurExistant = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
+            if (utilisateurExistant) {
+                return res.redirect("/inscription?erreur=emailExistant");
             }
 
-          
-            const nouvelUtilisateur = {
-                prenom: req.body.prenom,
-                nom: req.body.nom,
-                nom_utilisateur: req.body.nom_utilisateur,
-                adresse_courriel: req.body.adresse_courriel,
-                mot_de_passe: hash, 
-                mot_de_passe_clair: req.body.mot_de_passe 
-            };
-            try {
-                await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
-                
-                req.session.userId = nouvelUtilisateur._id;
-                req.session.save(err => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-                    }
-                    return res.redirect("/pageAffichagePrincipale");
-                });
-            } catch (err) {
-                if (err && err.code === 11000) {
-                    return res.redirect("/inscription?erreur=emailExistant");
-                } else {
+            bcrypt.hash(password, saltRounds, async function(err, hash) {
+                if (err) {
                     console.error(err);
-                    return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
+                    return res.status(500).send("Erreur lors du hachage du mot de passe.");
                 }
-            }
-        });
-    } catch (err) {
-        console.error("Erreur lors de la vérification de l'utilisateur:", err);
-        return res.status(500).send("Erreur serveur lors de la vérification.");
-    }
-});
+
+                const nouvelUtilisateur = {
+                    prenom: req.body.prenom,
+                    nom: req.body.nom,
+                    nom_utilisateur: req.body.nom_utilisateur,
+                    adresse_courriel: req.body.adresse_courriel,
+                    mot_de_passe: hash, 
+                    mot_de_passe_clair: password
+                };
+
+                try {
+                    await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
+                    req.session.userId = nouvelUtilisateur._id;
+                    req.session.save(err => {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+                        }
+                        return res.redirect("/pageAffichagePrincipale");
+                    });
+                } catch (err) {
+                    if (err && err.code === 11000) {
+                        return res.redirect("/inscription?erreur=emailExistant");
+                    } else {
+                        console.error(err);
+                        return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
+                    }
+                }
+            });
+        } catch (err) {
+            console.error("Erreur lors de la vérification de l'utilisateur:", err);
+            return res.status(500).send("Erreur serveur lors de la vérification.");
+        }
+    });
 }
 
 connectDB();
@@ -1322,31 +1324,3 @@ app.post('/payer', (req, res) => {
         }
     });
 });
-
-
-//Valider mot de passe
-// Require necessary modules
-
-//import express from "express";
-
-
-
-//const app = express();
-
-app.use(express.json());
-
-app.post('/validate_password_endpoint', [
-    body('password').isLength({ min: 8 }).withMessage("Le mot de passe doit contenir au moins 8 caractères"),
-    body('password').matches(/[a-z]/).withMessage("Le mot de passe doit contenir au moins une lettre minuscule"),
-    body('password').matches(/[A-Z]/).withMessage("Le mot de passe doit contenir au moins une lettre majuscule"),
-    body('password').matches(/[0-9]/).withMessage("Le mot de passe doit contenir au moins un chiffre"),
-    body('password').matches(/[^a-zA-Z0-9]/).withMessage("Le mot de passe doit contenir au moins un caractère spécial")
- ], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map(error => error.msg);
-        return res.status(400).json({ valid: false, message: errorMessages });
-    } else {
-        return res.json({ valid: true });
-    }
- });
