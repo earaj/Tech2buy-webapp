@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,59 +8,59 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <link rel="stylesheet" href="commun.css" />
   <script src="/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      background: #F0F8FF;
+    }
+    .scrollable-content {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
-<%- include ("../partials/header.ejs") %>
-<style>
-  body {
-    background: #F0F8FF;
-  }
-</style>
-
 <body>
   <a href="./panier">
     <img src="../Images/BackArrowButton.png" height="45" alt="Back" id="pageindex" class="btn link-secondary">
   </a>
-        <label for="pageindex">Annuler la transaction</label>
+  <label for="pageindex">Annuler la transaction</label>
 
   <div class="container">
-    
-      <div class="py-5 text-center">
-        <h2>La caisse</h2>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4 order-md-2 mb-4">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Votre panier</span>
-            <span class="badge badge-secondary badge-pill"><%= panier.length %></span>
-          </h4>
-          <div class="bg-light p-3">
-            <h2 class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</h2>
-            <% let prix_total = 0; %>
-            <% if (panier && panier.length) { %>
-              <% panier.forEach(function(produit) { %>
-                <div class="row mt-3">
-                  <div class="col-12">
-                    <h4><%= produit.nom_produit %></h4>
-                    <% if (produit.quantite > 1) { %>
-                      <p>(x <%= produit.quantite %>)</p>
-                    <% } %>
-                    <p><%= produit.prix_unitaire %>$</p>
-                  </div>
-                  <% prix_total += produit.prix_unitaire * produit.quantite; %>
+    <div class="py-5 text-center">
+      <h2>La caisse</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Votre panier</span>
+          <span class="badge badge-secondary badge-pill"><%= panier.length %></span>
+        </h4>
+        <div class="bg-light p-3 scrollable-content">
+          <h2 class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</h2>
+          <% let prix_total = 0; %>
+          <% if (panier && panier.length) { %>
+            <% panier.forEach(function(produit) { %>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <h4><%= produit.nom_produit %></h4>
+                  <% if (produit.quantite > 1) { %>
+                    <p>(x <%= produit.quantite %>)</p>
+                  <% } %>
+                  <p><%= produit.prix_unitaire %>$</p>
                 </div>
-              <% }) %>
-            <% } else { %>
-              <h3>On dirait que c'est vide !</h3>
-            <% } %>
-            <% if (panier && panier.length) { %>
-              <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
-            <% } %>
-          </div>
+                <% prix_total += produit.prix_unitaire * produit.quantite; %>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <h3>On dirait que c'est vide !</h3>
+          <% } %>
+          <% if (panier && panier.length) { %>
+            <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
+          <% } %>
         </div>
+      </div>
         
-        <div class="col-md-8 order-md-1">
-          <form method="POST" action="/payer">
+      <div class="col-md-8 order-md-1">
+        <form method="POST" action="/payer">
           <h4 class="mb-3">Adresse de facturation</h4>
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -129,12 +131,12 @@
         <% }) %>
           <hr class="mb-4">
           <button class="btn btn-primary btn-lg btn-block" type="submit">Continuer à vérifier</button>
-          </form>
-        </div>
+        </form>
       </div>
-   
+    </div>
     <footer class="my-5 pt-5 text-muted text-center text-small">
       <p class="mb-1">&copy; 2023-2024 Tech2Buy</p>
     </footer>
   </div>
 </body>
+</html>
