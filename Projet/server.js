@@ -83,6 +83,12 @@ app.use(function(req, res, next) {
     next();
 });
 
+
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    next();
+});
+
 /*
     Connection au server MySQL
 */
@@ -1161,14 +1167,32 @@ app.post("/supprimerDuPanier", function(req, res) {
     });
 });
 
-app.post('mdpGoogle', (req, res) => {
-    const { nomComplet, email } = req.body;
-    // Divisez le nomComplet en prénom et nom si nécessaire
-    // Stockez les informations nécessaires dans la session ou temporairement
+function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    let nomComplet = profile.getName();
+    let email = profile.getEmail();
+    let [prenom, ...nomParts] = nomComplet.split(' ');
+    let nom = nomParts.join(' '); 
+    const query = `INSERT INTO utilisateurs (prenom, nom, nom_utilisateur, adresse_courriel) VALUES (?, ?, ?, ?)`;
 
-    // Redirection vers motDePasseGoogle.ejs
-    // Vous pouvez aussi passer des données à la vue si nécessaire
-    res.render('/motDePasseGoogle', { email: email });
+    // Utilisation de la connexion à la base de données existante
+    // Supposons que 'db' est votre client de base de données MySQL
+    db.execute(query, [prenom, nom, prenom, email], (err, results) => {
+        if (err) {
+            // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
+            console.error('Erreur lors de l\'insertion dans la base de données:', err);
+        } else {
+            // Opération réussie
+            console.log('Utilisateur ajouté avec succès dans la base de données.');
+        }
+    });
+}
+
+app.post('/mdpGoogle', (req, res) => {
+    const { nomComplet, email } = req.body;
+    // Traitement des données ici, comme l'enregistrement dans la base de données
+    // Après le traitement, redirigez vers la route souhaitée
+    res.redirect('/motDePasseGoogle'); // Utilisez redirect pour une redirection côté serveur
 });
 
 
@@ -1306,6 +1330,7 @@ app.post('/payer', (req, res) => {
         const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
         const formattedTotal = total.toFixed(2);
         console.log("Total formatted for PayPal:", formattedTotal);
+        req.session.total = total;
 
         const create_payment_json = {
             "intent": "sale",
@@ -1346,6 +1371,7 @@ app.get('/success', (req, res) => {
 
     // Récupération du montant total de la session ou de la base de données
     const total = req.session.total; // ou une autre source
+    console.log("total session: " + total)
 
     // Validation du format du montant
     const totalString = typeof total === 'number' ? total.toFixed(2) : total;

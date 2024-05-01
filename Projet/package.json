@@ -24,6 +24,7 @@
     "google-auth-library": "^9.8.0",
     "googleapis": "^134.0.0",
     "jquery": "^3.7.1",
+    "mogodb": "^0.0.1-security",
     "mongodb": "^6.5.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.4",
