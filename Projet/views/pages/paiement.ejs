@@ -127,32 +127,6 @@
             <input type="hidden" name="items[<%= index %>][currency]" value="CAD">
             <input type="hidden" name="items[<%= index %>][quantity]" value="<%= item.quantite %>">
         <% }) %>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="cc-name">Nom sur la carte</label>
-              <input type="text" class="form-control" id="cc-name" placeholder="" required>
-              <small class="text-muted">Nom complet comme affiché sur la carte</small>
-              <div class="invalid-feedback">Le nom sur la carte est requis.</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="cc-number">Numéro de Carte de Crédit</label>
-              <input type="text" class="form-control" id="cc-number" placeholder="" required>
-              <div class="invalid-feedback">Le numéro de carte de crédit est requis.</div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3 mb-3">
-              <label for="cc-expiration">Expiration</label>
-              <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
-              <div class="invalid-feedback">La date d'expiration est requise.</div>
-            </div>
-            <div class="col-md-3 mb-3">
-              <label for="cc-cvv">CVV</label>
-              <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
-              <div class="invalid-feedback">Le code de sécurité est requis.</div>
-            </div>
-          </div>
           <hr class="mb-4">
           <button class="btn btn-primary btn-lg btn-block" type="submit">Continuer à vérifier</button>
           </form>
