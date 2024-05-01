@@ -1288,39 +1288,213 @@ app.post('/deleteComment', async function(req, res) {
 
 
 
+// app.post('/payer', (req, res) => {
+//     console.log(req.body);
+//     //const { items } = req.body;
+//     const items = Object.keys(req.body)
+//         .filter(key => key.startsWith('items['))
+//         .reduce((acc, key) => {
+//             const match = key.match(/^items\[(\d+)]\[(.+)]$/);
+//             const index = parseInt(match[1], 10);
+//             const property = match[2];
+
+//             if (!acc[index]) {
+//                 acc[index] = {};
+//             }
+
+//             acc[index][property] = req.body[key];
+
+//             return acc;
+//         }, []);
+//     const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
+//     const formattedTotal = total.toFixed(0);
+//     const create_payment_json = {
+//         "intent": "sale",
+//         "payer": {
+//             "payment_method": "paypal"
+//         },
+//         "redirect_urls": {  // correction ici pour respecter la nomenclature correcte des clés PayPal API
+//             "return_url": "http://localhost:4000/success",
+//             "cancel_url": "http://localhost:4000/paiement"
+//         },
+//         "transactions": [{  // correction ici pour utiliser la clé correcte
+//             "item_list": {
+//                 "items": items
+//             },
+//             "amount": {
+//                 "currency": "CAD",
+//                 "total": formattedTotal
+//             }
+//         }]
+//     };
+
+//     paypal.payment.create(create_payment_json, function(error, payment){
+//         if(error){
+//             console.error(error);
+//             return res.status(500).send('Error creating payment');
+//         } else {
+//             for(let i = 0; i < payment.links.length; i++){
+//                 if (payment.links[i].rel === 'approval_url') {
+//                     return res.redirect(payment.links[i].href);
+//                 }
+//             }
+//         }
+//     });
+// });
+
+
 app.post('/payer', (req, res) => {
-    const { items } = req.body;
-    const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0).toFixed(2);
-    const create_payment_json = {
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"
-        },
-        "redirect_urls": {  // correction ici pour respecter la nomenclature correcte des clés PayPal API
-            "return_url": "http://localhost:4000/success",
-            "cancel_url": "http://localhost:4000/paiement"
-        },
-        "transactions": [{  // correction ici pour utiliser la clé correcte
-            "item_list": {
-                "items": items
+    console.log(req.body);
+
+    const items = Object.keys(req.body)
+        .filter(key => key.startsWith('items['))
+        .reduce((acc, key) => {
+            const match = key.match(/^items\[(\d+)]\[(.+)]$/);
+            const index = parseInt(match[1], 10);
+            const property = match[2];
+
+            if (!acc[index]) {
+                acc[index] = { currency: 'CAD' };  // Assurez-vous que la devise est toujours définie
+            }
+
+            acc[index][property] = req.body[key];
+            return acc;
+        }, []);
+
+        items.forEach(item => {
+            item.price = parseFloat(item.price).toFixed(2);
+        });
+        
+        const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
+        const formattedTotal = total.toFixed(2);
+        console.log("Total formatted for PayPal:", formattedTotal);
+
+        const create_payment_json = {
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
             },
+            "redirect_urls": {
+                "return_url": "http://localhost:4000/success",
+                "cancel_url": "http://localhost:4000/paiement"
+            },
+            "transactions": [{
+                "item_list": {
+                    "items": items
+                },
+                "amount": {
+                    "currency": "CAD",
+                    "total": formattedTotal
+                }
+            }]
+        };
+        
+
+    paypal.payment.create(create_payment_json, function(error, payment){
+        if (error) {
+            console.error('PayPal Error:', error);
+            return res.status(500).send('Error creating payment');
+        } else {
+            const approvalUrl = payment.links.find(link => link.rel === 'approval_url').href;
+            return res.redirect(approvalUrl);
+        }
+    });
+});
+
+
+app.get('/success', (req, res) => {
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+
+    // Récupération du montant total de la session ou de la base de données
+    const total = req.session.total; // ou une autre source
+
+    // Validation du format du montant
+    const totalString = typeof total === 'number' ? total.toFixed(2) : total;
+
+    const execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
             "amount": {
                 "currency": "CAD",
-                "total": total
+                "total": totalString
             }
         }]
     };
 
-    paypal.payment.create(create_payment_json, function(error, payment){
-        if(error){
-            console.error(error);
-            return res.status(500).send('Error creating payment');
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            console.error(error.response);
+            res.status(500).send('Error during payment execution');
         } else {
-            for(let i = 0; i < payment.links.length; i++){
-                if (payment.links[i].rel === 'approval_url') {
-                    return res.redirect(payment.links[i].href);
-                }
-            }
+            // Logique après le paiement réussi
+            console.log("Get Payment Response");
+            console.log(JSON.stringify(payment));
+            res.redirect('/payment-successful');
         }
     });
 });
+
+app.get('/payment-successful', (req, res) => {
+    res.send('Le paiement a été effectué avec succès. Merci pour votre achat !');
+});
+
+
+
+// app.get('/success', (req, res) => {
+//     const payerId = req.query.PayerID;
+//     const paymentId = req.query.paymentId;
+
+//     const total = req.session.total;
+//     const execute_payment_json = {
+//         "payer_id": payerId,
+//         "transactions": [{
+//             "amount": {
+//                 "currency": "CAD",
+//                 "total": total
+//             }
+//         }]
+//     };
+
+//     // Appel PayPal pour finaliser le paiement
+//     paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+//         if (error) {
+//             console.log(error.response);
+//             throw error;
+//         } else {
+//             console.log("Get Payment Response");
+//             console.log(JSON.stringify(payment));
+//             // Vous pouvez maintenant envoyer l'utilisateur à une page de succès
+//             res.send('Success');
+//         }
+//     });
+// });
+
+
+
+//Valider mot de passe
+// Require necessary modules
+
+//import express from "express";
+
+
+
+//const app = express();
+
+app.use(express.json());
+
+app.post('/validate_password_endpoint', [
+    body('password').isLength({ min: 8 }).withMessage("Le mot de passe doit contenir au moins 8 caractères"),
+    body('password').matches(/[a-z]/).withMessage("Le mot de passe doit contenir au moins une lettre minuscule"),
+    body('password').matches(/[A-Z]/).withMessage("Le mot de passe doit contenir au moins une lettre majuscule"),
+    body('password').matches(/[0-9]/).withMessage("Le mot de passe doit contenir au moins un chiffre"),
+    body('password').matches(/[^a-zA-Z0-9]/).withMessage("Le mot de passe doit contenir au moins un caractère spécial")
+ ], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errorMessages = errors.array().map(error => error.msg);
+        return res.status(400).json({ valid: false, message: errorMessages });
+    } else {
+        return res.json({ valid: true });
+    }
+ });
