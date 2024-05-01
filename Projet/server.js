@@ -14,6 +14,16 @@ import bcrypt from 'bcrypt';
 const saltRounds = 10;
 import paypal from 'paypal-rest-sdk';
 
+//const express = require('express');
+const app = express();
+const _filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
+
+
+/*
+    Configuration de PayPal
+*/
+
 paypal.configure({
     'mode': 'sandbox',
     'client_id': 'Afll2rmOHzdsz_AXDrNJFGrUjVmsVtj9LKKpOT8ky_VBiEDne2rYVm5j8fvXfgYHpEVbnex3QZ_TgnVF',
@@ -21,9 +31,15 @@ paypal.configure({
 })
 
 
-const app = express();
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+/*
+    Configuration de CORS
+*/
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    next();
+});
 
 /*
     Connect to server
@@ -49,8 +65,9 @@ app.use(session({
     cookie: { secure: false } 
   }));
 
+
 /*
-    Importation de Bootstrap
+    Importation de Bootstrap    
 */
 
 app.use("/js", express.static(_dirname + "/node_modules/bootstrap/dist/js"));
@@ -1144,27 +1161,6 @@ app.post("/supprimerDuPanier", function(req, res) {
     });
 });
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    let nomComplet = profile.getName();
-    let email = profile.getEmail();
-    let [prenom, ...nomParts] = nomComplet.split(' ');
-    let nom = nomParts.join(' '); 
-    const query = `INSERT INTO utilisateurs (prenom, nom, nom_utilisateur, adresse_courriel) VALUES (?, ?, ?, ?)`;
-
-    // Utilisation de la connexion à la base de données existante
-    // Supposons que 'db' est votre client de base de données MySQL
-    db.execute(query, [prenom, nom, prenom, email], (err, results) => {
-        if (err) {
-            // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
-            console.error('Erreur lors de l\'insertion dans la base de données:', err);
-        } else {
-            // Opération réussie
-            console.log('Utilisateur ajouté avec succès dans la base de données.');
-        }
-    });
-}
-
 app.post('mdpGoogle', (req, res) => {
     const { nomComplet, email } = req.body;
     // Divisez le nomComplet en prénom et nom si nécessaire
@@ -1174,7 +1170,6 @@ app.post('mdpGoogle', (req, res) => {
     // Vous pouvez aussi passer des données à la vue si nécessaire
     res.render('/motDePasseGoogle', { email: email });
 });
-
 
 
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
@@ -1286,63 +1281,6 @@ app.post('/deleteComment', async function(req, res) {
     }
 });
 
-
-
-// app.post('/payer', (req, res) => {
-//     console.log(req.body);
-//     //const { items } = req.body;
-//     const items = Object.keys(req.body)
-//         .filter(key => key.startsWith('items['))
-//         .reduce((acc, key) => {
-//             const match = key.match(/^items\[(\d+)]\[(.+)]$/);
-//             const index = parseInt(match[1], 10);
-//             const property = match[2];
-
-//             if (!acc[index]) {
-//                 acc[index] = {};
-//             }
-
-//             acc[index][property] = req.body[key];
-
-//             return acc;
-//         }, []);
-//     const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
-//     const formattedTotal = total.toFixed(0);
-//     const create_payment_json = {
-//         "intent": "sale",
-//         "payer": {
-//             "payment_method": "paypal"
-//         },
-//         "redirect_urls": {  // correction ici pour respecter la nomenclature correcte des clés PayPal API
-//             "return_url": "http://localhost:4000/success",
-//             "cancel_url": "http://localhost:4000/paiement"
-//         },
-//         "transactions": [{  // correction ici pour utiliser la clé correcte
-//             "item_list": {
-//                 "items": items
-//             },
-//             "amount": {
-//                 "currency": "CAD",
-//                 "total": formattedTotal
-//             }
-//         }]
-//     };
-
-//     paypal.payment.create(create_payment_json, function(error, payment){
-//         if(error){
-//             console.error(error);
-//             return res.status(500).send('Error creating payment');
-//         } else {
-//             for(let i = 0; i < payment.links.length; i++){
-//                 if (payment.links[i].rel === 'approval_url') {
-//                     return res.redirect(payment.links[i].href);
-//                 }
-//             }
-//         }
-//     });
-// });
-
-
 app.post('/payer', (req, res) => {
     console.log(req.body);
 
@@ -1368,6 +1306,7 @@ app.post('/payer', (req, res) => {
         const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
         const formattedTotal = total.toFixed(2);
         console.log("Total formatted for PayPal:", formattedTotal);
+        req.session.total = total;
 
         const create_payment_json = {
             "intent": "sale",
@@ -1408,6 +1347,7 @@ app.get('/success', (req, res) => {
 
     // Récupération du montant total de la session ou de la base de données
     const total = req.session.total; // ou une autre source
+    console.log("total session: " + total)
 
     // Validation du format du montant
     const totalString = typeof total === 'number' ? total.toFixed(2) : total;
@@ -1475,12 +1415,9 @@ app.get('/payment-successful', (req, res) => {
 //Valider mot de passe
 // Require necessary modules
 
-//import express from "express";
 
 
 
-//const app = express();
-/** 
 app.use(express.json());
 
 app.post('/validate_password_endpoint', [
@@ -1497,4 +1434,4 @@ app.post('/validate_password_endpoint', [
     } else {
         return res.json({ valid: true });
     }
- });*/
+ });

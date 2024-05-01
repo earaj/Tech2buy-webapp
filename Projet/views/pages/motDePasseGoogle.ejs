@@ -7,48 +7,55 @@
     <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
 </head>
-<%- include ("../partials/header.ejs") %>
-
+<header>
+    <%- include ("../partials/header.ejs") %>
+</header>
 <script>
-    function envoyer(){
+    function envoyer() {
         alert("Un lien a été envoié")
     }
 </script>
-
 <a href="./index">
-                <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
-                </a>
+    <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex">
+        Retour</label>
+</a>
 <div class="row justify-content-center">
     <div class="col-auto">
         <div class="card-header" style="margin-top: 90px;" class="card-title mb-0">
             <Center>
-            <h1><strong>Veuillez entrer un mot de passe pour vous connecter</strong></h1></Center>
+                <h1><strong>Veuillez entrer un mot de passe pour vous connecter</strong></h1>
+            </Center>
         </div>
-       
-        
         <a>Mot de passe</a>
-                <div class="card">
-                    <input type="password" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="mdp" name="motdepasse" required>
-                
-                </div>
+        <div class="card">
+            <input type="password"
+                class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="mdp"
+                name="motdepasse" required>
+
+        </div>
 
         <a>Confirmez mot de passe</a>
         <div class="card">
-            <input type="password" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="cMdp" name="confirmeMdp" required>
-        
+            <input type="password"
+                class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="cMdp"
+                name="confirmeMdp" required>
+
         </div>
-            </div>
-        </div>
-        <br>
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <button class="btn btn-primary btn-lg" type="submit">Confirmer</button>
-            </div>
-        </div><br><br><br><br><br><br><br>
-        <div>
-        <center>
-            <strong>Sécurité et confidentialité</strong><br>
-            Toute transaction effectuée à Tech2Buy est sécurisée. Tous les renseignements personnels que vous nous fournissez seront traités en vertu de notre politique de confidentialite.
-        </center>
     </div>
-<%- include ("../partials/footer.ejs") %>
+</div>
+<br>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <button class="btn btn-primary btn-lg" type="submit">Confirmer</button>
+    </div>
+</div><br><br><br><br><br><br><br>
+<div>
+    <center>
+        <strong>Sécurité et confidentialité</strong><br>
+        Toute transaction effectuée à Tech2Buy est sécurisée. Tous les renseignements personnels que vous nous
+        fournissez seront traités en vertu de notre politique de confidentialite.
+    </center>
+</div>
+<footer>
+    <%- include ("../partials/footer.ejs") %>
+</footer>
