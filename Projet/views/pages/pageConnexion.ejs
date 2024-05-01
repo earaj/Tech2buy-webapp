@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,96 +12,92 @@
     <!-- Assurez-vous d'inclure vos propres liens vers les fichiers CSS et JS -->
 </head>
 <%- include ("../partials/header.ejs") %>
-<style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        font-family: 'Barlow Semi Condensed', sans-serif;
-        background-image: linear-gradient(200deg, rgba(171, 171, 171,0.05) 0%, rgba(171, 171, 171,0.05) 23%,rgba(90, 90, 90,0.05) 23%, rgba(90, 90, 90,0.05) 48%,rgba(65, 65, 65,0.05) 48%, rgba(65, 65, 65,0.05) 61%,rgba(232, 232, 232,0.05) 61%, rgba(232, 232, 232,0.05) 100%),linear-gradient(126deg, rgba(194, 194, 194,0.05) 0%, rgba(194, 194, 194,0.05) 11%,rgba(127, 127, 127,0.05) 11%, rgba(127, 127, 127,0.05) 33%,rgba(117, 117, 117,0.05) 33%, rgba(117, 117, 117,0.05) 99%,rgba(248, 248, 248,0.05) 99%, rgba(248, 248, 248,0.05) 100%),linear-gradient(144deg, rgba(64, 64, 64,0.05) 0%, rgba(64, 64, 64,0.05) 33%,rgba(211, 211, 211,0.05) 33%, rgba(211, 211, 211,0.05) 50%,rgba(53, 53, 53,0.05) 50%, rgba(53, 53, 53,0.05) 75%,rgba(144, 144, 144,0.05) 75%, rgba(144, 144, 144,0.05) 100%),linear-gradient(329deg, rgb(146,196,255),rgb(146,196,255));
-    }
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Barlow Semi Condensed', sans-serif;
+            background-image: linear-gradient(200deg, rgba(171, 171, 171, 0.05) 0%, rgba(171, 171, 171, 0.05) 23%, rgba(90, 90, 90, 0.05) 23%, rgba(90, 90, 90, 0.05) 48%, rgba(65, 65, 65, 0.05) 48%, rgba(65, 65, 65, 0.05) 61%, rgba(232, 232, 232, 0.05) 61%, rgba(232, 232, 232, 0.05) 100%), linear-gradient(126deg, rgba(194, 194, 194, 0.05) 0%, rgba(194, 194, 194, 0.05) 11%, rgba(127, 127, 127, 0.05) 11%, rgba(127, 127, 127, 0.05) 33%, rgba(117, 117, 117, 0.05) 33%, rgba(117, 117, 117, 0.05) 99%, rgba(248, 248, 248, 0.05) 99%, rgba(248, 248, 248, 0.05) 100%), linear-gradient(144deg, rgba(64, 64, 64, 0.05) 0%, rgba(64, 64, 64, 0.05) 33%, rgba(211, 211, 211, 0.05) 33%, rgba(211, 211, 211, 0.05) 50%, rgba(53, 53, 53, 0.05) 50%, rgba(53, 53, 53, 0.05) 75%, rgba(144, 144, 144, 0.05) 75%, rgba(144, 144, 144, 0.05) 100%), linear-gradient(329deg, rgb(146, 196, 255), rgb(146, 196, 255));
+        }
 
-    .bg-image {
-    background-image: url('backgroundImage.jpg'); 
-    background-size: cover;
-    background-position: center;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
+        .bg-image {
+            background-image: url('backgroundImage.jpg');
+            background-size: cover;
+            background-position: center;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
 
-    .login-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 35%;
-        padding: 20px;
-        background: rgba(3, 66, 201, 0.054); /* Black background with transparency */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-    }
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35%;
+            padding: 20px;
+            background: rgba(3, 66, 201, 0.054);
+            /* Black background with transparency */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
 
-    .login-form {
-        margin-top: 20px;
-    }
+        .login-form {
+            margin-top: 20px;
+        }
 
-    .form-control {
-        background: transparent;    
-        border-radius: 20px;
-        border: none;
-        color: white;
-        padding: 10px 20px;
-        margin-bottom: 20px;
-    }
+        .form-control {
+            background: transparent;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
 
-    .btn-primary {
-        border-radius: 20px;
-        padding: 10px 20px;
-        width: 100%;
-        background-color: #007bff;
-        border: none;
-    }
+        .btn-primary {
+            border-radius: 20px;
+            padding: 10px 20px;
+            width: 100%;
+            background-color: #007bff;
+            border: none;
+        }
 
-    .login-form a {
-        color: #ddd;
-    }
+        .login-form a {
+            color: #ddd;
+        }
 
-    .login-form h3 {
-        color: #fff;
-        text-align: center;
-        margin-bottom: 30px;
-    }
+        .login-form h3 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    .form-group {
-        position: relative;
-    }
+        .form-group {
+            position: relative;
+        }
 
-    .form-group i {
-        position: absolute;
-        top: 13px;
-        left: 10px;
-        color: #999;
-    }
+        .form-group i {
+            position: absolute;
+            top: 13px;
+            left: 10px;
+            color: #999;
+        }
 
-    .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: white;
-    opacity: 1; /* Firefox */
-    }
+        .form-control::placeholder {
+            color: white;
+            opacity: 1;
+        }
 
-    .form-control:-ms-input-placeholder { /* Internet Explorer 10-11 */
-        color: white;
-    }
+    </style>
 
-    .form-control::-ms-input-placeholder { /* Microsoft Edge */
-        color: white;
-    }
+    <body>
+        <form action="/connexion" method="post">
 
-    
-</style>
-<body>
-<div class="login-container">
+            <!-- <div class="login-container">
     <div class="login-form">
         <h3 style="color: white;">Connexion</h3>
         <form action="/connexion" method="post">
@@ -121,33 +118,95 @@
             </div>
         </form>
     </div>
-</div>
-<script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
-    <script>
-        function validerEmail() {
-            const courriel = document.getElementById('courriel');
-            if (courriel.value.includes('@') && courriel.value.length >= 2) {
-                courriel.classList.add('is-valid');
-                courriel.classList.remove('is-invalid'); 
-            } else {
-                courriel.classList.remove('is-valid');
-                courriel.classList.add('is-invalid'); 
+</div> -->
+
+
+            <section class="vh-100">
+                <div class="container h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-lg-12 col-xl-11">
+                            <div class="card text-black" style="border-radius: 25px;">
+                                <div class="card-body p-md-5">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Connexion</p>
+
+
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                                    <label class="form-label" for="courriel">Nom Utilisateur</label>
+                                                    <input type="email" class="form-control input-field" id="courriel"
+                                                        name="courriel" placeholder="Adresse courriel" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                                    <label class="form-label" for="motdepasse">Mot de passe</label>
+                                                    <input type="password" class="form-control input-field" id="motdepasse"
+                                                        name="motdepasse" placeholder="Mot de passe" required>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                                <button type="submit" class="btn btn-primary">Se connecter</button>
+                                            </div>
+
+                                            <div class="text-center mt-3">
+                                                <a href="mdpOublie" style="color: rgb(0, 0, 0);">Mot de passe oublié?</a>
+                                            </div>
+                                            <div class="text-center mt-3">
+                                                <a href="inscription" style="color: rgb(0, 0, 0);">Créer un compte</a>
+                                            </div>
+
+
+                                        </div>
+                                        <div
+                                            class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                                            <img src="../Images/loginicon.png" class="img-fluid " style="margin-left: 30%;" height="250" width="250" alt="">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
+
+        <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+        <script>
+            function validerEmail() {
+                const courriel = document.getElementById('courriel');
+                if (courriel.value.includes('@') && courriel.value.length >= 2) {
+                    courriel.classList.add('is-valid');
+                    courriel.classList.remove('is-invalid');
+                } else {
+                    courriel.classList.remove('is-valid');
+                    courriel.classList.add('is-invalid');
+                }
             }
-        }
-        
-       
-        function validerPassword() {
-            const motdepasse = document.getElementById('motdepasse');
-            if (motdepasse.value.length >= 1) {
-                motdepasse.classList.add('is-valid');
-                motdepasse.classList.remove('is-invalid'); 
-            } else {
-                motdepasse.classList.remove('is-valid');
-                motdepasse.classList.add('is-invalid'); 
+
+
+            function validerPassword() {
+                const motdepasse = document.getElementById('motdepasse');
+                if (motdepasse.value.length >= 1) {
+                    motdepasse.classList.add('is-valid');
+                    motdepasse.classList.remove('is-invalid');
+                } else {
+                    motdepasse.classList.remove('is-valid');
+                    motdepasse.classList.add('is-invalid');
+                }
             }
-        }
-        
-        document.getElementById('courriel').addEventListener('input', validerEmail);
-        document.getElementById('motdepasse').addEventListener('input', validerPassword);
+
+            document.getElementById('courriel').addEventListener('input', validerEmail);
+            document.getElementById('motdepasse').addEventListener('input', validerPassword);
         </script>
-</body>
+    </body>
