@@ -133,15 +133,20 @@
     </div>
 
     </div> -->
-    
+ 
     <section class="vh-100">
+      
   <div class="container h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-lg-12 col-xl-11">
         <div class="card text-black" style="border-radius: 25px;">
           <div class="card-body p-md-5">
             <div class="row justify-content-center">
-              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1"> 
+                  <a href="./index">
+                <img src="../Images/BackArrowButton.png" height="45" alt="Back" id="pageindex" class="btn link-secondary">                    
+            </a> 
+             <label for="pageindex"> Retour</label>
 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Créer un compte</p>
 
@@ -149,31 +154,31 @@
                     <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="prenom">Votre Prénom</label>
-                          <input type="text" id="prenom" class="form-control" />
+                          <label class="form-label" for="prenom">Prénom</label>
+                          <input class="form-control" type="text" name="prenom" id="prenom" required>
                         </div>
                       </div>
                 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                      <label class="form-label" for="nom">Votre Nom</label>
-                      <input type="text" id="nom" class="form-control" />
+                      <label class="form-label" for="nom">Nom</label>
+                      <input class="form-control " type="text" name="nom" id="nom" required>
                     </div>
                   </div>
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                      <label class="form-label" for="nomUtilisateur">Votre Nom Utilisateur</label>
-                      <input type="text" id="nom_utilisateur" class="form-control" />
+                      <label class="form-label" for="nomUtilisateur">Nom d'utilisateur</label>
+                <input class="form-control" type="text" name="nom_utilisateur" id="nom_utilisateur"required>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                      <label class="form-label" for="courriel">Votre Adresse de Courriel</label>
-                      <input type="email" id="adresse_courriel" class="form-control" />
+                      <label class="form-label" for="courriel">Adresse de courriel</label>
+                      <input class="form-control" type="email" name="adresse_courriel" id="adresse_courriel" required>
                     </div>
                   </div>
 
@@ -181,7 +186,8 @@
                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                       <label class="form-label" for="motDePasse">Mot de passe</label>
-                      <input type="password" id="mot_de_passe" class="form-control" />
+                <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+                      <span id="message2" style="color:red"> </span>
                     </div>
                   </div>
 
@@ -189,14 +195,16 @@
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                       <label class="form-label" for="password">Confirmer votre mot de passe</label>
-                      <input type="password" id="pswd2" class="form-control" />
+                      <input type="password" class="form-control form-control-sm" id="pswd2" required>
+                      <span id="message2" style="color:red"> </span>
                     </div>
                   </div>
 
            
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <input data-mdb-button-init data-mdb-ripple-init  role="button" type="submit" class="btn btn-primary btn-lg" value="S'inscrire"></input>
+                    <input class="btn btn-primary btn-block col-8"  role="button" type="submit" value="S'inscrire ">
+
                   </div>
 
        
