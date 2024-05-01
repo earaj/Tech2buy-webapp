@@ -14,6 +14,16 @@ import bcrypt from 'bcrypt';
 const saltRounds = 10;
 import paypal from 'paypal-rest-sdk';
 
+//const express = require('express');
+const app = express();
+const _filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
+
+
+/*
+    Configuration de PayPal
+*/
+
 paypal.configure({
     'mode': 'sandbox',
     'client_id': 'Afll2rmOHzdsz_AXDrNJFGrUjVmsVtj9LKKpOT8ky_VBiEDne2rYVm5j8fvXfgYHpEVbnex3QZ_TgnVF',
@@ -21,9 +31,15 @@ paypal.configure({
 })
 
 
-const app = express();
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+/*
+    Configuration de CORS
+*/
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    next();
+});
 
 /*
     Connect to server
@@ -49,8 +65,9 @@ app.use(session({
     cookie: { secure: false } 
   }));
 
+
 /*
-    Importation de Bootstrap
+    Importation de Bootstrap    
 */
 
 app.use("/js", express.static(_dirname + "/node_modules/bootstrap/dist/js"));
@@ -1144,27 +1161,6 @@ app.post("/supprimerDuPanier", function(req, res) {
     });
 });
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    let nomComplet = profile.getName();
-    let email = profile.getEmail();
-    let [prenom, ...nomParts] = nomComplet.split(' ');
-    let nom = nomParts.join(' '); 
-    const query = `INSERT INTO utilisateurs (prenom, nom, nom_utilisateur, adresse_courriel) VALUES (?, ?, ?, ?)`;
-
-    // Utilisation de la connexion à la base de données existante
-    // Supposons que 'db' est votre client de base de données MySQL
-    db.execute(query, [prenom, nom, prenom, email], (err, results) => {
-        if (err) {
-            // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
-            console.error('Erreur lors de l\'insertion dans la base de données:', err);
-        } else {
-            // Opération réussie
-            console.log('Utilisateur ajouté avec succès dans la base de données.');
-        }
-    });
-}
-
 app.post('mdpGoogle', (req, res) => {
     const { nomComplet, email } = req.body;
     // Divisez le nomComplet en prénom et nom si nécessaire
@@ -1174,7 +1170,6 @@ app.post('mdpGoogle', (req, res) => {
     // Vous pouvez aussi passer des données à la vue si nécessaire
     res.render('/motDePasseGoogle', { email: email });
 });
-
 
 
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
@@ -1475,11 +1470,8 @@ app.get('/payment-successful', (req, res) => {
 //Valider mot de passe
 // Require necessary modules
 
-//import express from "express";
 
 
-
-//const app = express();
 
 app.use(express.json());
 
