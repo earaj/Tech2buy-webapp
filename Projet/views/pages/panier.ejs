@@ -1,129 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panier</title>
+    <title>Panier | TECH2BUY</title>
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css" />
-    <script src="/js/bootstrap.min.js"></script>
+    <style>
+        .background-section {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 30%;
+            background-color: #F0FAFF;
+            z-index: -1;
+        }
+
+        h2 {
+            color: #000;
+            font-family: "Barlow Semi Condensed";
+            font-size: 40px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal
+        }
+
+        h3 {
+            color: #000;
+            font-family: "Barlow Semi Condensed";
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal
+        }
+
+        .custom-margin-top {
+            margin-top: 100px;
+            margin-left: 70px;
+        }
+
+        .custom-margin-resume {
+            margin-top: 20px;
+        }
+
+        span {
+            color: green;
+        }
+
+        
+        .product-list {
+            max-height: 500px; 
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+       
+        .checkout-summary {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .checkout-button {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<header>
-    <%- include("../partials/headTech2buy.ejs") %>
-</header>
-<!-- <script language="javascript">
-    if(screen.width>=1000) {document.write("<style>body{zoom:80%;}</style>");}
-</script> -->
-<style>
-    .background-section {
-        position: fixed;
-        top: 0;
-        right: 0;
-        height: 100%;
-        width: 30%;
-        background-color: #F0FAFF;
-        z-index: -1;
-    }
 
-    h2 {
-        color: #000;
-
-        font-family: "Barlow Semi Condensed";
-        font-size: 40px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal
-    }
-
-
-    h3 {
-        color: #000;
-
-        font-family: "Barlow Semi Condensed";
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal
-    }
-
-    .custom-margin-top {
-        margin-top: 100px;
-        margin-left: 70px;
-    }
-
-    .custom-margin-resume {
-        margin-top: 20px;
-    }
-
-
-    span {
-        color: green;
-
-    }
-</style>
 <body>
+    <header>
+        <%- include("../partials/headTech2buy.ejs") %>
+    </header>
+
     <div class="container">
         <div class="row">
             <div class="col-md-7">
                 <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
 
-                <% if (panier && panier.length) { %>
-                    <% panier.forEach(function(produit) { %>
-                        <div  class="row custom-margin-top">
-                            <div class="col-sm-4 col-md-2">
-                                <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
-                            </div>
-                            <div class="col-sm-8 col-md-10">
-                                <a href="/detailProduit?id=<%=produit.id_produit%>">
-                                <h3 >
-                                    <%= produit.nom_produit %>
-                                </h3></a>
-                                <p>
-                                    <%= produit.description_produit %>
-                                </p>
-                                <p>
-                                    <%= produit.prix_unitaire %>$
-                                </p>
-                                <p>Quantité: 
-                                    <%= produit.quantite %>
-                                </p>
-                                <form action="/supprimerDuPanier" method="post">
-                                    <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
-                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Supprimer</button>
-                                </form>
-                            </div>
-                        </div>
-                        <% }) %>
-                            <% } else { %>
-                                <h3>Votre panier est vide.</h3>
-                                <% } %>
-            </div>
-            <div class="col-md-5"> 
-                <div class="bg-light p-3"> 
-                    <h2 class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</h2>
-                    <% let prix_total=0; %>
+                <div class="product-list">
                     <% if (panier && panier.length) { %>
                         <% panier.forEach(function(produit) { %>
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <h4><%= produit.nom_produit %> <% if (produit.quantite > 1){ %>
-                                        (x <%= produit.quantite %>) <% }%></h4>
-                                    <p><%= produit.prix_unitaire %>$</p>
+                            <div  class="row custom-margin-top">
+                                <div class="col-sm-4 col-md-2">
+                                    <img src="<%= produit.image_url %>" alt="<%= produit.nom_produit %>" class="img-fluid">
                                 </div>
-                                <% prix_total += produit.prix_unitaire * produit.quantite; %>
+                                <div class="col-sm-8 col-md-10">
+                                    <a href="/detailProduit?id=<%=produit.id_produit%>">
+                                    <h3 >
+                                        <%= produit.nom_produit %>
+                                    </h3></a>
+                                    <p>
+                                        <%= produit.description_produit %>
+                                    </p>
+                                    <p>
+                                        <%= produit.prix_unitaire %>$
+                                    </p>
+                                    <p>Quantité: 
+                                        <%= produit.quantite %>
+                                    </p>
+                                    <form action="/supprimerDuPanier" method="post">
+                                        <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
+                                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Supprimer</button>
+                                    </form>
+                                </div>
                             </div>
                         <% }) %>
                     <% } else { %>
-                        <h3>On dirait que c'est vide !</h3>
+                        <h3>Votre panier est vide.</h3>
                     <% } %>
-                    <% if (panier && panier.length){ %>
-                        <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
+                </div> 
+            </div>
+            <div class="col-md-5"> 
+                <div class="checkout-summary"> 
+                    <% let totalItems = 0; %>
+                    <% let totalPrice = 0; %>
+                    <% if (panier && panier.length) { %>
+                        <% panier.forEach(function(produit) { %>
+                            <% totalItems += produit.quantite; %>
+                            <% totalPrice += produit.prix_unitaire * produit.quantite; %>
+                        <% }) %>
                     <% } %>
-                    <a href="/paiement">
-                        <button class="btn btn-primary btn-lg">Passer à la caisse</button>
-                    </a>
+                    <h3>Total d'articles: <%= totalItems %></h3>
+                    <h3>Prix total: <%= totalPrice.toFixed(2) %>$</h3>
+                    <a href="/paiement" class="btn btn-primary checkout-button btn-lg">Passer à la caisse</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer>
+        <div style="width: 100%;">
+            <%- include ("../partials/footer.ejs") %></div>
+    </footer>
 </body>
-<%- include ("../partials/footer.ejs") %>
+
+</html>

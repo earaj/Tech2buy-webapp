@@ -1,48 +1,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application evenements</title>
+    <title>Réinitialiser | TECH2BUY</title>
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
 </head>
-<%- include ("../partials/header.ejs") %>
-
+<header>
+    <%- include ("../partials/header.ejs") %>
+</header>
 <script>
     function envoyer(){
         alert("Un lien a été envoié")
     }
 </script>
-
 <a href="./index">
-                <button id="pageindex" type="button" class="btn link-secondary">&#8592;</button> <label for="pageindex"> Retour</label>
+    <img src="../Images/BackArrowButton.png" height="45" alt="Back" id="pageindex" class="btn link-secondary">                    
                 </a>
+                <label for="pageindex"> Retour</label>
 <div class="row justify-content-center">
-    <div class="col-auto">
-        <div class="card-header" style="margin-top: 90px;" class="card-title mb-0">
-            <Center>
-            <h1><strong>Vous avez oublié votre mot de passe ?</strong></h1></Center>
-        </div>
-        <div><Center> <h5>Entrez votre adresse courriel utilisée pour<br> créer votre compte et nous vous enverrons un <br>lien de réinitialisation.</h5></Center></div>
-        
-        <a>Adresse de courriel</a>
+    
+        <div class="col-auto">
+            <div class="card-header" style="margin-top: 90px;" class="card-title mb-0">
+                <Center>
+                <h1><strong>Vous avez oublié votre mot de passe ?</strong></h1></Center>
+            </div>
+            <div><Center> <h5>Entrez votre adresse courriel utilisée pour<br> créer votre compte et nous vous enverrons un <br>lien de réinitialisation.</h5></Center></div>
+            <br><br>
+            <form action="/reset-password" method="POST">
                 <div class="card">
+                    <label for="courriel"></label>
                     <input type="email" class="form-control input-lg <%= typeof erreur !== 'undefined' ? 'is-invalid' : '' %>" id="courriel" name="courriel" required>
-                
+                    <div class="row justify-content-center">
+                        <div class="col-auto"></div>
+                    </div>
                 </div>
-            </div>
+                <br><br>
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <button class="btn btn-primary btn-lg" type="submit">Envoyer le lien</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <br>
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <button onclick="envoyer()" class="btn btn-primary btn-lg" type="submit">Envoyer le lien</button>
-            </div>
-        </div><br><br><br><br><br><br><br>
-        <div>
         <center>
             <strong>Sécurité et confidentialité</strong><br>
             Toute transaction effectuée à Tech2Buy est sécurisée. Tous les renseignements personnels que vous nous fournissez seront traités en vertu de notre politique de confidentialite.
         </center>
     </div>
-<%- include ("../partials/footer.ejs") %>
+    <div style="position: absolute; bottom: 0%; width: 100%; left:0%">
+<%- include ("../partials/footer.ejs") %></div>
