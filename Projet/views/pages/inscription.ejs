@@ -1,203 +1,206 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inscritption</title>
+  <title>Application evenements</title>
   <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <link rel="stylesheet" href="commun.css" />
   <script src="/js/bootstrap.min.js"></script>
 
 </head>
+
+
 <script>
-//   function validation() {
-//     var pw1 = document.getElementById("mot_de_passe").value;
-//     var pw2 = document.getElementById("pswd2").value;
-//     if (pw1 !== pw2) {
-//       document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
-//       return false;
-//     }
-//     var xhr = new XMLHttpRequest();
-//     xhr.open("POST", "validate_password_endpoint", true);
-//     xhr.setRequestHeader("Content-Type", "application/json");
-//     xhr.onreadystatechange = function () {
-//       if (xhr.readyState === 4) {
-//         if (xhr.status === 200) {
-//           var response = JSON.parse(xhr.responseText);
-//           if (response.valid) {
-//             alert("Création de compte avec Succès!");
-//             window.location.href = "/pageAffichagePrincipale";
-//           } else {
-//             document.getElementById("message2").innerHTML = "";
-//             response.message.forEach(function (errorMessage) {
-//               document.getElementById("message2").innerHTML += errorMessage + "<br>";
-//             });
-//           }
-//         } else {
-//           // Handle server errors
-//           console.error("Server error: " + xhr.status);
-//         }
-//       }
-//     };
-//     xhr.send(JSON.stringify({password: pw1}));
-//     return false;
-//   }
+    function validation() {
+      var pw1 = document.getElementById("mot_de_passe").value;
+      var pw2 = document.getElementById("pswd2").value;
 
-function validation() {
-    var pw1 = document.getElementById("mot_de_passe").value;
-    var pw2 = document.getElementById("pswd2").value;
-    if (pw1 !== pw2) {
-      document.getElementById("message2").innerHTML = "**Les mots de passe ne correspondent pas**";
-      return false;
-    }
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "validate_password_endpoint", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
-          if (response.valid) {
-            alert("Création de compte avec Succès!");
-            window.location.href = "/pageAffichagePrincipale";
-          } else {
-            document.getElementById("message2").innerHTML = "";
-            response.message.forEach(function (errorMessage) {
-              document.getElementById("message2").innerHTML += errorMessage + "<br>";
-            });
-          }
-        } else {
-          console.error("Server error: " + xhr.status);
-        }
+      if (pw1 !== pw2) {
+          document.getElementById("message2").innerText = "**Les mots de passe ne correspondent pas**";
+          return false;
       }
-    };
-    xhr.send(JSON.stringify({password: pw1}));
-    return true;
-}
 
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "validate_password_endpoint", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                  var response = JSON.parse(xhr.responseText);
+                  if (response.valid) {
+                      alert("Création de compte avec Succès!");
+                      window.location.href = "/pageAffichagePrincipale"; 
+                  } else {
+                      document.getElementById("message2").innerText = ""; 
+                      var errorMessage = response.message.join("\n"); // Join error messages with newline
+                      document.getElementById("message2").innerText = errorMessage;
+                  }
+              } else {
+                  // Handle server errors
+                  console.error("Server error: " + xhr.status);
+              }
+          }
+      };
+
+      xhr.send(JSON.stringify({ password: pw1 }));
+
+      return false;
+  }
 </script>
 
 <style>
-  body,
-  html {
-    height: 100%;
-    margin: 0;
-    font-family: 'Barlow Semi Condensed', sans-serif;
-    background-image: linear-gradient(200deg, rgba(171, 171, 171, 0.05) 0%, rgba(171, 171, 171, 0.05) 23%, rgba(90, 90, 90, 0.05) 23%, rgba(90, 90, 90, 0.05) 48%, rgba(65, 65, 65, 0.05) 48%, rgba(65, 65, 65, 0.05) 61%, rgba(232, 232, 232, 0.05) 61%, rgba(232, 232, 232, 0.05) 100%), linear-gradient(126deg, rgba(194, 194, 194, 0.05) 0%, rgba(194, 194, 194, 0.05) 11%, rgba(127, 127, 127, 0.05) 11%, rgba(127, 127, 127, 0.05) 33%, rgba(117, 117, 117, 0.05) 33%, rgba(117, 117, 117, 0.05) 99%, rgba(248, 248, 248, 0.05) 99%, rgba(248, 248, 248, 0.05) 100%), linear-gradient(144deg, rgba(64, 64, 64, 0.05) 0%, rgba(64, 64, 64, 0.05) 33%, rgba(211, 211, 211, 0.05) 33%, rgba(211, 211, 211, 0.05) 50%, rgba(53, 53, 53, 0.05) 50%, rgba(53, 53, 53, 0.05) 75%, rgba(144, 144, 144, 0.05) 75%, rgba(144, 144, 144, 0.05) 100%), linear-gradient(329deg, rgb(146, 196, 255), rgb(146, 196, 255));
+   body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Barlow Semi Condensed', sans-serif;
+      background-image: linear-gradient(200deg, rgba(171, 171, 171,0.05) 0%, rgba(171, 171, 171,0.05) 23%,rgba(90, 90, 90,0.05) 23%, rgba(90, 90, 90,0.05) 48%,rgba(65, 65, 65,0.05) 48%, rgba(65, 65, 65,0.05) 61%,rgba(232, 232, 232,0.05) 61%, rgba(232, 232, 232,0.05) 100%),linear-gradient(126deg, rgba(194, 194, 194,0.05) 0%, rgba(194, 194, 194,0.05) 11%,rgba(127, 127, 127,0.05) 11%, rgba(127, 127, 127,0.05) 33%,rgba(117, 117, 117,0.05) 33%, rgba(117, 117, 117,0.05) 99%,rgba(248, 248, 248,0.05) 99%, rgba(248, 248, 248,0.05) 100%),linear-gradient(144deg, rgba(64, 64, 64,0.05) 0%, rgba(64, 64, 64,0.05) 33%,rgba(211, 211, 211,0.05) 33%, rgba(211, 211, 211,0.05) 50%,rgba(53, 53, 53,0.05) 50%, rgba(53, 53, 53,0.05) 75%,rgba(144, 144, 144,0.05) 75%, rgba(144, 144, 144,0.05) 100%),linear-gradient(329deg, rgb(146,196,255),rgb(146,196,255));
   }
-
   .image {
-    right: 0%;
-    top: 0%;
+      right: 0%;
+      top: 0%;
   }
 
   h1 {
-    color: #000;
-    text-align: center;
-    font-family: "Barlow Semi Condensed";
-    font-size: 60px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal
+      color: #000;
+      text-align: center;
+      font-family: "Barlow Semi Condensed";
+      font-size: 60px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal
   }
-
   label {
-    font-family: "Barlow Semi Condensed";
-    font-size: 25px;
-    font-style: bold;
-    font-weight: 400;
-    line-height: normal;
+      font-family: "Barlow Semi Condensed";
+      font-size: 25px;
+      font-style: bold;
+      font-weight: 400;
+      line-height: normal;
   }
 
   .btn-primary:hover {
-    transform: translateY(2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+  
 </style>
 <header>
   <%- include ("../partials/header.ejs") %>
 </header>
-<body>
-    <form onsubmit="return validation()" action="/inscription" method="post">
-      <section class="vh-100">
-        <div class="container h-100">
-          <div class="row d-flex justify-content-center align-items-center h-100">
+<form id="signupForm" onsubmit="return validation()">
+<section class="vh-100">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-12 col-xl-11">
-              <div class="card text-black" style="border-radius: 25px;">
-                <a href="./index">
-                  <img src="../Images/BackArrowButton.png" height="45" alt="Back" id="pageindex" class="btn link-secondary">                  
-                </a>
-                <div class="card-body p-md-5">
-                  
-                  <div class="row justify-content-center">
-                    <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                      
-                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Créer un compte</p>
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="prenom">Prénom</label>
-                          <input class="form-control" type="text" name="prenom" id="prenom" required>
-                          <label class="form-label" for="prenom">Votre Prénom</label>
-                          <input type="text" id="prenom" name="prenom" required class="form-control" />
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Créer un compte</p>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="prenom">Prénom</label>
+                                        <input type="text" id="prenom" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="nom">Nom</label>
+                                        <input type="text" id="nom" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="nomUtilisateur">Nom utilisateur</label>
+                                        <input type="text" id="nom_utilisateur" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="courriel">Courriel</label>
+                                        <input type="email" id="adresse_courriel" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="motDePasse">Mot de passe</label>
+                                        <input type="password" id="mot_de_passe" class="form-control" />
+                                        <span id="message2" style="color:red"> </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="password">Confimer mot de passe</label>
+                                        <input type="password" id="pswd2" class="form-control" />
+                                        <span id="message2" style="color:red"> </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                    <input data-mdb-button-init data-mdb-ripple-init role="button" type="submit" class="btn btn-primary btn-lg" value="Creer compte"></input>
+                                </div>
+                            </div>
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                                <img src="../Images/createAccountImage.jpg" class="img-fluid" alt="">
+                            </div>
                         </div>
-                      </div>
-
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="nom">Votre Nom</label>
-                          <input type="text" id="nom" name="nom" required  class="form-control" />
-                        </div>
-                      </div>
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="nomUtilisateur">Votre Nom Utilisateur</label>
-                          <input type="text" id="nom_utilisateur" name="nom_utilisateur" required class="form-control" />
-                        </div>
-                      </div>
-
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="courriel">Votre Adresse de Courriel</label>
-                          <input type="email" id="adresse_courriel" name="adresse_courriel" required class="form-control" />
-                        </div>
-                      </div>
-
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="motDePasse">Mot de passe</label>
-                          <input type="password" id="mot_de_passe" name="mot_de_passe" required class="form-control" />
-                          <span id="message2" style="color:red"> </span>
-                        </div>
-                      </div>
-
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
-                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="password">Confirmer votre mot de passe</label>
-                          <input type="password" id="pswd2" required class="form-control" />
-                          <span id="message2" style="color:red"> </span>
-                        </div>
-                      </div>
-
-                      <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <input data-mdb-button-init data-mdb-ripple-init role="button" type="submit"
-                          class="btn btn-primary btn-lg" value="S'inscrire"></input>
-                      </div>
                     </div>
-                    <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-                      <img src="../Images/createAccountImage.jpg" class="img-fluid" alt="">
-                    </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </section>
-    </form>
+    </div>
+</section>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function validatePassword() {
+    var password = $("#mot_de_passe").val();
+    var confirmPassword = $("#pswd2").val();
+
+    if (password !== confirmPassword) {
+        $("#message2").html("Les mots de passe ne correspondent pas.");
+        return false;
+    } else {
+        $("#message2").html("");
+        return true;
+    }
+}
+
+function validation() {
+  if (!validatePassword()) {
+        return false;
+    }
+
+    var password = $("#mot_de_passe").val();
+
+    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    if (!strongRegex.test(password)) {
+        $("#message2").html("Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
+        return false;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/inscription",
+        data: $("#signupForm").serialize(), 
+        success: function(response) {
+
+            console.log(response);
+            alert("Création de compte avec succès!");
+            window.location.href = "/pageAffichagePrincipale"; 
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert("Une erreur s'est produite lors de la création de compte.");
+        }
+    });
+    return false;
+}
+</script>
 </body>
 </html>
