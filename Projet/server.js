@@ -1281,63 +1281,6 @@ app.post('/deleteComment', async function(req, res) {
     }
 });
 
-
-
-// app.post('/payer', (req, res) => {
-//     console.log(req.body);
-//     //const { items } = req.body;
-//     const items = Object.keys(req.body)
-//         .filter(key => key.startsWith('items['))
-//         .reduce((acc, key) => {
-//             const match = key.match(/^items\[(\d+)]\[(.+)]$/);
-//             const index = parseInt(match[1], 10);
-//             const property = match[2];
-
-//             if (!acc[index]) {
-//                 acc[index] = {};
-//             }
-
-//             acc[index][property] = req.body[key];
-
-//             return acc;
-//         }, []);
-//     const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
-//     const formattedTotal = total.toFixed(0);
-//     const create_payment_json = {
-//         "intent": "sale",
-//         "payer": {
-//             "payment_method": "paypal"
-//         },
-//         "redirect_urls": {  // correction ici pour respecter la nomenclature correcte des clés PayPal API
-//             "return_url": "http://localhost:4000/success",
-//             "cancel_url": "http://localhost:4000/paiement"
-//         },
-//         "transactions": [{  // correction ici pour utiliser la clé correcte
-//             "item_list": {
-//                 "items": items
-//             },
-//             "amount": {
-//                 "currency": "CAD",
-//                 "total": formattedTotal
-//             }
-//         }]
-//     };
-
-//     paypal.payment.create(create_payment_json, function(error, payment){
-//         if(error){
-//             console.error(error);
-//             return res.status(500).send('Error creating payment');
-//         } else {
-//             for(let i = 0; i < payment.links.length; i++){
-//                 if (payment.links[i].rel === 'approval_url') {
-//                     return res.redirect(payment.links[i].href);
-//                 }
-//             }
-//         }
-//     });
-// });
-
-
 app.post('/payer', (req, res) => {
     console.log(req.body);
 
