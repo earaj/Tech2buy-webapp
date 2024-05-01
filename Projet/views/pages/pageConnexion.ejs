@@ -48,15 +48,15 @@
         linear-gradient(329deg, rgb(146, 196, 255), rgb(146, 196, 255));
     }
 
-    .bg-image {
-      background-image: url("backgroundImage.jpg");
-      background-size: cover;
-      background-position: center;
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
+        .bg-image {
+            background-image: url("backgroundImage.jpg");
+            background-size: cover;
+            background-position: center;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
     .login-container {
       position: absolute;
@@ -91,36 +91,36 @@
       border: none;
     }
 
-    .login-form a {
-      color: #ddd;
-    }
+        .login-form a {
+            color: #ddd;
+        }
 
-    .login-form h3 {
-      color: #fff;
-      text-align: center;
-      margin-bottom: 30px;
-    }
+        .login-form h3 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    .form-group {
-      position: relative;
-    }
+        .form-group {
+            position: relative;
+        }
 
-    .form-group i {
-      position: absolute;
-      top: 13px;
-      left: 10px;
-      color: #999;
-    }
+        .form-group i {
+            position: absolute;
+            top: 13px;
+            left: 10px;
+            color: #999;
+        }
 
-    .form-control::placeholder {
-      color: white;
-      opacity: 1;
-    }
-  </style>
+        .form-control::placeholder {
+            color: white;
+            opacity: 1;
+        }
+    </style>
 
-  <body>
-    <form action="/connexion" method="post">
-      <!-- <div class="login-container">
+    <body>
+        <form action="/connexion" method="post">
+            <!-- <div class="login-container">
     <div class="login-form">
         <h3 style="color: white;">Connexion</h3>
         <form action="/connexion" method="post">
@@ -203,29 +203,29 @@
       </section>
     </form>
 
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
-    <script>
-      function validerEmail() {
-        const courriel = document.getElementById("courriel");
-        if (courriel.value.includes("@") && courriel.value.length >= 2) {
-          courriel.classList.add("is-valid");
-          courriel.classList.remove("is-invalid");
-        } else {
-          courriel.classList.remove("is-valid");
-          courriel.classList.add("is-invalid");
-        }
-      }
+        <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+        <script>
+            function validerEmail() {
+                const courriel = document.getElementById("courriel");
+                if (courriel.value.includes("@") && courriel.value.length >= 2) {
+                    courriel.classList.add("is-valid");
+                    courriel.classList.remove("is-invalid");
+                } else {
+                    courriel.classList.remove("is-valid");
+                    courriel.classList.add("is-invalid");
+                }
+            }
 
-      function validerPassword() {
-        const motdepasse = document.getElementById("motdepasse");
-        if (motdepasse.value.length >= 1) {
-          motdepasse.classList.add("is-valid");
-          motdepasse.classList.remove("is-invalid");
-        } else {
-          motdepasse.classList.remove("is-valid");
-          motdepasse.classList.add("is-invalid");
-        }
-      }
+            function validerPassword() {
+                const motdepasse = document.getElementById("motdepasse");
+                if (motdepasse.value.length >= 1) {
+                    motdepasse.classList.add("is-valid");
+                    motdepasse.classList.remove("is-invalid");
+                } else {
+                    motdepasse.classList.remove("is-valid");
+                    motdepasse.classList.add("is-invalid");
+                }
+            }
 
       document
         .getElementById("courriel")
