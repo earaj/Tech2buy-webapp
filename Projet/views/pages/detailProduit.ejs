@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détail du produit</title>
+    <title><%= produit.nom_produit %> | TECH2BUY</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="commun.css">
     <link href='https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed' rel='stylesheet'>
@@ -11,6 +11,7 @@
 <header>
     <%- include("../partials/headTech2buy.ejs") %>
 </header>
+<script src="/js/bootstrap.min.js"></script>
 <body>
     <div class="container mt-5">
         <div class="row">
@@ -59,33 +60,6 @@
         </div>
     </div>
 </div>
-
-<!-- <div class="container my-5">
-    <h3>Commentaires</h3>
-    <% commentaires.forEach(function(commentaire) { %>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Utilisateur <%= commentaire.id_utilisateur %></h5>
-                <p class="card-text"><%= commentaire.commentaire %></p>
-                <p class="card-text"><small class="text-muted">Posté le <%= commentaire.date_du_commentaire %></small></p>
-            </div>
-        </div>
-    <% }); %>
-</div> -->
-
-<!-- <div class="container my-5">
-    <h3>Commentaires</h3>
-    <% commentaires.forEach(function(commentaire) { %>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title"><%= commentaire.nom_utilisateur %></h5>
-                <p class="card-text"><%= commentaire.commentaire %></p>
-                <p class="card-text"><small class="text-muted">Posté le <%= new Date(commentaire.date_du_commentaire).toLocaleDateString() %></small></p>
-            </div>
-        </div>
-    <% }); %>
-</div> -->
-
 <div class="container my-5">
     <h3>Commentaires</h3>
     <% commentaires.forEach(function(commentaire) { %>
@@ -104,8 +78,5 @@
         </div>
     <% }); %>
 </div>
-
-
-    <script src="/js/bootstrap.min.js"></script>
 </body>
 </html>

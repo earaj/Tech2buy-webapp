@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Affichage Principale</title>
+    <title>Recherche | TECH2BUY</title>
 
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css"/>
@@ -19,26 +19,21 @@
 
   submenuTriggers.forEach(function (trigger) {
     trigger.addEventListener('click', function (e) {
-
-      // Fermez tous les sous-menus ouverts
       var openSubmenus = document.querySelectorAll('.dropdown-submenu .dropdown-menu');
       openSubmenus.forEach(function (menu) {
-        // Fermez le menu si ce n'est pas le menu actuellement cliqué
+       
         if (menu !== this.nextElementSibling) {
           menu.style.display = 'none';
         }
       }, this); 
 
-      // Trouvez le sous-menu correspondant à ce déclencheur et basculez sa visibilité
       var submenu = this.nextElementSibling;
       submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
 
-      // Empêchez l'événement de se propager pour éviter de fermer la liste déroulante parente
       e.stopPropagation();
     });
   });
 
-  // Ajoutez un écouteur d'événements sur le document pour fermer les sous-menus quand on clique en dehors
   document.addEventListener('click', function (e) {
     var openSubmenus = document.querySelectorAll('.dropdown-submenu .dropdown-menu');
     openSubmenus.forEach(function (menu) {
@@ -66,10 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateResultsDisplay(items) {
     var resultsContainer = document.querySelector('.row');
-    resultsContainer.innerHTML = ''; // Effacez les résultats précédents
+    resultsContainer.innerHTML = ''; 
 
     items.forEach(function(item) {
-      // Créez et ajoutez ici les nouveaux éléments HTML pour chaque résultat
       var cardHtml = `<% if (items.length) { %>
                 <% items.forEach(function(item) { %>
                       <div class="col-md-3">
@@ -106,8 +100,7 @@ function recherche(searchTerm, sortBy) {
     fetch(`/recherche?query=${encodeURIComponent(searchTerm)}&sortBy=${sortBy}`)
         .then(response => response.json())
         .then(data => {
-            // Traiter les données reçues (par exemple, mettre à jour le DOM avec les résultats)
-            console.log(data); // Afficher les résultats dans la console pour le debug
+            console.log(data);
         })
         .catch(error => console.error('Erreur lors de la recherche AJAX:', error));
 }
