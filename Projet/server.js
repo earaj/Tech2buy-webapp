@@ -1480,7 +1480,7 @@ app.get('/payment-successful', (req, res) => {
 
 
 //const app = express();
-
+/** 
 app.use(express.json());
 
 app.post('/validate_password_endpoint', [
@@ -1497,4 +1497,4 @@ app.post('/validate_password_endpoint', [
     } else {
         return res.json({ valid: true });
     }
- });
+ });*/
