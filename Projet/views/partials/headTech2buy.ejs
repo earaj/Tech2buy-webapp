@@ -1,149 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Your Site</title>
     <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
         }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #fff; /* Set background color to white */
-        }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #fff; /* Set background color to white */
+      }
+      .navbar {
+        background-color: #c0ddff;
+        position: relative;
+        display: flex;
+        justify-content: space-between; /* Align items to the left and right */
+        align-items: center;
+        padding: 15px 5%; /* Adjust padding for better spacing */
+      }
 
-        .navbar {
-            background-color: #C0DDFF; /* Best Buy's blue color */
-            color: #fff;
-            padding: 15px 0;
-            text-align: center;
-            position: relative;
-            z-index: 1; /* Ensure the navbar stays on top of other content */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Add a subtle shadow for depth */
-            animation: fadeIn 1s;
-        }
+      .navbar-brand img {
+        height: 80px;
+        width: 200px;
+        margin-right: 40px;
+        animation: fadeIn 1s;
+      }
 
-        .navbar-brand img {
-            height: 80px;
-            width: 200px;
-            margin-right: 40px;
-            animation: fadeIn 1s;
-        }
+      .nav-item form {
+        animation: fadeIn 1s;
+      }
 
-        .navbar-nav {
-            margin-right: 700px;
-            animation: fadeIn 1s;
-        }
+      .nav-item input[type="text"] {
+        border-radius: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
 
-        .nav-item form {
-            animation: fadeIn 1s;
-        }
+      .nav-item input[type="text"]:focus {
+        outline: none;
+        border-color: #c0ddff; /* Change border color on focus */
+      }
 
-        .nav-item input[type="text"] {
-            border-radius: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
+      .nav-item button[type="cherche"] {
+        border: none;
+        background-color: #c0ddff;
+        color: #fff;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-        .nav-item input[type="text"]:focus {
-            outline: none;
-            border-color: #C0DDFF; /* Change border color on focus */
-        }
+      .nav-item button[type="cherche"]:hover {
+        background-color: #c0ddff; /* Darken background color on hover */
+      }
 
-        .nav-item button[type="cherche"] {
-            border: none;
-            background-color: #C0DDFF;
-            color: #fff;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+      .nav-link {
+        font-size: larger;
+        display: inline-block;
+        margin-right: 20px;
+        animation: fadeIn 1s;
+      }
 
-        .nav-item button[type="cherche"]:hover {
-            background-color: #C0DDFF; /* Darken background color on hover */
-        }
+      .nav-link img {
+        height: 30px;
+        margin-right: 5px;
+        vertical-align: middle;
+      }
 
-        .nav-link {
-            font-size: larger;
-            display: inline-block;
-            margin-right: 20px;
-            animation: fadeIn 1s;
-        }
+      .nav-link:hover {
+        animation: pulse 1s infinite;
+      }
 
-        .nav-link img {
-            height: 30px;
-            margin-right: 5px;
-            vertical-align: middle;
-        }
+      .search-container {
+        display: flex;
+        align-items: center;
+      }
 
-        .nav-link:hover {
-            animation: pulse 1s infinite;
-        }
+      .search-container input[type="text"] {
+        border-radius: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        margin-right: 10px;
+      }
+
+      .search-container button[type="cherche"] {
+        border: none;
+        background-color: #c0ddff;
+        color: #fff;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a href="./pageAffichagePrincipale" class="navbar-brand" style="margin-left: 5%;">
-            <img src="output-onlinepngtools 1.png" alt="Your Logo">
-        </a>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <form action="/recherche" method="get">
-                    <input name="query" class="nav-item form-control"  type="text" placeholder="Rechercher Tech2buy">
-                    <button type="cherche">Search</button> </input>
-                </form>
-            </li>
-        </ul>
+      <a
+        href="./pageAffichagePrincipale"
+        class="navbar-brand"
+        style="margin-left: 5%"
+      >
+        <img src="output-onlinepngtools 1.png" alt="Your Logo" />
+      </a>
+      <form class="search-container" action="/recherche" method="get">
+        <input name="query" type="text" placeholder="Rechercher Tech2buy" />
+        <button type="cherche">Search</button>
+      </form>
 
-        <!-- <a href="./pageAffichagePrincipale" class="navbar-brand">
-            <img src="output-onlinepngtools 1.png" alt="Your Logo" style="height: 80px;">
-        </a>
-        <form class="form-inline my-2 my-lg-0 col-md-2" style="flex-grow: 1;" action="/recherche" method="get">
-            <div class="input-group w-100">
-                <input name="query" type="text" class="form-control" placeholder="Rechercher Tech2buy" aria-label="Recherche">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <img src="image 2.png" alt="Search" style="height: 20px;"> 
-                    </button>
-                </div>
-            </div>
-        </form> -->
-
-        <a class="nav-link" href="/parametreUtilisateur">
-            <img src="image 4.png" height="60px">Paramètre d’utilisateur
-        </a>
-        <a class="nav-link" href="/panier">
-            <img src="image 3.png" height="45px">Panier
-        </a>
-        <a class="nav-link" href="/deconnect">
-            <img src="logout.png" height="30px">Déconnexion
-        </a>
+      <a class="nav-link" href="/parametreUtilisateur">
+        <img src="image 4.png" height="60px" />Paramètre d’utilisateur
+      </a>
+      <a class="nav-link" href="/panier">
+        <img src="image 3.png" height="45px" />Panier
+      </a>
+      <a class="nav-link" href="/deconnect">
+        <img src="logout.png" height="30px" />Déconnexion
+      </a>
     </nav>
-</body>
+  </body>
 </html>
