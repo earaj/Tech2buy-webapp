@@ -56,6 +56,10 @@
           <% if (panier && panier.length) { %>
             <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
           <% } %>
+        </div><br>
+        
+        <div class="text-right">
+          <button class="btn btn-primary btn-lg" type="submit">Continuer à vérifier</button>
         </div>
       </div>
         
@@ -128,10 +132,10 @@
             <input type="hidden" name="items[<%= index %>][price]" value="<%= item.prix_unitaire %>">
             <input type="hidden" name="items[<%= index %>][currency]" value="CAD">
             <input type="hidden" name="items[<%= index %>][quantity]" value="<%= item.quantite %>">
-        <% }) %>
+          <% }) %>
           <hr class="mb-4">
-          <button class="btn btn-primary btn-lg btn-block" type="submit">Continuer à vérifier</button>
         </form>
+      
       </div>
     </div>
     <footer class="my-5 pt-5 text-muted text-center text-small">
