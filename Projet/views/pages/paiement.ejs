@@ -57,14 +57,14 @@
             <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
           <% } %>
         </div><br>
-        
+        <form method="POST" action="/payer">
         <div class="text-right">
           <button class="btn btn-primary btn-lg" type="submit">Continuer à vérifier</button>
         </div>
       </div>
         
       <div class="col-md-8 order-md-1">
-        <form method="POST" action="/payer">
+        
           <h4 class="mb-3">Adresse de facturation</h4>
           <div class="row">
             <div class="col-md-6 mb-3">
