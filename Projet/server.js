@@ -1306,6 +1306,7 @@ app.post('/payer', (req, res) => {
         const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
         const formattedTotal = total.toFixed(2);
         console.log("Total formatted for PayPal:", formattedTotal);
+        req.session.total = total;
 
         const create_payment_json = {
             "intent": "sale",
@@ -1346,6 +1347,7 @@ app.get('/success', (req, res) => {
 
     // Récupération du montant total de la session ou de la base de données
     const total = req.session.total; // ou une autre source
+    console.log("total session: " + total)
 
     // Validation du format du montant
     const totalString = typeof total === 'number' ? total.toFixed(2) : total;
