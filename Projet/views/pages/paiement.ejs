@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +13,14 @@
     body {
       background: #F0F8FF;
     }
+
     .scrollable-content {
       max-height: 400px;
       overflow-y: auto;
     }
   </style>
 </head>
+
 <body>
   <a href="./panier">
     <img src="../Images/BackArrowButton.png" height="45" alt="Back" id="pageindex" class="btn link-secondary">
@@ -32,111 +35,115 @@
       <div class="col-md-4 order-md-2 mb-4">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-muted">Votre panier</span>
-          <span class="badge badge-secondary badge-pill"><%= panier.length %></span>
+          <span class="badge badge-secondary badge-pill">
+            <%= panier.length %>
+          </span>
         </h4>
         <div class="bg-light p-3 scrollable-content">
           <h2 class="display-4 text-center" style="font-weight: bold;">Résumé de la commande</h2>
-          <% let prix_total = 0; %>
-          <% if (panier && panier.length) { %>
-            <% panier.forEach(function(produit) { %>
-              <div class="row mt-3">
-                <div class="col-12">
-                  <h4><%= produit.nom_produit %></h4>
-                  <% if (produit.quantite > 1) { %>
-                    <p>(x <%= produit.quantite %>)</p>
-                  <% } %>
-                  <p><%= produit.prix_unitaire %>$</p>
+          <% let prix_total=0; %>
+            <% if (panier && panier.length) { %>
+              <% panier.forEach(function(produit) { %>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <h4>
+                      <%= produit.nom_produit %>
+                    </h4>
+                    <% if (produit.quantite> 1) { %>
+                      <p>(x <%= produit.quantite %>)</p>
+                      <% } %>
+                        <p>
+                          <%= produit.prix_unitaire %>$
+                        </p>
+                  </div>
+                  <% prix_total +=produit.prix_unitaire * produit.quantite; %>
                 </div>
-                <% prix_total += produit.prix_unitaire * produit.quantite; %>
-              </div>
-            <% }) %>
-          <% } else { %>
-            <h3>On dirait que c'est vide !</h3>
-          <% } %>
-          <% if (panier && panier.length) { %>
-            <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
-          <% } %>
+                <% }) %>
+                  <% } else { %>
+                    <h3>On dirait que c'est vide !</h3>
+                    <% } %>
+                      <% if (panier && panier.length) { %>
+                        <h4>Prix total: <%= prix_total.toFixed(2) %>$</h4>
+                        <% } %>
         </div><br>
-        
-        <form method="POST" action="/payer">
-        <div class="text-right">
-          <button class="btn btn-primary btn-lg" type="submit">Continuer à vérifier</button>
-        </div>
-      </div>
-        
-      <div class="col-md-8 order-md-1">
-        
-          <h4 class="mb-3">Adresse de facturation</h4>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="prenom">Prénom</label>
-              <input type="text" class="form-control" id="prenom" placeholder="Entrez votre prénom" value="<%= utilisateurs.prenom %>" required>
-              <div class="invalid-feedback">Le prénom est requis.</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="nom">Nom</label>
-              <input type="text" class="form-control" id="nom" placeholder="Entrez votre nom" value="<%= utilisateurs.nom %>" required>
-              <div class="invalid-feedback">Le nom est requis.</div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="nom_utilisateur">Nom Utilisateur</label>
-            <input type="text" class="form-control" id="nom_utilisateur" placeholder="Entrez votre nom d'utilisateur" value="<%= utilisateurs.nom_utilisateur %>" required>
-            <div class="invalid-feedback">Votre nom d'utilisateur est requis.</div>
-          </div>
-          <div class="mb-3">
-            <label for="adresse_courriel">Courriel</label>
-            <input type="email" class="form-control" id="adresse_courriel" placeholder="Entrez votre adresse courriel" value="<%= utilisateurs.adresse_courriel %>" required>
-            <div class="invalid-feedback">Veuillez entrer une adresse courriel valide.</div>
-          </div>
-          <div class="mb-3">
-            <label for="address">Adresse</label>
-            <input type="text" class="form-control" id="address" placeholder="Entrez votre adresse"  value="<%= adresse_de_livraison.adresse %>" required>
-            <div class="invalid-feedback">L'adresse est requise.</div>
-          </div>
-          <div class="mb-3">
-            <label for="address2">Adresse 2</label>
-            <input type="text" class="form-control" id="address2" placeholder="Apartment ou suite">
-          </div>
-          <div class="row">
-            <div class="col-md-5 mb-3">
-              <label for="Pays">Pays</label>
-              <input type="text" class="form-control" id="pays" placeholder="Entrez le nom du pays" value="<%= adresse_de_livraison.pays %>" required>
-              <div class="invalid-feedback">Le Pays est requis.</div>
-            </div>
-            <div class="col-md-4 mb-3">
-              <label for="ville">Ville</label>
-              <input type="text" class="form-control" id="ville" placeholder="Entrez le nom du pays" value="<%= adresse_de_livraison.ville %>" required>
-              <div class="invalid-feedback">Le ville est requis.</div>
-            </div>
-            <div class="col-md-3 mb-3">
-              <label for="codepostale">Code Postale</label>
-              <input type="text" class="form-control" id="codepostale" placeholder="" value="<%= adresse_de_livraison.code_postal %>" required>
-              <div class="invalid-feedback">Le code ZIP est requis.</div>
-            </div>
-          </div>
-          <h4 class="mb-3">Paiement</h4>
-          <div class="d-block my-3">
-            <div class="custom-control custom-radio">
-              <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-              <label class="custom-control-label" for="credit">Carte de crédit</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
-              <label class="custom-control-label" for="paypal">Paypal</label>
-            </div>
-          </div>
 
-          <% panier.forEach(function(item, index) { %>
-            <input type="hidden" name="items[<%= index %>][name]" value="<%= item.nom_produit %>">
-            <input type="hidden" name="items[<%= index %>][sku]" value="<%= item.id_produit %>">
-            <input type="hidden" name="items[<%= index %>][price]" value="<%= item.prix_unitaire %>">
-            <input type="hidden" name="items[<%= index %>][currency]" value="CAD">
-            <input type="hidden" name="items[<%= index %>][quantity]" value="<%= item.quantite %>">
+        <form method="POST" action="/payer">
+          <div class="text-right">
+            <button class="btn btn-primary btn-lg" type="submit">Continuer à vérifier</button>
+          </div>
+      </div>
+
+      <div class="col-md-8 order-md-1">
+
+        <h4 class="mb-3">Adresse de facturation</h4>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="prenom">Prénom</label>
+            <input type="text" class="form-control" id="prenom" placeholder="Entrez votre prénom"
+              value="<%= utilisateurs.prenom %>" required>
+            <div class="invalid-feedback">Le prénom est requis.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="nom">Nom</label>
+            <input type="text" class="form-control" id="nom" placeholder="Entrez votre nom"
+              value="<%= utilisateurs.nom %>" required>
+            <div class="invalid-feedback">Le nom est requis.</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="nom_utilisateur">Nom Utilisateur</label>
+          <input type="text" class="form-control" id="nom_utilisateur" placeholder="Entrez votre nom d'utilisateur"
+            value="<%= utilisateurs.nom_utilisateur %>" required>
+          <div class="invalid-feedback">Votre nom d'utilisateur est requis.</div>
+        </div>
+        <div class="mb-3">
+          <label for="adresse_courriel">Courriel</label>
+          <input type="email" class="form-control" id="adresse_courriel" placeholder="Entrez votre adresse courriel"
+            value="<%= utilisateurs.adresse_courriel %>" required>
+          <div class="invalid-feedback">Veuillez entrer une adresse courriel valide.</div>
+        </div>
+        <div class="mb-3">
+          <label for="address">Adresse</label>
+          <input type="text" class="form-control" id="address" placeholder="Entrez votre adresse"
+            value="<%= adresse_de_livraison.adresse %>" required>
+          <div class="invalid-feedback">L'adresse est requise.</div>
+        </div>
+        <div class="mb-3">
+          <label for="address2">Adresse 2</label>
+          <input type="text" class="form-control" id="address2" placeholder="Apartment ou suite">
+        </div>
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <label for="Pays">Pays</label>
+            <input type="text" class="form-control" id="pays" placeholder="Entrez le nom du pays"
+              value="<%= adresse_de_livraison.pays %>" required>
+            <div class="invalid-feedback">Le Pays est requis.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="ville">Ville</label>
+            <input type="text" class="form-control" id="ville" placeholder="Entrez le nom du pays"
+              value="<%= adresse_de_livraison.ville %>" required>
+            <div class="invalid-feedback">Le ville est requis.</div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="codepostale">Code Postale</label>
+            <input type="text" class="form-control" id="codepostale" placeholder=""
+              value="<%= adresse_de_livraison.code_postal %>" required>
+            <div class="invalid-feedback">Le code ZIP est requis.</div>
+          </div>
+        </div>
+        </div>
+
+        <% panier.forEach(function(item, index) { %>
+          <input type="hidden" name="items[<%= index %>][name]" value="<%= item.nom_produit %>">
+          <input type="hidden" name="items[<%= index %>][sku]" value="<%= item.id_produit %>">
+          <input type="hidden" name="items[<%= index %>][price]" value="<%= item.prix_unitaire %>">
+          <input type="hidden" name="items[<%= index %>][currency]" value="CAD">
+          <input type="hidden" name="items[<%= index %>][quantity]" value="<%= item.quantite %>">
           <% }) %>
-          <hr class="mb-4">
-        </form>
-      
+            <hr class="mb-4">
+            </form>
+
       </div>
     </div>
     <footer class="my-5 pt-5 text-muted text-center text-small">
@@ -144,4 +151,5 @@
     </footer>
   </div>
 </body>
+
 </html>

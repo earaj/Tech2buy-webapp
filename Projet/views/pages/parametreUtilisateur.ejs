@@ -123,14 +123,14 @@
                                 <div class="form-group">
                                     <label for="adresse">Adresse</label>
                                     <input type="text" class="form-control" id="adresse" name="adresse"
-                                        placeholder="Entrez votre adresse">
+                                        placeholder="<%= adresse_de_livraison.adresse || 'Entrez votre adresse' %>">
                                     <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="pays">Pays</label>
                                         <input type="text" class="form-control" id="pays" name="pays"
-                                            placeholder="Entrez votre pays">
+                                            placeholder="<%= adresse_de_livraison.pays || 'Entrez votre pays' %>">
                                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                 </div>
@@ -138,20 +138,19 @@
                                     <div class="form-group col-md-6">
                                         <label for="ville">Ville</label>
                                         <input type="text" class="form-control" id="ville" name="ville"
-                                            placeholder="Entrez votre ville">
+                                            placeholder="<%= adresse_de_livraison.ville || 'Entrez votre ville' %>">
                                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="inputState">Province</label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected="">Choisir...</option>
-                                            <option>Québec</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="province" name="province"
+                                            placeholder="<%= adresse_de_livraison.province || 'Entrez votre province' %>">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="inputZip">Code postal</label>
                                         <input type="text" class="form-control" id="code_postal" name="code_postal"
-                                            placeholder="Entrez votre code postal">
+                                            placeholder="<%= adresse_de_livraison.code_postal || 'Entrez votre code postal' %>">
                                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                 </div>
