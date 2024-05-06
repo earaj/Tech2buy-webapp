@@ -9,9 +9,9 @@ const express = require('express');
 const app = express();
 
 
-const { setupRoutes } = require('../Projet/views/pages');
+const { setupRoutes } = require('../../Projet');
 
-jest.mock('../Projet/views', () => ({
+jest.mock('../../Projet', () => ({
   getDB: jest.fn(() => ({
     collection: jest.fn(() => ({
       findOne: jest.fn(),
@@ -21,14 +21,14 @@ jest.mock('../Projet/views', () => ({
 }));
 
 jest.mock('bcrypt', () => ({
-  hash: jest.fn((data, salt, callback) => callback(null, 'hashedPassword')),
+  hash: jest.fn((data, salt, callback) => callback(null, 'passHashe')),
 }));
 
 
 setupRoutes(app);
 
 describe('POST /inscription', () => {
-  test('should create a new user with valid data', async () => {
+  test('creation utili', async () => {
 
     const requestBody = {
       prenom: 'era',
