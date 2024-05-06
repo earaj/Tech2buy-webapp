@@ -14,6 +14,7 @@ CREATE TABLE adresse_de_livraison (
     code_postal         VARCHAR(6) NOT NULL,
     ville               VARCHAR(50) NOT NULL,
     pays                VARCHAR(50) NOT NULL,
+    province            VARCHAR(255) NOT NULL,
     id_session          VARCHAR(255),
     PRIMARY KEY (id_adresselivraison)
 );
