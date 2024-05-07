@@ -52,21 +52,61 @@
 
         
         .product-list {
-            max-height: 500px; 
-            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 1000px; 
+            overflow-y: auto;
         }
 
-       
+
         .checkout-summary {
             text-align: center;
             padding: 20px;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 200px;
+        }
+
+        .summary-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: black;
+        }
+
+        .summary-detail {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .checkout-button {
             margin-top: 20px;
+        }
+
+        .btn.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+}
+
+
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        footer {
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -76,7 +116,8 @@
         <%- include("../partials/headTech2buy.ejs") %>
     </header>
 
-    <div class="container">
+    <div class="wrapper">
+    <div class="container content">
         <div class="row">
             <div class="col-md-7">
                 <h2 class="mt-4 mb-1 ms-5">Votre panier</h2>
@@ -114,8 +155,9 @@
                     <% } %>
                 </div> 
             </div>
-            <div class="col-md-5"> 
-                <div class="checkout-summary"> 
+            
+            <div class="col-md-5">
+                <div class="checkout-summary">
                     <% let totalItems = 0; %>
                     <% let totalPrice = 0; %>
                     <% if (panier && panier.length) { %>
@@ -124,17 +166,25 @@
                             <% totalPrice += produit.prix_unitaire * produit.quantite; %>
                         <% }) %>
                     <% } %>
-                    <h3>Total d'articles: <%= totalItems %></h3>
-                    <h3>Prix total: <%= totalPrice.toFixed(2) %>$</h3>
-                    <a href="/paiement" class="btn btn-primary checkout-button btn-lg">Passer à la caisse</a>
+                    <div class="summary-title">Résumé de la commande</div>
+                    <div class="summary-detail">
+                        <i class="bi bi-cart-fill"></i>
+                        <span>Total d'articles: <%= totalItems %></span>
+                    </div>
+                    <div class="summary-detail">
+                        <i class="bi bi-cash-stack"></i>
+                        <span>Prix total: <%= totalPrice.toFixed(2) %>$</span>
+                    </div>
+                    <!-- <a href="/paiement" class="btn btn-primary checkout-button btn-lg">Passer à la caisse</a> -->
+                    <a href="/paiement" class="btn btn-primary checkout-button btn-lg <%= panier.length ? '' : 'disabled' %>">Passer à la caisse</a>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 
     <footer>
-        <div style="width: 100%;">
-            <%- include ("../partials/footer.ejs") %></div>
+            <%- include ("../partials/footer.ejs") %>
     </footer>
 </body>
 

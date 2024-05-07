@@ -43,6 +43,7 @@
       xhr.send(JSON.stringify({ password: pw1 }));
 
       return true;
+      return true;
   }
 </script>
 
@@ -84,7 +85,7 @@
 <header>
   <%- include ("../partials/header.ejs") %>
 </header>
-<form id="signupForm" onsubmit="return validation()">
+<form onsubmit="return validation()" action="/inscription" method="post">
 <section class="vh-100">
     <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -102,35 +103,35 @@
                                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="prenom">Prénom</label>
-                                        <input type="text" id="prenom" class="form-control" style="border: 1px solid black;" />
+                                        <input type="text" id="prenom" name="prenom" required class="form-control" />
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="nom">Nom</label>
-                                        <input type="text" id="nom" class="form-control" style="border: 1px solid black;" />
+                                        <input type="text" id="prenom" name="prenom" required class="form-control" />
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="nomUtilisateur">Nom utilisateur</label>
-                                        <input type="text" id="nom_utilisateur" class="form-control" style="border: 1px solid black;"/>
+                                        <input type="text" id="nom_utilisateur" name="nom_utilisateur" required class="form-control" />
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="courriel">Courriel</label>
-                                        <input type="email" id="adresse_courriel" class="form-control" style="border: 1px solid black;" />
+                                        <input type="email" id="adresse_courriel" name="adresse_courriel" required class="form-control" />
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="motDePasse">Mot de passe</label>
-                                        <input type="password" id="mot_de_passe" class="form-control" style="border: 1px solid black;"/>
+                                        <input type="password" id="mot_de_passe" name="mot_de_passe" required class="form-control" />
                                         <span id="message2" style="color:red"> </span>
                                     </div>
                                 </div>
@@ -157,51 +158,6 @@
     </div>
 </section>
 </form>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-function validatePassword() {
-    var password = $("#mot_de_passe").val();
-    var confirmPassword = $("#pswd2").val();
-
-    if (password !== confirmPassword) {
-        $("#message2").html("Les mots de passe ne correspondent pas.");
-        return false;
-    } else {
-        $("#message2").html("");
-        return true;
-    }
-}
-
-function validation() {
-  if (!validatePassword()) {
-        return false;
-    }
-
-    var password = $("#mot_de_passe").val();
-
-    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-    if (!strongRegex.test(password)) {
-        $("#message2").html("Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
-        return false;
-    }
-    $.ajax({
-        type: "POST",
-        url: "/inscription",
-        data: $("#signupForm").serialize(), 
-        success: function(response) {
-
-            console.log(response);
-            alert("Création de compte avec succès!");
-            window.location.href = "/pageAffichagePrincipale"; 
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Une erreur s'est produite lors de la création de compte.");
-        }
-    });
-    return false;
-}
-</script>
 </body>
 </html>
