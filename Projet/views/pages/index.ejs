@@ -111,12 +111,51 @@
     .footer {
     width: 100%;
     }
+    .animate-up {
+    animation: moveUpDown 1s ease-in-out;
+}
+
+@keyframes moveUpDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px); /* Adjust the value to control the distance */
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .animated-text {
+            animation: slideInFromLeft 1s ease-out forwards;
+        }
 </style>
 <header>
     <%- include ("../partials/header.ejs") %>
 </header>
 <body>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
         function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
@@ -139,25 +178,29 @@
                     console.error("Error:", error);
                 });
         }
-    </script>
+    </script> -->
     <div class="wrapper">
         <div class="full-background"></div>
         <div class="container-fluid">
             <div class="right-section">
-                <div class="right-section-content">
+                <div class="right-section-content animated-text">
                     <img src="output-onlinepngtools 1.png" alt="TECH2BUY Logo" style="max-width: 200px" />
                     <p class="paragraphe-princ">
                         Commencez dès maintenant à sauver en équipement technologique
                     </p>
-                    <br><br><br><br><br><br><br><br><br><br><br>
-                    <a href="./inscription" class="btn custom-button btn-outline-primary">S'inscrire dès aujourd'hui</a>
+                    <!-- Removed multiple <br> tags -->
+                    <a href="./inscription" class="btn custom-button btn-outline-primary animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">S'inscrire dès aujourd'hui</a>
+                    
+                    <a href="./pageConnexion" class="btn btn-primary custom-button animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">Se connecter</a>
+                    <!-- Added margin-top to space out the buttons -->
                     <p>Vous êtes déjà membre TECH2BUY?</p>
-                    <a href="./pageConnexion" class="btn btn-primary custom-button">Se connecter</a>
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                    <a href="pageAffichagePrincipale">
-                        <h5>Accéder sans se connecter</h5>
-                    </a>
+                    <a href="pageAffichagePrincipale" class="btn btn-primary custom-button animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">Accéder sans se connecter </a>
                 </div>
+                
+                
+                
+                
+                
             </div>
         </div>
         <div class="push"></div>
