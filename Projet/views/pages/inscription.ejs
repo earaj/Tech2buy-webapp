@@ -7,45 +7,61 @@
   <link rel="stylesheet" href="commun.css" />
   <script src="/js/bootstrap.min.js"></script>
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    function validatePassword() {
+        var password = $("#mot_de_passe").val();
+        var confirmPassword = $("#pswd2").val();
+    
+        if (password !== confirmPassword) {
+            $("#message2").html("Les mots de passe ne correspondent pas.");
+            return false;
+        } else {
+            $("#message2").html("");
+            return true;
+        }
+    }
+    
     function validation() {
-      var pw1 = document.getElementById("mot_de_passe").value;
-      var pw2 = document.getElementById("pswd2").value;
+        if (!validatePassword()) {
+            return false;
+        }
 
-      if (pw1 !== pw2) {
-          document.getElementById("message2").innerText = "**Les mots de passe ne correspondent pas**";
-          return false;
-      }
+        var password = $("#mot_de_passe").val();
 
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "validate_password_endpoint", true);
-      xhr.setRequestHeader("Content-Type", "application/json");
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        if (!strongRegex.test(password)) {
+            $("#message2").html("Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
+            return false;
+        }
 
-      xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                  var response = JSON.parse(xhr.responseText);
-                  if (response.valid) {
-                      alert("Création de compte avec Succès!");
-                      window.location.href = "/pageAffichagePrincipale"; 
-                  } else {
-                      document.getElementById("message2").innerText = ""; 
-                      var errorMessage = response.message.join("\n"); // Join error messages with newline
-                      document.getElementById("message2").innerText = errorMessage;
-                  }
-              } else {
-                  // Handle server errors
-                  console.error("Server error: " + xhr.status);
-              }
-          }
-      };
+        var formData = {
+            prenom: $("#prenom").val(),
+            nom: $("#nom").val(),
+            nom_utilisateur: $("#nom_utilisateur").val(),
+            adresse_courriel: $("#adresse_courriel").val(),
+            mot_de_passe: password 
+        };
 
-      xhr.send(JSON.stringify({ password: pw1 }));
-
-      return true;
-      return true;
-  }
+        $.ajax({
+            type: "POST",
+            url: "/inscription",
+            data: JSON.stringify(formData), 
+            contentType: "application/json", 
+            success: function(response) {
+                console.log(response);
+                alert("Création de compte avec succès!");
+                window.location.href = "/pageAffichagePrincipale"; 
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("Une erreur s'est produite lors de la création de compte.");
+            }
+        });
+        return false;
+    }
 </script>
+
 
 <style>
    body, html {
