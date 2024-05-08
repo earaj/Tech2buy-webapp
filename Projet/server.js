@@ -2,23 +2,21 @@
     Importation des modules requis
 */
 
-import express, { query } from "express";
+import express from 'express';
+import { query } from 'express';
 import session from "express-session";
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 import mysql from "mysql2";
-//import mysql from "mysql2";
-import {body, validationResult} from "express-validator";
+import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 import paypal from 'paypal-rest-sdk';
 
-//const express = require('express');
 const app = express();
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
-
 
 /*
     Configuration de PayPal
@@ -253,6 +251,11 @@ app.get("/pageAffichagePrincipale", function(req, res) {
     });
 });
 
+app.get("/paiementSucces", function(req, res) { 
+    res.render("pages/paiementSucces", {
+    });
+});
+
 //SQL
 // app.get("/parametreUtilisateur", function(req, res) {
     
@@ -289,22 +292,34 @@ app.get("/parametreUtilisateur", async function(req, res) {
         return res.redirect("/pageConnexion");
     }
 
-    // Afficher l'ID de l'utilisateur pour le débogage
-    console.log("Récupération des informations pour l'ID utilisateur MongoDB:", req.session.userId);
+    console.log("Récupération des informations pour l'ID utilisateur:", req.session.userId);
 
     try {
-        // Assurez-vous de convertir l'ID de session en ObjectId MongoDB
         const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(req.session.userId) });
 
-        if (utilisateur) {
-            console.log("Utilisateur trouvé:", utilisateur); // Afficher les informations de l'utilisateur pour le débogage
-            res.render("pages/parametreUtilisateur", {
-                utilisateur: utilisateur
-            });
-        } else {
-            console.log("Utilisateur non trouvé pour l'ID:", req.session.userId); // Log si aucun utilisateur n'est trouvé
+        if (!utilisateur) {
             return res.status(404).send("Utilisateur non trouvé.");
         }
+
+        const queryAdresse = `
+            SELECT adresse, code_postal, ville, pays, province
+            FROM adresse_de_livraison
+            WHERE id_session = ?
+        `;
+
+        con.query(queryAdresse, [req.session.userId], (err, adresseResult) => {
+            if (err) {
+                console.error("Error fetching address: ", err);
+                return res.status(500).send("Erreur lors de la récupération de l'adresse.");
+            }
+
+            const adresse_de_livraison = adresseResult.length > 0 ? adresseResult[0] : {};
+
+            res.render("pages/parametreUtilisateur", {
+                utilisateur: utilisateur,
+                adresse_de_livraison: adresse_de_livraison
+            });
+        });
     } catch (err) {
         console.error("Erreur lors de la récupération des informations utilisateur:", err);
         return res.status(500).send("Erreur lors de la récupération des données de l'utilisateur.");
@@ -312,13 +327,10 @@ app.get("/parametreUtilisateur", async function(req, res) {
 });
 
 
-
-
 app.get("/MiseAJourMotDePasse", function(req, res) {
     res.render("pages/parametresUtilisateur", {
     });
 });
-
 
 
 //SQL
@@ -362,22 +374,18 @@ app.get("/paiement", async function(req, res) {
     const idUtilisateur = req.session.userId;
 
     if (!idUtilisateur) {
-        // If the user is not logged in, redirect them to the login page
         return res.redirect("/pageConnexion");
     }
 
     try {
-        // Fetch user information from MongoDB
         const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(idUtilisateur) });
 
         if (!utilisateur) {
-            // If user not found in the database, handle it appropriately
             return res.status(404).send("Utilisateur non trouvé.");
         }
 
-        // Query to fetch products from cart (similar to your existing code)
         const queryPanier = `
-            SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite,adl.adresse, adl.code_postal, adl.ville, adl.pays
+            SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite,adl.adresse, adl.code_postal, adl.ville, adl.pays, adl.province
             FROM produit p
             JOIN detail_panier dp ON p.id_produit = dp.id_produit
             JOIN panier pa ON dp.id_panier = pa.id_panier
@@ -390,13 +398,12 @@ app.get("/paiement", async function(req, res) {
                 console.error("Error fetching products from cart: ", err);
                 return res.status(500).send("Error fetching products from cart.");
             }
-// Assuming adresse_de_livraison is retrieved from your database
-const adresse_de_livraison = {
-    pays: "Your Country",
-    // Add other properties as needed
-};
 
-            // Pass the data to the payment page template along with user information
+        const adresse_de_livraison = {
+            pays: "Your Country",
+        };
+
+            
             res.render("pages/paiement", {
                 panier: produits,
                 utilisateurs: {
@@ -405,7 +412,7 @@ const adresse_de_livraison = {
                     nom_utilisateur: utilisateur.nom_utilisateur,
                     adresse_courriel: utilisateur.adresse_courriel
                 },
-                adresse_de_livraison: produits.length > 0 ? produits[0] : null // Pass adresse_de_livraison to the template
+                adresse_de_livraison: produits.length > 0 ? produits[0] : null 
             });
         });
     } catch (err) {
@@ -459,35 +466,6 @@ app.get("/deconnect", function(req, res) {
     });
 })
 
-// //Fonction pour la creation de compte utilisateurs SQL
-// app.post("/inscription", function(req, res) {
-//     //Hacher le mot de passe avant de l'insérer
-//     bcrypt.hash(req.body.mot_de_passe, saltRounds, function(err, hash) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).send("Erreur lors du hachage du mot de passe.");
-//         }
-        
-//         const requete = "INSERT INTO mybd.utilisateur (prenom, nom, nom_utilisateur, adresse_courriel, mot_de_passe, mot_de_passe_clair) VALUES (?, ?, ?, ?, ?, ?)";
-//         const parametres = [
-//             req.body.prenom,
-//             req.body.nom,
-//             req.body.nom_utilisateur,
-//             req.body.adresse_courriel,
-//             hash, //Mot de passe haché
-//             req.body.mot_de_passe //Mot de passe en clair
-//         ];
-
-//         con.query(requete, parametres, function(err, result) {
-//             if (err) {
-//                 console.error(err);
-//                 return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
-//             }
-//             res.redirect("/pageConnexion");
-//         });
-//     });
-// });
-
 // //Fonction pour la connexion au compte des utilisateurs SQL
 // app.post("/connexion", function(req, res) {
 //     const requete = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ?";
@@ -527,7 +505,7 @@ app.get("/deconnect", function(req, res) {
 // });
 
 //NoSQL
-app.post("/connexion", async function(req, res) {
+app.post("/pageConnexion", async function(req, res) {
     const courriel = req.body.courriel;
     console.log(`Tentative de connexion pour l'email: ${courriel}`);
 
@@ -565,29 +543,7 @@ app.post("/connexion", async function(req, res) {
     }
 });
 
-
 //SQL
-// app.get('/detailProduit', function(req, res){
-//     const idProduit = req.query.id;
-//     const query = 'SELECT * FROM produit WHERE id_produit = ?'; 
-//     con.query(query, [idProduit], (err, rows) => {
-//         if (err) {
-//             console.error('Erreur', err);
-//             return res.status(500).send('Erreur interne du serveur');
-//         }
-//         const produit = rows[0];
-//         res.render('pages/detailProduit', { produit: produit});
-//     });
-//     const queryCommentaire = 'SELECT * FROM commentaire WHERE id_produit = ? ORDER BY date_du_commentaire DESC';
-//     con.query(queryCommentaire, [idProduit], (err, commentaires) => {
-//         if (err) {
-//             console.error(err);
-//             // Gérez l'erreur ou affichez un message approprié
-//         }
-//     });
-// });
-
-//SQL 2
 // app.get('/detailProduit', function(req, res){
 //     const idProduit = req.query.id;
 //     if (!idProduit) {
@@ -656,9 +612,6 @@ app.get('/detailProduit', async function(req, res) {
 });
 
 
-
-
-
 //Fonction pour la recherche des produits
 app.get('/recherche', (req, res) => {
     const searchTerm = req.query.query;
@@ -684,199 +637,6 @@ app.get('/recherche', (req, res) => {
         res.render('pages/recherche', { items: rows, searchTerm: searchTerm });
     });
 });
-
-
-// //Fonction pour mettre à jour les paramètres de l'utilisateur SQL
-// app.post("/parametreUtilisateur", function(req, res) {
-//     if (!req.session.userId) {
-//         //Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     const requete = "SELECT * FROM mybd.utilisateur WHERE id_utilisateur = ?";
-//     con.query(requete, [req.session.userId], function(err, result) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).send("Erreur lors de la vérification de l'utilisateur.");
-//         }
-
-//         if (result.length > 0) {
-//             let query = "UPDATE mybd.utilisateur SET ";
-//             let params = [];
-//             let mettreAJour = false;
-
-//             if (req.body.prenom && req.body.prenom.trim() !== "") {
-//                 query += "prenom = ?, ";
-//                 params.push(req.body.prenom);
-//                 mettreAJour = true;
-//             }
-
-//             if (req.body.nom && req.body.nom.trim() !== "") {
-//                 query += "nom = ?, ";
-//                 params.push(req.body.nom);
-//                 mettreAJour = true;
-//             }
-
-//             if (req.body.nom_utilisateur && req.body.nom_utilisateur.trim() !== "") {
-//                 query += "nom_utilisateur = ?, ";
-//                 params.push(req.body.nom_utilisateur);
-//                 mettreAJour = true;
-//             }
-
-//             if (req.body.adresse_courriel && req.body.adresse_courriel.trim() !== "") {
-//                 query += "adresse_courriel = ?, ";
-//                 params.push(req.body.adresse_courriel);
-//                 mettreAJour = true;
-//             }
-
-//             if (req.body.mot_de_passe && req.body.mot_de_passe.trim() !== "") {
-//                 query += "mot_de_passe = ?, ";
-//                 params.push(req.body.mot_de_passe);
-//                 mettreAJour = true;
-//             }
-
-//             if (mettreAJour) {
-//                 query = query.slice(0, -2); //Enlever la dernière virgule et espace
-//                 query += " WHERE id_utilisateur = ?";
-//                 params.push(req.session.userId);
-
-//                 //Exécuter la mise à jour
-//                 con.query(query, params, function(err, result) {
-//                     if (err) {
-//                         console.error(err);
-//                         return res.status(500).send("Erreur lors de la mise à jour de l'utilisateur.");
-//                     }
-//                     //Continuer avec la mise à jour de l'adresse si besoin
-//                     updateAddress(req, res);
-//                 });
-//             } else {
-//                 //Si aucun champ utilisateur à mettre à jour, continuer directement avec l'adresse
-//                 updateAddress(req, res);
-//             }
-//         } else {
-            
-//             return res.status(404).send("Utilisateur non trouvé.");
-//         }
-//     });
-// });
-
-// function updateAddress(req, res) {
-//     const requeteAdresse = "SELECT * FROM mybd.adresse_de_livraison WHERE id_utilisateur = ?";
-//     con.query(requeteAdresse, [req.session.userId], function(err, result) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).send("Erreur lors de la vérification de l'adresse.");
-//         }
-
-//         let queryAdresse = "";
-//         let parametresAdresse = [];
-//         let mettreAJour = false; //Ajouté pour vérifier si une mise à jour est nécessaire
-
-//         if (result.length > 0) {
-//             queryAdresse = "UPDATE mybd.adresse_de_livraison SET ";
-//             if (req.body.adresse) {
-//                 queryAdresse += "adresse = ?, ";
-//                 parametresAdresse.push(req.body.adresse);
-//                 mettreAJour = true;
-//             }
-    
-//             if (req.body.code_postal) {
-//                 queryAdresse += "code_postal = ?, ";
-//                 parametresAdresse.push(req.body.code_postal);
-//                 mettreAJour = true;
-//             }
-    
-//             if (req.body.ville) {
-//                 queryAdresse += "ville = ?, ";
-//                 parametresAdresse.push(req.body.ville);
-//                 mettreAJour = true;
-//             }
-    
-//             if (req.body.pays) {
-//                 queryAdresse += "pays = ?, ";
-//                 parametresAdresse.push(req.body.pays);
-//                 mettreAJour = true;
-//             }
-    
-//             if (mettreAJour) {
-//                 queryAdresse = queryAdresse.slice(0, -2); //Enlever la dernière virgule et espace
-//                 queryAdresse += " WHERE id_utilisateur = ?";
-//                 parametresAdresse.push(req.session.userId);
-//             }
-//         } else if (req.body.adresse || req.body.code_postal || req.body.ville || req.body.pays) {
-//             // Insertion seulement si au moins un champ est rempli
-//             queryAdresse = "INSERT INTO mybd.adresse_de_livraison (id_utilisateur, adresse, code_postal, ville, pays) VALUES (?, ?, ?, ?, ?)";
-//             parametresAdresse = [
-//                 req.session.userId,
-//                 req.body.adresse,
-//                 req.body.code_postal,
-//                 req.body.ville,
-//                 req.body.pays
-//             ];
-//             mettreAJour = true;
-//         }
-//         if (mettreAJour) {
-//             //Exécuter la requête de mise à jour ou d'insertion pour l'adresse
-//             con.query(queryAdresse, parametresAdresse, function(err, result) {
-//                 if (err) {
-//                     console.error(err);
-//                     return res.status(500).send("Erreur lors de la mise à jour de l'adresse.");
-//                 }
-//                 //Redirection après mise à jour de l'adresse
-//                 return res.redirect("/parametreUtilisateur");
-//             });
-//         } else {
-//             return res.redirect("/parametreUtilisateur");
-//         }
-//     });
-// }
-
-// //Fonction pour la réinitialisation du mot de passe SQL
-// app.post("/miseAJourMotDePasse", function(req, res) {
-//     if (!req.session.userId) {
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     const motDePasseActuel = req.body.mot_de_passe_actuel;
-//     const nouveauMotDePasse = req.body.nouveau_mot_de_passe;
-//     const confirmerNouveauMotDePasse = req.body.confirmer_nouveau_mot_de_passe;
-
-//     if (nouveauMotDePasse !== confirmerNouveauMotDePasse) {
-//         return res.redirect("/parametreUtilisateur?erreurConfirmationNouveauMotDePasse=Les nouveaux mots de passe ne correspondent pas.");
-//     }
-
-//     const requete = "SELECT mot_de_passe FROM mybd.utilisateur WHERE id_utilisateur = ?";
-//     con.query(requete, [req.session.userId], function(err, result) {
-//         if (err || result.length === 0) {
-//             console.error(err);
-//             return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la vérification de l'utilisateur.");
-//         }
-
-//         bcrypt.compare(motDePasseActuel, result[0].mot_de_passe, function(err, isMatch) {
-//             if (err || !isMatch) {
-//                 return res.redirect("/parametreUtilisateur?erreurMotDePasseActuel=Le mot de passe actuel est incorrect.");
-//             }
-
-//             bcrypt.hash(nouveauMotDePasse, saltRounds, function(err, hashedPassword) {
-//                 if (err) {
-//                     console.error(err);
-//                     return res.redirect("/parametreUtilisateur?erreur=Erreur lors du hachage du nouveau mot de passe.");
-//                 }
-
-//                 //Mise à jour à la fois du mot de passe haché et du mot de passe en clair
-//                 const queryMiseAJour = "UPDATE mybd.utilisateur SET mot_de_passe = ?, mot_de_passe_clair = ? WHERE id_utilisateur = ?";
-//                 con.query(queryMiseAJour, [hashedPassword, nouveauMotDePasse, req.session.userId], function(err) {
-//                     if (err) {
-//                         console.error(err);
-//                         return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la mise à jour du mot de passe.");
-//                     }
-//                     res.redirect("/parametreUtilisateur?passwordUpdateSuccess=true");
-//                 });
-//             });
-//         });
-//     });
-// });
-
 
 app.post("/parametreUtilisateur", async function(req, res) {
     if (!req.session.userId) {
@@ -910,72 +670,72 @@ app.post("/parametreUtilisateur", async function(req, res) {
     }
 });
 
+//old version of updateAddress
 // function updateAddress(req, res) {
 //     const idSession = req.session.userId;
 
-//     const requeteAdresse = "SELECT * FROM adresse_de_livraison WHERE id_session = ?";
-//     con.query(requeteAdresse, [idSession], function(err, result) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).send("Erreur lors de la vérification de l'adresse.");
-//         }
-
-//         if (result.length > 0) {
-//             // Si une adresse existe, construire la requête de mise à jour
-//             let queryAdresse = "UPDATE adresse_de_livraison SET ";
-//             let parametresAdresse = [];
-//             let champsAUpdater = [];
-
-//             if (req.body.adresse) champsAUpdater.push(`adresse = ?`);
-//             if (req.body.code_postal) champsAUpdater.push(`code_postal = ?`);
-//             if (req.body.ville) champsAUpdater.push(`ville = ?`);
-//             if (req.body.pays) champsAUpdater.push(`pays = ?`);
-
-//             parametresAdresse = [req.body.adresse, req.body.code_postal, req.body.ville, req.body.pays].filter(val => val !== undefined);
-//             parametresAdresse.push(idSession); // Ajouter l'ID de session en fin pour la condition WHERE
-
-//             queryAdresse += champsAUpdater.join(', ') + " WHERE id_session = ?";
+//     const champsAInclure = {
+//         adresse: req.body.adresse,
+//         code_postal: req.body.code_postal,
+//         ville: req.body.ville,
+//         pays: req.body.pays
+//     };
+//     const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== undefined && champsAInclure[cle] !== "");
+//     const parametresAdresse = champsAUpdater.map(cle => champsAInclure[cle]);
+    
+//     if (champsAUpdater.length > 0) {
+//         parametresAdresse.push(idSession); // Ajouter l'ID de session pour la condition WHERE
+//         const requeteAdresse = `SELECT * FROM adresse_de_livraison WHERE id_session = ?`;
+        
+//         con.query(requeteAdresse, [idSession], function(err, result) {
+//             if (err) {
+//                 console.error(err);
+//                 return res.status(500).send("Erreur lors de la vérification de l'adresse.");
+//             }
             
-//             // Exécution de la requête de mise à jour
+//             let queryAdresse;
+//             if (result.length > 0) {
+//                 // Construction de la requête de mise à jour
+//                 queryAdresse = `UPDATE adresse_de_livraison SET ${champsAUpdater.map(cle => `${cle} = ?`).join(', ')} WHERE id_session = ?`;
+//             } else {
+//                 // Construction de la requête d'insertion
+//                 champsAUpdater.unshift('id_session'); // Ajoute 'id_session' au début pour l'insertion
+//                 queryAdresse = `INSERT INTO adresse_de_livraison (${champsAUpdater.join(', ')}) VALUES (${champsAUpdater.map(() => '?').join(', ')})`;
+//                 parametresAdresse.unshift(idSession); // Ajoute l'ID de session au début pour l'insertion
+//             }
+            
+//             // Exécution de la requête de mise à jour ou d'insertion
 //             con.query(queryAdresse, parametresAdresse, function(err, result) {
 //                 if (err) {
-//                     console.error(err);
+//                     console.error("Erreur SQL :", err);
 //                     return res.status(500).send("Erreur lors de la mise à jour de l'adresse.");
 //                 }
 //                 res.redirect("/parametreUtilisateur");
 //             });
-//         } else {
-//             // Si aucune adresse n'existe, construire la requête d'insertion
-//             let queryAdresse = "INSERT INTO adresse_de_livraison (id_session, adresse, code_postal, ville, pays) VALUES (?, ?, ?, ?, ?)";
-//             let parametresAdresse = [idSession, req.body.adresse, req.body.code_postal, req.body.ville, req.body.pays];
-
-//             // Exécution de la requête d'insertion
-//             con.query(queryAdresse, parametresAdresse, function(err, result) {
-//                 if (err) {
-//                     console.error(err);
-//                     return res.status(500).send("Erreur lors de l'insertion de l'adresse.");
-//                 }
-//                 res.redirect("/parametreUtilisateur");
-//             });
-//         }
-//     });
+//         });
+//     } else {
+//         // Si aucun champ n'est à mettre à jour, rediriger directement
+//         res.redirect("/parametreUtilisateur");
+//     }
 // }
-
 
 function updateAddress(req, res) {
     const idSession = req.session.userId;
 
+   
     const champsAInclure = {
-        adresse: req.body.adresse,
-        code_postal: req.body.code_postal,
-        ville: req.body.ville,
-        pays: req.body.pays
+        adresse: req.body.adresse || '', 
+        code_postal: req.body.code_postal || '', 
+        ville: req.body.ville || '',       
+        pays: req.body.pays || '' ,
+        province: req.body.province || ''       
     };
-    const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== undefined && champsAInclure[cle] !== "");
+
+    const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== '');
     const parametresAdresse = champsAUpdater.map(cle => champsAInclure[cle]);
-    
+
     if (champsAUpdater.length > 0) {
-        parametresAdresse.push(idSession); // Ajouter l'ID de session pour la condition WHERE
+        parametresAdresse.push(idSession); 
         const requeteAdresse = `SELECT * FROM adresse_de_livraison WHERE id_session = ?`;
         
         con.query(requeteAdresse, [idSession], function(err, result) {
@@ -986,16 +746,13 @@ function updateAddress(req, res) {
             
             let queryAdresse;
             if (result.length > 0) {
-                // Construction de la requête de mise à jour
                 queryAdresse = `UPDATE adresse_de_livraison SET ${champsAUpdater.map(cle => `${cle} = ?`).join(', ')} WHERE id_session = ?`;
             } else {
-                // Construction de la requête d'insertion
-                champsAUpdater.unshift('id_session'); // Ajoute 'id_session' au début pour l'insertion
+                champsAUpdater.unshift('id_session'); 
                 queryAdresse = `INSERT INTO adresse_de_livraison (${champsAUpdater.join(', ')}) VALUES (${champsAUpdater.map(() => '?').join(', ')})`;
-                parametresAdresse.unshift(idSession); // Ajoute l'ID de session au début pour l'insertion
+                parametresAdresse.unshift(idSession); 
             }
             
-            // Exécution de la requête de mise à jour ou d'insertion
             con.query(queryAdresse, parametresAdresse, function(err, result) {
                 if (err) {
                     console.error("Erreur SQL :", err);
@@ -1009,8 +766,6 @@ function updateAddress(req, res) {
         res.redirect("/parametreUtilisateur");
     }
 }
-
-
 
 
 app.post("/miseAJourMotDePasse", async function(req, res) {
@@ -1051,21 +806,6 @@ app.post("/miseAJourMotDePasse", async function(req, res) {
         return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la mise à jour du mot de passe.");
     }
 });
-
-
-
-
-// app.get("/parametreUtilisateur", function(req, res) {
-//     //Vérifiez que l'utilisateur est connecté et a un id_utilisateur stocké
-//     if (req.session.userId) {
-//         res.render("pages/parametreUtilisateur", {
-//             id_utilisateur: req.session.userId
-//         });
-//     } else {
-//         //Si non connecté, redirige vers la page de connexion
-//         res.redirect("/pageConnexion");
-//     }
-// });
 
 
 //BONNE VERSION NoSQL
@@ -1173,12 +913,13 @@ app.post("/supprimerDuPanier", function(req, res) {
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
 
 app.post('/reset-password', async (req, res) => {
-    const email = req.body.courriel;
+    const email = req.body.email;
     const resetLink = `http://localhost:4000/reset/${email}`;
 
     await sendResetEmail(email, resetLink);
     res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
 });
+
 
 
 import nodemailer from 'nodemailer';
@@ -1339,7 +1080,7 @@ app.post('/payer', (req, res) => {
 });
 
 
-app.get('/success', (req, res) => {
+app.get('/success', (req, res) => { 
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
 
@@ -1368,10 +1109,11 @@ app.get('/success', (req, res) => {
             // Logique après le paiement réussi
             console.log("Get Payment Response");
             console.log(JSON.stringify(payment));
-            res.redirect('/payment-successful');
+            res.redirect('/paiementSucces');
         }
     });
 });
+
 
 app.get('/payment-successful', (req, res) => {
     res.send('Le paiement a été effectué avec succès. Merci pour votre achat !');
@@ -1379,42 +1121,7 @@ app.get('/payment-successful', (req, res) => {
 
 
 
-// app.get('/success', (req, res) => {
-//     const payerId = req.query.PayerID;
-//     const paymentId = req.query.paymentId;
-
-//     const total = req.session.total;
-//     const execute_payment_json = {
-//         "payer_id": payerId,
-//         "transactions": [{
-//             "amount": {
-//                 "currency": "CAD",
-//                 "total": total
-//             }
-//         }]
-//     };
-
-//     // Appel PayPal pour finaliser le paiement
-//     paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-//         if (error) {
-//             console.log(error.response);
-//             throw error;
-//         } else {
-//             console.log("Get Payment Response");
-//             console.log(JSON.stringify(payment));
-//             // Vous pouvez maintenant envoyer l'utilisateur à une page de succès
-//             res.send('Success');
-//         }
-//     });
-// });
-
-
-
 //Valider mot de passe
-// Require necessary modules
-
-
-
 
 app.use(express.json());
 
@@ -1433,3 +1140,30 @@ app.post('/validate_password_endpoint', [
         return res.json({ valid: true });
     }
  });
+
+
+ app.post('/updatePasswordDeLink/:email', async (req, res) => {
+    const email = req.params.email; 
+    const newPassword = req.body.newPassword;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    const db = getDB();
+    try {
+        const result = await db.collection('utilisateurs').updateOne(
+            { adresse_courriel: email },
+            { $set: { mot_de_passe: hashedPassword,
+                        mot_de_passe_clair: newPassword 
+            } }
+        );
+        
+        if (result.modifiedCount === 0) {
+            console.log("Pas de documents correspondant à la requête de mise à jour.");
+            return res.status(400).send("Pas de documents correspondant à la requête de mise à jour.");
+        }
+    
+        return res.status(200).send("Mot de passe mis à jour avec succès.");
+    } catch (error) {
+        console.error("Erreur ", error);
+        return res.status(500).send("Erreur lors de la mise à jour du mot de passe.");
+    }
+});

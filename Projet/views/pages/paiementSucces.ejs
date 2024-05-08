@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement succès | TECH2BUY</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="commun.css" />
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+        margin: 0;
+        font-family: "Barlow Semi Condensed", sans-serif;
+        background-image: linear-gradient(200deg,
+                rgba(171, 171, 171, 0.05) 0%,
+                rgba(171, 171, 171, 0.05) 23%,
+                rgba(90, 90, 90, 0.05) 23%,
+                rgba(90, 90, 90, 0.05) 48%,
+                rgba(65, 65, 65, 0.05) 48%,
+                rgba(65, 65, 65, 0.05) 61%,
+                rgba(232, 232, 232, 0.05) 61%,
+                rgba(232, 232, 232, 0.05) 100%),
+            linear-gradient(126deg,
+                rgba(194, 194, 194, 0.05) 0%,
+                rgba(194, 194, 194, 0.05) 11%,
+                rgba(127, 127, 127, 0.05) 11%,
+                rgba(127, 127, 127, 0.05) 33%,
+                rgba(117, 117, 117, 0.05) 33%,
+                rgba(117, 117, 117, 0.05) 99%,
+                rgba(248, 248, 248, 0.05) 99%,
+                rgba(248, 248, 248, 0.05) 100%),
+            linear-gradient(144deg,
+                rgba(64, 64, 64, 0.05) 0%,
+                rgba(64, 64, 64, 0.05) 33%,
+                rgba(211, 211, 211, 0.05) 33%,
+                rgba(211, 211, 211, 0.05) 50%,
+                rgba(53, 53, 53, 0.05) 50%,
+                rgba(53, 53, 53, 0.05) 75%,
+                rgba(144, 144, 144, 0.05) 75%,
+                rgba(144, 144, 144, 0.05) 100%),
+            linear-gradient(329deg, rgb(146, 196, 255), rgb(146, 196, 255));
+    }
+
+    .bg-image {
+        background-image: url("backgroundImage.jpg");
+        background-size: cover;
+        background-position: center;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .login-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 35%;
+        padding: 20px;
+        background: rgba(3, 66, 201, 0.054);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+    }
+
+    .login-form {
+        margin-top: 20px;
+    }
+
+    .form-control {
+        background: transparent;
+        border-radius: 20px;
+        border: none;
+        color: rgb(0, 0, 0);
+        padding: 10px 20px;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        border-radius: 20px;
+        padding: 10px 20px;
+        width: 70%;
+        margin-left: 15%;
+        background-color: #007bff;
+        border: none;
+    }
+
+    .login-form a {
+        color: #ddd;
+    }
+
+    .login-form h3 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-group i {
+        position: absolute;
+        top: 13px;
+        left: 10px;
+        color: #999;
+    }
+
+    .form-control::placeholder {
+        color: white;
+        opacity: 1;
+    }
+
+
+    @keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .animated-Image {
+            animation: slideInFromLeft 1s ease-out forwards;
+        }
+
+        .animated-description {
+            animation: fadeIn 1s ease-out forwards;
+        }
+</style>
+
+<body>
+    <!-- <h1>Paiement réussi!</h1>
+    <p>Merci pour votre achat! Votre commande sera traitée sous peu.</p>
+    <a href="/pageAffichagePrincipale">Retour à la page d'accueil</a> -->
+
+    <section class="vh-100">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-7">
+                    <div class="card text-black" style="border-radius: 25px">
+                        <div class="card-body p-md-5">
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                                <img src="../Images/panierImage.png" class="img-fluid animated-Image" style="margin-left: 45%"
+                                    height="250" width="250" alt="" />
+                            </div>
+                            <h1 class="mb-4 animated-description" style="font-size: 36px; font-weight: bold; margin-left: 20%;">Merci pour votre achat !</h1>
+                            <p style="font-size: 18px; margin-left: 10%;" class="animated-description">Votre commande a été traitée avec succès et elle sera expédiée sous peu!</p>
+                            <a href="/pageAffichagePrincipale" class="btn btn-primary"
+                                style="margin-top: 20px; border-radius: 20px; font-weight: bold;">Retour à la page
+                                d'accueil</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

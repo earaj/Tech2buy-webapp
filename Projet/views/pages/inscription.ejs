@@ -7,44 +7,61 @@
   <link rel="stylesheet" href="commun.css" />
   <script src="/js/bootstrap.min.js"></script>
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    function validatePassword() {
+        var password = $("#mot_de_passe").val();
+        var confirmPassword = $("#pswd2").val();
+    
+        if (password !== confirmPassword) {
+            $("#message2").html("Les mots de passe ne correspondent pas.");
+            return false;
+        } else {
+            $("#message2").html("");
+            return true;
+        }
+    }
+    
     function validation() {
-      var pw1 = document.getElementById("mot_de_passe").value;
-      var pw2 = document.getElementById("pswd2").value;
+        if (!validatePassword()) {
+            return false;
+        }
 
-      if (pw1 !== pw2) {
-          document.getElementById("message2").innerText = "**Les mots de passe ne correspondent pas**";
-          return false;
-      }
+        var password = $("#mot_de_passe").val();
 
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "validate_password_endpoint", true);
-      xhr.setRequestHeader("Content-Type", "application/json");
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        if (!strongRegex.test(password)) {
+            $("#message2").html("Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
+            return false;
+        }
 
-      xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                  var response = JSON.parse(xhr.responseText);
-                  if (response.valid) {
-                      alert("Création de compte avec Succès!");
-                      window.location.href = "/pageAffichagePrincipale"; 
-                  } else {
-                      document.getElementById("message2").innerText = ""; 
-                      var errorMessage = response.message.join("\n"); // Join error messages with newline
-                      document.getElementById("message2").innerText = errorMessage;
-                  }
-              } else {
-                  // Handle server errors
-                  console.error("Server error: " + xhr.status);
-              }
-          }
-      };
+        var formData = {
+            prenom: $("#prenom").val(),
+            nom: $("#nom").val(),
+            nom_utilisateur: $("#nom_utilisateur").val(),
+            adresse_courriel: $("#adresse_courriel").val(),
+            mot_de_passe: password 
+        };
 
-      xhr.send(JSON.stringify({ password: pw1 }));
-
-      return false;
-  }
+        $.ajax({
+            type: "POST",
+            url: "/inscription",
+            data: JSON.stringify(formData), 
+            contentType: "application/json", 
+            success: function(response) {
+                console.log(response);
+                alert("Création de compte avec succès!");
+                window.location.href = "/pageAffichagePrincipale"; 
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("Une erreur s'est produite lors de la création de compte.");
+            }
+        });
+        return false;
+    }
 </script>
+
 
 <style>
    body, html {
@@ -84,7 +101,7 @@
 <header>
   <%- include ("../partials/header.ejs") %>
 </header>
-<form id="signupForm" onsubmit="return validation()">
+<form onsubmit="return validation()" action="/inscription" method="post">
 <section class="vh-100">
     <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -102,35 +119,35 @@
                                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="prenom">Prénom</label>
-                                        <input type="text" id="prenom" class="form-control" />
+                                        <input type="text" id="prenom" name="prenom" required class="form-control" style="border: 1px solid black;"/>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="nom">Nom</label>
-                                        <input type="text" id="nom" class="form-control" />
+                                        <input type="text" id="nom" name="nom" required class="form-control" style="border: 1px solid black;"/>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="nomUtilisateur">Nom utilisateur</label>
-                                        <input type="text" id="nom_utilisateur" class="form-control" />
+                                        <input type="text" id="nom_utilisateur" name="nom_utilisateur" required class="form-control" style="border: 1px solid black;"/>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                        <label class="form-label" for="courriel">Courriel</label>
-                                        <input type="email" id="adresse_courriel" class="form-control" />
+                                        <label class="form-label" for="courriel">Adresse courriel</label>
+                                        <input type="email" id="adresse_courriel" name="adresse_courriel" required class="form-control" style="border: 1px solid black;"/>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="motDePasse">Mot de passe</label>
-                                        <input type="password" id="mot_de_passe" class="form-control" />
+                                        <input type="password" id="mot_de_passe" name="mot_de_passe" required class="form-control" style="border: 1px solid black;"/>
                                         <span id="message2" style="color:red"> </span>
                                     </div>
                                 </div>
@@ -138,12 +155,12 @@
                                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="password">Confimer mot de passe</label>
-                                        <input type="password" id="pswd2" class="form-control" />
+                                        <input type="password" id="pswd2" class="form-control" style="border: 1px solid black;"/>
                                         <span id="message2" style="color:red"> </span>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                    <input data-mdb-button-init data-mdb-ripple-init role="button" type="submit" class="btn btn-primary btn-lg" value="S'inscrire"></input>
+                                    <input data-mdb-button-init data-mdb-ripple-init role="button" type="submit" style="border: 1px solid black;" class="btn btn-primary btn-lg" value="S'inscrire"></input>
                                 </div>
                             </div>
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
@@ -157,51 +174,6 @@
     </div>
 </section>
 </form>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-function validatePassword() {
-    var password = $("#mot_de_passe").val();
-    var confirmPassword = $("#pswd2").val();
-
-    if (password !== confirmPassword) {
-        $("#message2").html("Les mots de passe ne correspondent pas.");
-        return false;
-    } else {
-        $("#message2").html("");
-        return true;
-    }
-}
-
-function validation() {
-  if (!validatePassword()) {
-        return false;
-    }
-
-    var password = $("#mot_de_passe").val();
-
-    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-    if (!strongRegex.test(password)) {
-        $("#message2").html("Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
-        return false;
-    }
-    $.ajax({
-        type: "POST",
-        url: "/inscription",
-        data: $("#signupForm").serialize(), 
-        success: function(response) {
-
-            console.log(response);
-            alert("Création de compte avec succès!");
-            window.location.href = "/pageAffichagePrincipale"; 
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Une erreur s'est produite lors de la création de compte.");
-        }
-    });
-    return false;
-}
-</script>
 </body>
 </html>

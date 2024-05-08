@@ -123,14 +123,14 @@
                                 <div class="form-group">
                                     <label for="adresse">Adresse</label>
                                     <input type="text" class="form-control" id="adresse" name="adresse"
-                                        placeholder="Entrez votre adresse">
+                                        placeholder="<%= adresse_de_livraison.adresse || 'Entrez votre adresse' %>">
                                     <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="pays">Pays</label>
                                         <input type="text" class="form-control" id="pays" name="pays"
-                                            placeholder="Entrez votre pays">
+                                            placeholder="<%= adresse_de_livraison.pays || 'Entrez votre pays' %>">
                                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                 </div>
@@ -138,20 +138,19 @@
                                     <div class="form-group col-md-6">
                                         <label for="ville">Ville</label>
                                         <input type="text" class="form-control" id="ville" name="ville"
-                                            placeholder="Entrez votre ville">
+                                            placeholder="<%= adresse_de_livraison.ville || 'Entrez votre ville' %>">
                                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="inputState">Province</label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected="">Choisir...</option>
-                                            <option>Québec</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="province" name="province"
+                                            placeholder="<%= adresse_de_livraison.province || 'Entrez votre province' %>">
+                                        <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="inputZip">Code postal</label>
                                         <input type="text" class="form-control" id="code_postal" name="code_postal"
-                                            placeholder="Entrez votre code postal">
+                                            placeholder="<%= adresse_de_livraison.code_postal || 'Entrez votre code postal' %>">
                                         <input type="hidden" name="id_utilisateur" value="&lt;%= id_utilisateur %&gt;">
                                     </div>
                                 </div>
@@ -166,7 +165,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Mot de passe</h5>
-                            <form method="POST" action="/miseAJourMotDePasse">
+                            <form method="POST" action="/miseAJourMotDePasse" onsubmit="return validation()">
                                 <div class="form-group">
                                     <label for="mot_de_passe_actuel">Mot de passe actuel</label>
                                     <input type="password" class="form-control" id="mot_de_passe_actuel"
@@ -182,11 +181,10 @@
                                         <div class="invalid-feedback">
                                             <%= erreurNouveauMotDePasse %>
                                         </div>
-                                        <% } %>
+                                    <% } %>
                                 </div>
                                 <div class="form-group">
-                                    <label for="confirmer_nouveau_mot_de_passe">Confirmer le nouveau mot de
-                                        passe</label>
+                                    <label for="confirmer_nouveau_mot_de_passe">Confirmer le nouveau mot de passe</label>
                                     <input type="password"
                                         class="form-control <%= typeof erreurConfirmationNouveauMotDePasse !== 'undefined' ? 'is-invalid' : '' %>"
                                         id="confirmer_nouveau_mot_de_passe" name="confirmer_nouveau_mot_de_passe"
@@ -195,8 +193,9 @@
                                         <div class="invalid-feedback">
                                             <%= erreurConfirmationNouveauMotDePasse %>
                                         </div>
-                                        <% } %>
+                                    <% } %>
                                 </div>
+                                <span id="msgDeValidationMDP" style="color:red"></span>
                                 <br>
                                 <input class="btn btn-primary" type="submit" value="Sauvegarder">
                             </form>
@@ -211,3 +210,34 @@
 </div>
 </div>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function validatePasswordFields() {
+        var newPassword = $("#nouveau_mot_de_passe").val();
+        var confirmPassword = $("#confirmer_nouveau_mot_de_passe").val();
+
+        if (newPassword !== confirmPassword) {
+            $("#msgDeValidationMDP").html("Les nouveaux mots de passe ne correspondent pas.");
+            return false;
+        } else {
+            $("#msgDeValidationMDP").html("");
+            return true;
+        }
+    }
+
+    function validation() {
+        if (!validatePasswordFields()) {
+            return false;
+        }
+
+        var newPassword = $("#nouveau_mot_de_passe").val();
+
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        if (!strongRegex.test(newPassword)) {
+            $("#msgDeValidationMDP").html("Le nouveau mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
+            return false;
+        }
+        return true;
+    }
+</script>
