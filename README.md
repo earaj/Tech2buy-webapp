@@ -34,6 +34,10 @@ mot de passe: oracle
 CREATE DATABASE mybd; USE mybd;
 <h3>3- Rendez vous dans le dossier "Script", puis ouvrez le fichier "script2.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
 
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/40d4b4aa-a77b-470f-a5bc-8a2ce8f386dc)
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/8e66b81b-936d-42dc-a389-3f575c9ac8da)
+
+
 <h3>4- Toujours dans le dossier "Script", ouvrez le fichier "InsertionDonnees.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
 
 <h3>5- roulez ce script dans le terminal du conteneur pour ajouter l'utulisateur scott:</h3>
