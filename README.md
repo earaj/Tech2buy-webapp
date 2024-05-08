@@ -37,9 +37,12 @@ Lorsque les environnements sont tous installés, veuillez commencer à suivre le
 9- Allez dans un navigateur et tapez: http://localhost:4000
 
 
-
 [^1]: Lien pour installer Docker Desktop sur votre machine : https://docs.docker.com/get-docker/
 [^2]: Lien pour installer Node.js sur votre machine : https://nodejs.org/en/download
 [^3]: Lien pour installer l'éditeur Visual Studio Code : https://code.visualstudio.com/download
 
+<br>
+
+> [!TIP]
+> Assurez d'avoir au moins 10GB stockage libre sur votre ordinateur afin d'installer tous les environnements requis.
 
