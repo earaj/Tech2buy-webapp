@@ -50,13 +50,13 @@
     <div class="row">
         <div class="col-12">
             <h2 class="mb-4">Laisser un commentaire</h2>
-            <form action="/submitComment" method="post">
+            <form action="/submitComment" method="post" id="commentForm">
                 <input type="hidden" name="idProduit" value="<%= produit.id_produit %>">
                 <div class="mb-3">
                     <textarea class="form-control" name="commentText" rows="3" placeholder="Votre commentaire..." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Publier le commentaire</button>
-            </form>
+                <button type="submit" class="btn btn-primary <%= req.session.userId ? '' : 'disabled' %>" id="submitCommentButton">Publier le commentaire</button>
+            </form>            
         </div>
     </div>
 </div>
