@@ -26,6 +26,7 @@ docker run -d -p 3306:3306 --name mysql-server -e MYSQL_ROOT_PASSWORD=oracle -e 
 <h3>2- Sur DockerDesktop, un nouveau conteneur nommé "mysql-server" sera créé. Lancez le conteneur et roulez dans le CLI du conteneur: </h3>
 mysql -u root -p
 mot de passe: oracle
+
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/97714714-b2dd-463a-936d-1a906552b834)
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/bf6258b4-77b8-43f9-a9fd-5653b73f293f)
 
@@ -49,8 +50,12 @@ FLUSH PRIVILEGES;
 
 <h3>6- Sur DockerDesktop, un nouveau conteneur nommé "mongo" sera créé. Lancez le conteneur
 
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/7f51e8c6-f42c-4843-ba2f-bda4d4647107)
 
-<h3>Installation de package pour node.js</h3>
+
+
+
+<h2>Installation de package pour node.js</h2>
 
 <h3>7- Allez dans l'invite de commande et tapez: cd Downloads/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj-main/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj-main/Projet</h3>
 
