@@ -73,7 +73,7 @@
     right: 0;
     top: 0;
     width: 25%;
-    height: 100%;
+    height: 150%;
     backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
@@ -111,6 +111,33 @@
     .footer {
     width: 100%;
     }
+
+    .access-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007BFF;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s;
+}
+
+.access-btn:hover {
+  background-color: #0056b3;
+}
+
+.access-btn .arrow {
+  display: inline-block; /* Assurez-vous que la flèche est un élément en ligne pour permettre la transformation */
+  margin-left: 5px;
+  transition: transform 0.5s;
+}
+
+.access-btn:hover .arrow {
+  transform: translateX(10px);
+}
 </style>
 <header>
     <%- include ("../partials/header.ejs") %>
@@ -149,13 +176,17 @@
                     <p class="paragraphe-princ">
                         Commencez dès maintenant à sauver en équipement technologique
                     </p>
-                    <br><br><br><br><br><br><br><br><br><br><br>
+                    <br><br><br><br><br><br>
                     <a href="./inscription" class="btn custom-button btn-outline-primary">S'inscrire dès aujourd'hui</a>
                     <p>Vous êtes déjà membre TECH2BUY?</p>
                     <a href="./pageConnexion" class="btn btn-primary custom-button">Se connecter</a>
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                    
+                    <br><br>
+
                     <a href="pageAffichagePrincipale">
-                        <h5>Accéder sans se connecter</h5>
+                        <button class="access-btn btn btn-primary">
+                            Accéder sans se connecter <span class="arrow">→</span>
+                          </button>
                     </a>
                 </div>
             </div>
@@ -164,5 +195,5 @@
     </div>
 </body>
 <footer class="footer">
-    <div style="width: 100%"><%- include ("../partials/footer.ejs") %></div>
+    <div style="width: 100%; margin-top: 200px; position: absolute;"><%- include ("../partials/footer.ejs") %></div>
 </footer>
