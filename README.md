@@ -1,6 +1,6 @@
 <h1>TECH2BUY</h1>
 
-Pour déployer l'application, vous aurez besoin d'installer ces environnements suivants: **Docker Desktop**[^1], **Node.js**[^2] et **Visual Studio Code**[^3].
+Pour déployer l'application, vous aurez besoin d'installer ces environnements suivants: **Docker Desktop**[^1], **Node.js**[^2] et **Visual Studio Code**[^3]. Assurez vous que le sous-système windows pour linux soit à jour pour assurer le bon fonctionnement de Docker Desktop. pour ce faire roulez cette commande dans l'invite de commande:<strong> wsl --update </strong>
 
 Lorsque les environnements sont tous installés, veuillez commencer à suivre les étapes suivantes :
 <h2>Installation du projet</h2> 
@@ -24,6 +24,12 @@ Lorsque les environnements sont tous installés, veuillez commencer à suivre le
 <h3>1- Dans le terminal, roulez cette commande: </h3>
 docker run -d -p 3306:3306 --name mysql-server -e MYSQL_ROOT_PASSWORD=oracle -e MYSQL_DATABASE=scott -e MYSQL_USER=scott -e MYSQL_PASSWORD=oracle mysql/mysql-server:latest
 <h3>2- Sur DockerDesktop, un nouveau conteneur nommé "mysql-server" sera créé. Lancez le conteneur et roulez dans le CLI du conteneur: </h3>
+mysql -u root -p
+mot de passe: oracle
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/97714714-b2dd-463a-936d-1a906552b834)
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/bf6258b4-77b8-43f9-a9fd-5653b73f293f)
+
+
 CREATE DATABASE mybd; USE mybd;
 <h3>3- Rendez vous dans le dossier "Script", puis ouvrez le fichier "script2.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
 
