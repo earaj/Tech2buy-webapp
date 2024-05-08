@@ -502,7 +502,7 @@ app.get("/deconnect", function(req, res) {
 // });
 
 //NoSQL
-app.post("/connexion", async function(req, res) {
+app.post("/pageConnexion", async function(req, res) {
     const courriel = req.body.courriel;
     console.log(`Tentative de connexion pour l'email: ${courriel}`);
 
