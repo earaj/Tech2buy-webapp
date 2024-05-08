@@ -73,7 +73,7 @@
     right: 0;
     top: 0;
     width: 25%;
-    height: 150%;
+    height: 100%;
     backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
@@ -111,33 +111,45 @@
     .footer {
     width: 100%;
     }
-
-    .access-btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007BFF;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s;
+    .animate-up {
+    animation: moveUpDown 1s ease-in-out;
 }
 
-.access-btn:hover {
-  background-color: #0056b3;
+@keyframes moveUpDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px); /* Adjust the value to control the distance */
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 
-.access-btn .arrow {
-  display: inline-block; /* Assurez-vous que la flèche est un élément en ligne pour permettre la transformation */
-  margin-left: 5px;
-  transition: transform 0.5s;
-}
+@keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
 
-.access-btn:hover .arrow {
-  transform: translateX(10px);
-}
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .animated-text {
+            animation: slideInFromLeft 1s ease-out forwards;
+        }
 </style>
 <header>
     <%- include ("../partials/header.ejs") %>
@@ -176,18 +188,13 @@
                     <p class="paragraphe-princ">
                         Commencez dès maintenant à sauver en équipement technologique
                     </p>
-                    <br><br><br><br><br><br>
-                    <a href="./inscription" class="btn custom-button btn-outline-primary">S'inscrire dès aujourd'hui</a>
-                    <p>Vous êtes déjà membre TECH2BUY?</p>
-                    <a href="./pageConnexion" class="btn btn-primary custom-button">Se connecter</a>
+                    <!-- Removed multiple <br> tags -->
+                    <a href="./inscription" class="btn custom-button btn-outline-primary animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">S'inscrire dès aujourd'hui</a>
                     
-                    <br><br>
-
-                    <a href="pageAffichagePrincipale">
-                        <button class="access-btn btn btn-primary">
-                            Accéder sans se connecter <span class="arrow">→</span>
-                          </button>
-                    </a>
+                    <a href="./pageConnexion" class="btn btn-primary custom-button animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">Se connecter</a>
+                    <!-- Added margin-top to space out the buttons -->
+                    <p>Vous êtes déjà membre TECH2BUY?</p>
+                    <a href="pageAffichagePrincipale" class="btn btn-primary custom-button animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">Accéder sans se connecter </a>
                 </div>
                 
                 
@@ -200,5 +207,5 @@
     </div>
 </body>
 <footer class="footer">
-    <div style="width: 100%; margin-top: 200px; position: absolute;"><%- include ("../partials/footer.ejs") %></div>
+    <div style="width: 100%"><%- include ("../partials/footer.ejs") %></div>
 </footer>
