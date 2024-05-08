@@ -30,8 +30,12 @@ mot de passe: oracle
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/97714714-b2dd-463a-936d-1a906552b834)
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/bf6258b4-77b8-43f9-a9fd-5653b73f293f)
 
-
+<h3>3- une fois sur mySql roulez cette commande: </h3>
 CREATE DATABASE mybd; USE mybd;
+
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/82d8ee8f-22ce-41db-ad44-a66cba81885a)
+
+
 <h3>3- Rendez vous dans le dossier "Script", puis ouvrez le fichier "script2.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/40d4b4aa-a77b-470f-a5bc-8a2ce8f386dc)
