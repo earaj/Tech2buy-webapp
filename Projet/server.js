@@ -2,23 +2,21 @@
     Importation des modules requis
 */
 
-import express, { query } from "express";
+import express from 'express';
+import { query } from 'express';
 import session from "express-session";
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 import mysql from "mysql2";
-//import mysql from "mysql2";
-import {body, validationResult} from "express-validator";
+import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 import paypal from 'paypal-rest-sdk';
 
-//const express = require('express');
 const app = express();
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
-
 
 /*
     Configuration de PayPal
@@ -502,7 +500,7 @@ app.get("/deconnect", function(req, res) {
 // });
 
 //NoSQL
-app.post("/connexion", async function(req, res) {
+app.post("/pageConnexion", async function(req, res) {
     const courriel = req.body.courriel;
     console.log(`Tentative de connexion pour l'email: ${courriel}`);
 
@@ -936,12 +934,13 @@ app.post('/mdpGoogle', (req, res) => {
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
 
 app.post('/reset-password', async (req, res) => {
-    const email = req.body.courriel;
+    const email = req.body.email;
     const resetLink = `http://localhost:4000/reset/${email}`;
 
     await sendResetEmail(email, resetLink);
     res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
 });
+
 
 
 import nodemailer from 'nodemailer';
@@ -1143,7 +1142,6 @@ app.get('/payment-successful', (req, res) => {
 
 
 //Valider mot de passe
-// Require necessary modules
 
 app.use(express.json());
 
@@ -1162,3 +1160,30 @@ app.post('/validate_password_endpoint', [
         return res.json({ valid: true });
     }
  });
+
+
+ app.post('/updatePasswordDeLink/:email', async (req, res) => {
+    const email = req.params.email; 
+    const newPassword = req.body.newPassword;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    const db = getDB();
+    try {
+        const result = await db.collection('utilisateurs').updateOne(
+            { adresse_courriel: email },
+            { $set: { mot_de_passe: hashedPassword,
+                        mot_de_passe_clair: newPassword 
+            } }
+        );
+        
+        if (result.modifiedCount === 0) {
+            console.log("Pas de documents correspondant à la requête de mise à jour.");
+            return res.status(400).send("Pas de documents correspondant à la requête de mise à jour.");
+        }
+    
+        return res.status(200).send("Mot de passe mis à jour avec succès.");
+    } catch (error) {
+        console.error("Erreur ", error);
+        return res.status(500).send("Erreur lors de la mise à jour du mot de passe.");
+    }
+});
