@@ -73,6 +73,14 @@ FLUSH PRIVILEGES;
 
 npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer nodemailer-smtp-transport google-auth-library --save
 
+<h2>Configuration du compte PayPal</h2>
+
+<h3>Vous aurez besoin d'un compte paypal afin d'accèder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous passez les étapes suivantes: </h3>
+
+1.Tout d'abord, rendez-vous chez le site de Paypal[^4] afin de créer un compte.
+<h3>2.Ensuite, choisissez Personal Sign up for free</h3>
+
+
 
 <h2>Lancement de l'application</h2>
 
@@ -83,9 +91,12 @@ http://localhost:4000
 
 <br>
 
+
 [^1]: Lien pour installer Docker Desktop sur votre machine : https://docs.docker.com/get-docker/
 [^2]: Lien pour installer Node.js sur votre machine : https://nodejs.org/en/download
 [^3]: Lien pour installer l'éditeur Visual Studio Code : https://code.visualstudio.com/download
+[^4]: Lien pour accèder au site de PayPal : https://www.paypal.com/ky/webapps/mpp/account-selection
+
 
 <br>
 
