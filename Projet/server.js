@@ -2,23 +2,21 @@
     Importation des modules requis
 */
 
-import express, { query } from "express";
+import express from 'express';
+import { query } from 'express';
 import session from "express-session";
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 import mysql from "mysql2";
-//import mysql from "mysql2";
-import {body, validationResult} from "express-validator";
+import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 import paypal from 'paypal-rest-sdk';
 
-//const express = require('express');
 const app = express();
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
-
 
 /*
     Configuration de PayPal
