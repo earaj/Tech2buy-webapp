@@ -1031,7 +1031,7 @@ app.post('/payer', (req, res) => {
             const property = match[2];
 
             if (!acc[index]) {
-                acc[index] = { currency: 'CAD' };  // Assurez-vous que la devise est toujours définie
+                acc[index] = { currency: 'CAD' };
             }
 
             acc[index][property] = req.body[key];
@@ -1046,6 +1046,7 @@ app.post('/payer', (req, res) => {
         const formattedTotal = total.toFixed(2);
         console.log("Total formatted for PayPal:", formattedTotal);
         req.session.total = total;
+        req.session.items = items;
 
         const create_payment_json = {
             "intent": "sale",
@@ -1084,11 +1085,11 @@ app.get('/success', (req, res) => {
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
 
-    // Récupération du montant total de la session ou de la base de données
-    const total = req.session.total; // ou une autre source
+    //Récupération du montant total de la session ou de la base de données
+    const total = req.session.total;
     console.log("total session: " + total)
 
-    // Validation du format du montant
+    //Validation du format du montant
     const totalString = typeof total === 'number' ? total.toFixed(2) : total;
 
     const execute_payment_json = {
@@ -1106,19 +1107,53 @@ app.get('/success', (req, res) => {
             console.error(error.response);
             res.status(500).send('Error during payment execution');
         } else {
-            // Logique après le paiement réussi
+            //Logique après le paiement réussi
             console.log("Get Payment Response");
             console.log(JSON.stringify(payment));
-            res.redirect('/paiementSucces');
+
+            const items = req.session.items || [];
+
+            if (items.length === 0) {
+                return res.status(400).send('No items found in session');
+            }
+            
+            //Enregistrer la commande dans la base de données
+            const idSession = req.session.userId;
+            const dateCommande = new Date().toISOString().split('T')[0];
+            const statutCommande = "Payed";
+
+            //Insertion de la commande
+            const insertCommandeSql = `INSERT INTO commande (id_session, date_commande, statut_commande, prix_total) VALUES (?, ?, ?, ?)`;
+            con.query(insertCommandeSql, [idSession, dateCommande, statutCommande, totalString], (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Error saving order to database');
+                }
+
+                const idCommande = result.insertId;
+
+                //Insertion des détails de la commande
+                const insertDetailSql = `INSERT INTO detail_commande (id_commande, id_produit, quantite, prix_unitaire) VALUES ?`;
+                const detailData = items.map(item => [
+                    idCommande,
+                    parseInt(item.sku),
+                    parseInt(item.quantity),
+                    parseFloat(item.price)
+                ]);
+
+                con.query(insertDetailSql, [detailData], (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send('Error saving order details to database');
+                    }
+
+                    //Redirection vers la page de succès
+                    res.redirect('/paiementSucces');
+                });
+            });
         }
     });
 });
-
-
-app.get('/payment-successful', (req, res) => {
-    res.send('Le paiement a été effectué avec succès. Merci pour votre achat !');
-});
-
 
 
 //Valider mot de passe
