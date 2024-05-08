@@ -936,12 +936,13 @@ app.post('/mdpGoogle', (req, res) => {
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
 
 app.post('/reset-password', async (req, res) => {
-    const email = req.body.courriel;
+    const email = req.body.email;
     const resetLink = `http://localhost:4000/reset/${email}`;
 
     await sendResetEmail(email, resetLink);
     res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
 });
+
 
 
 import nodemailer from 'nodemailer';
@@ -1143,7 +1144,6 @@ app.get('/payment-successful', (req, res) => {
 
 
 //Valider mot de passe
-// Require necessary modules
 
 app.use(express.json());
 
@@ -1162,3 +1162,30 @@ app.post('/validate_password_endpoint', [
         return res.json({ valid: true });
     }
  });
+
+
+ app.post('/updatePasswordDeLink/:email', async (req, res) => {
+    const email = req.params.email; 
+    const newPassword = req.body.newPassword;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    const db = getDB();
+    try {
+        const result = await db.collection('utilisateurs').updateOne(
+            { adresse_courriel: email },
+            { $set: { mot_de_passe: hashedPassword,
+                        mot_de_passe_clair: newPassword 
+            } }
+        );
+        
+        if (result.modifiedCount === 0) {
+            console.log("Pas de documents correspondant à la requête de mise à jour.");
+            return res.status(400).send("Pas de documents correspondant à la requête de mise à jour.");
+        }
+    
+        return res.status(200).send("Mot de passe mis à jour avec succès.");
+    } catch (error) {
+        console.error("Erreur ", error);
+        return res.status(500).send("Erreur lors de la mise à jour du mot de passe.");
+    }
+});
