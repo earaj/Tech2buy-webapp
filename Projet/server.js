@@ -251,6 +251,11 @@ app.get("/pageAffichagePrincipale", function(req, res) {
     });
 });
 
+app.get("/paiementSucces", function(req, res) { 
+    res.render("pages/paiementSucces", {
+    });
+});
+
 //SQL
 // app.get("/parametreUtilisateur", function(req, res) {
     
@@ -1101,7 +1106,7 @@ app.post('/payer', (req, res) => {
 });
 
 
-app.get('/success', (req, res) => {
+app.get('/success', (req, res) => { 
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
 
@@ -1130,10 +1135,11 @@ app.get('/success', (req, res) => {
             // Logique après le paiement réussi
             console.log("Get Payment Response");
             console.log(JSON.stringify(payment));
-            res.redirect('/payment-successful');
+            res.redirect('/paiementSucces');
         }
     });
 });
+
 
 app.get('/payment-successful', (req, res) => {
     res.send('Le paiement a été effectué avec succès. Merci pour votre achat !');
