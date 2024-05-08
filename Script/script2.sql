@@ -39,9 +39,10 @@ CREATE TABLE categorie_du_produit (
 
 CREATE TABLE commande (
     id_commande     INT NOT NULL,
-    id_utilisateur  INT NOT NULL,
+    id_session      VARCHAR(255) NOT NULL;,
     date_commande   DATE NOT NULL,
     statut_commande VARCHAR(100) NOT NULL,
+    prix_total      DECIMAL(10, 2) NULL, 
     PRIMARY KEY (id_commande)
 );
 
@@ -67,7 +68,7 @@ CREATE TABLE detail_panier (
     id_panier        INT NOT NULL,
     id_produit       INT NOT NULL,
     quantite         INT NOT NULL,
-    PRIMARY KEY (id_detail_panier),
+    PRIMARY KEY (id_detail_panier)
 );
 
 CREATE TABLE paiement (
