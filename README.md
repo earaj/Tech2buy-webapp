@@ -102,7 +102,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 
 <h3>Lorsque vous avez fini de configurer votre compte, faites ces étapes suivantes afin d'accèder à votre compte sandbox pour le fonctionnement de paiement du site web:</h3>
 
-1.Tout d'abord, rendez vous au site de PayPal développeur[5^] pour accèder à votre sandbox compte et connectez vous avec votre compte de Paypal.
+1.Tout d'abord, rendez vous au site de PayPal développeur[^5] pour accèder à votre sandbox compte et connectez vous avec votre compte de Paypal.
 
 2.Ensuite, cliquez sur «Tools» en de la page accueil et après, cliquez Developer.
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/185f7ac1-736d-4241-b4d6-e218e36dd154)
@@ -132,11 +132,13 @@ http://localhost:4000
 <br>
 
 
+
 [^1]: Lien pour installer Docker Desktop sur votre machine : https://docs.docker.com/get-docker/
 [^2]: Lien pour installer Node.js sur votre machine : https://nodejs.org/en/download
 [^3]: Lien pour installer l'éditeur Visual Studio Code : https://code.visualstudio.com/download
-[^4]: Lien pour accèder au site de PayPal : https://www.paypal.com/ky/webapps/mpp/account-selection^
-[5^]: Lien pour accèder au site de développeur PayPal : https://developer.paypal.com/home
+[^4]: Lien pour accèder au site de PayPal : https://www.paypal.com/ky/webapps/mpp/account-selection
+[^5]: Lien pour accèder au site de développeur PayPal : https://developer.paypal.com/home
+
 
 
 <br>
