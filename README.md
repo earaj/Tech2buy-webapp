@@ -30,7 +30,7 @@ mot de passe: oracle
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/97714714-b2dd-463a-936d-1a906552b834)
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/bf6258b4-77b8-43f9-a9fd-5653b73f293f)
 
-<h3>3- une fois sur mySql roulez cette commande: </h3>
+<h3>3- Une fois sur mySql roulez cette commande: </h3>
 CREATE DATABASE mybd; USE mybd;
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/82d8ee8f-22ce-41db-ad44-a66cba81885a)
@@ -75,7 +75,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 
 <h2>Configuration du compte PayPal</h2>
 
-<h3>Vous aurez besoin d'un compte paypal afin d'accèder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous passez les étapes suivantes: </h3>
+<h3>Vous aurez besoin d'un compte paypal afin d'accèder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
 
 1.Tout d'abord, rendez-vous chez le site de Paypal[^4] afin de créer un compte.
 
@@ -97,7 +97,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 7.Après, insérez vos informations personnelles.
 <img width="736" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/3e8fdb20-eb50-4d1d-8979-05cccf368ed1">
 
-8.Finalement, insérez votre adresse, cochez la 2ième casse et cliquez «Agree and create account» et ensuite cliquez «Not now».
+8.Finalement, insérez votre adresse, cochez la 1ière case et cliquez «Agree and create account» et ensuite cliquez «Not now».
 <img width="741" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/337f1b86-c4c9-4e39-8179-8d1e5f291e4c">
 
 <h3>Lorsque vous avez fini de configurer votre compte, faites ces étapes suivantes afin d'accèder à votre compte sandbox pour le fonctionnement de paiement du site web:</h3>
