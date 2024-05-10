@@ -111,10 +111,12 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/3c8986fc-b379-4cb5-a651-5635afbc24d7)
 
 4.Après, cliquez sur les trois points sur un des deux comptes présentés devant vous et puis cliquez «View/Edit account».
-<img width="1479" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/50722b6b-3f9f-4fe3-aa76-6b401ebad078">
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/f5735304-de4b-4253-9534-178265f14c3b)
+
 
 5.Ensuite, sauvegardez quelque part l'adresse courriel et le mot de passe du compte sandbox qui sont affichés devant vous pour faire le paiement dans le site web plus tard. Si vous voulez, vous pouvez modifier l'adresse courriel et le mot de passe à votre goût.
-<img width="1498" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/f91516cc-d6db-4a79-9505-6006cb000569">
+<img width="1498" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/ce115644-c5a6-4553-94fd-d5c5f23371e2">
+
 
 6.Finalement, insérer CAD 100,000 dans le compte sandbox pour vous permettre d'achetez d'autant produits vous voulez. Si vous ne reste plus d'argent dans le sandbox compte, faites simplement remettre CAD 100,000.
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/fd51d8f1-812d-46dd-b591-0fa12f60100e)
