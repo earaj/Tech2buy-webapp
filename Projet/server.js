@@ -256,6 +256,11 @@ app.get("/paiementSucces", function(req, res) {
     });
 });
 
+app.get("/resetPassword", function(req, res) {
+    res.render("pages/resetPassword", {
+    });
+});
+
 //SQL
 // app.get("/parametreUtilisateur", function(req, res) {
     
@@ -917,7 +922,8 @@ app.post('/reset-password', async (req, res) => {
     const resetLink = `http://localhost:4000/reset/${email}`;
 
     await sendResetEmail(email, resetLink);
-    res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
+    //res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
+    res.redirect('/resetPassword');
 });
 
 
