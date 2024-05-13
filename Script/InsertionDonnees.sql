@@ -1,7 +1,7 @@
 INSERT INTO mybd.produit 
 (id_produit, nom_produit, description_produit, prix_unitaire, stock_disponible, couleur, dimensions, cpu, gpu, ram, stockage, Systeme_dexploitation, taille_ecran, image_url) 
 VALUES
-(1, 'Apple MacBook Pro 13"', 'Laptop haute performance avec puce Apple M1', 1299, 5, 'Gris sidéral', '30.41x21.24x1.56 cm', 'Apple M1', 'Apple M1 intégré', '8GB', '256GB SSD', 'macOS', '13 pouces', '[MYD92LL-A-E] Apple 13-inch MacBook Pro_ Apple M1 chip with 8-core CPU and 8-core GPU, Space Gray (8GB unified memory, 512GB SSD).jpg' ),
+(1, 'Apple MacBook Pro 13"', 'Laptop haute performance avec puce Apple M1', 1299, 5, 'Gris sidéral', '30.41x21.24x1.56 cm', 'Apple M1', 'Apple M1 intégré', '8GB', '256GB SSD', 'macOS', '13 pouces', 'macbook.jpg' ),
 (2, 'Dell XPS 15', 'Puissant laptop pour les creatifs et professionnels', 1850, 4, 'Argent', '34.5x23.5x1.7 cm', 'Intel Core i7-10750H', 'NVIDIA GTX 1650 Ti', '16GB', '512GB SSD', 'Windows 10', '15.6 pouces', 'dell-xps-15-9500-2020-preview.jpg'),
 (3, 'Samsung Galaxy S21', 'Smartphone haut de gamme avec appareil photo professionnel', 799, 10, 'Phantom Gray', 'N/A', 'Exynos 2100', 'Intégré', '8GB', '128GB', 'Android 11', '6.2 pouces', 'samsung-galaxy-s21-5g-256gb.jpg'),
 (4, 'Lenovo Legion 5', 'Laptop de gaming avec performance exceptionnelle', 999, 6, 'Phantom Blue', '36.3x26.0x2.56 cm', 'AMD Ryzen 7 5800H', 'NVIDIA RTX 3060', '16GB', '512GB SSD', 'Windows 10', '15.6 pouces', 'b8cd5add-342b-4e00-860b-ac5ed4a0ed17-preview.jpg'),
