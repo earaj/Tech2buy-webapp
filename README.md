@@ -75,7 +75,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 
 <h2>Configuration du compte PayPal</h2>
 
-<h3>Vous aurez besoin d'un compte paypal afin d'accèder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
+<h3>Vous aurez besoin d'un compte paypal afin d'accéder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
 
 1.Tout d'abord, rendez-vous chez le site de Paypal[^4] afin de créer un compte.
 
