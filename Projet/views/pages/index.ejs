@@ -120,7 +120,7 @@
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px); /* Adjust the value to control the distance */
+        transform: translateY(-10px); 
     }
     100% {
         transform: translateY(0);
@@ -155,30 +155,6 @@
     <%- include ("../partials/header.ejs") %>
 </header>
 <body>
-    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script>
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            let nomComplet = profile.getName();
-            let email = profile.getEmail();
-            let data = {nomComplet: nomComplet, email: email};
-
-            fetch("/mdpGoogle", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    window.location.href = "/motDePasseGoogle";
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-        }
-    </script> -->
     <div class="wrapper">
         <div class="full-background"></div>
         <div class="container-fluid">
@@ -188,19 +164,11 @@
                     <p class="paragraphe-princ">
                         Commencez dès maintenant à sauver en équipement technologique
                     </p>
-                    <!-- Removed multiple <br> tags -->
                     <a href="./inscription" class="btn custom-button btn-outline-primary animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">S'inscrire dès aujourd'hui</a>
-                    
                     <a href="./pageConnexion" class="btn btn-primary custom-button animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">Se connecter</a>
-                    <!-- Added margin-top to space out the buttons -->
                     <p>Vous êtes déjà membre TECH2BUY?</p>
                     <a href="pageAffichagePrincipale" class="btn btn-primary custom-button animate-up" style="border-radius: 20px; font-size: 16px; display: flex; justify-content: center; align-items: center; margin-top: 40px;">Accéder sans se connecter </a>
                 </div>
-                
-                
-                
-                
-                
             </div>
         </div>
         <div class="push"></div>
