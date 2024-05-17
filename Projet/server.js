@@ -103,29 +103,6 @@ const con = mysql.createConnection({
 con.connect(function(err){
     if(err) throw err;
     console.log("connected!");
-
-    //RUN CE CODE POUR HACHER LES MOTS DE PASSE EXISTANTS DES UTILISATEURS
-
-    // con.query("SELECT id_utilisateur, mot_de_passe FROM mybd.utilisateur", function (err, result) {
-    //     if (err) throw err;
-
-    //     result.forEach(user => {
-    //         bcrypt.hash(user.mot_de_passe, saltRounds, function(err, hash) {
-    //             if (err) {
-    //                 console.error("Erreur lors du hachage du mot de passe pour l'utilisateur ID:", user.id_utilisateur);
-    //                 return;
-    //             }
-
-    //             con.query("UPDATE utilisateur SET mot_de_passe = ? WHERE id_utilisateur = ?", [hash, user.id_utilisateur], function(err, result) {
-    //                 if (err) {
-    //                     console.error("Erreur lors de la mise à jour du mot de passe haché pour l'utilisateur ID:", user.id_utilisateur);
-    //                     return;
-    //                 }
-    //                 console.log("Mot de passe mis à jour pour l'utilisateur ID:", user.id_utilisateur);
-    //             });
-    //         });
-    //     });
-    // });
 });
 
 
@@ -261,37 +238,6 @@ app.get("/resetPassword", function(req, res) {
     });
 });
 
-//SQL
-// app.get("/parametreUtilisateur", function(req, res) {
-    
-//     if (!req.session.userId) {
-        
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     //récupérer les informations de l'utilisateur
-//     const requete = "SELECT * FROM mybd.utilisateur WHERE id_utilisateur = ?";
-    
-//     // Exécuter la requête SQL
-//     con.query(requete, [req.session.userId], function(err, result) {
-//         if (err) {
-            
-//             console.error(err);
-//             return res.status(500).send("Erreur lors de la récupération des données de l'utilisateur.");
-//         }
-
-//         if (result.length > 0) {
-            
-//             res.render("pages/parametreUtilisateur", {
-//                 utilisateur: result[0]
-//             });
-//         } else {
-//             return res.status(404).send("Utilisateur non trouvé.");
-//         }
-//     });
-// });
-
-
 app.get("/parametreUtilisateur", async function(req, res) {
     if (!req.session.userId) {
         return res.redirect("/pageConnexion");
@@ -336,43 +282,6 @@ app.get("/MiseAJourMotDePasse", function(req, res) {
     res.render("pages/parametresUtilisateur", {
     });
 });
-
-
-//SQL
-// app.get("/paiement", function(req, res) {
-//     const idUtilisateur = req.session.userId;
-
-//     if (!idUtilisateur) {
-//         // If the user is not logged in, redirect them to the login page
-//         return res.redirect("/pageConnexion");
-//     }
-
-//     const queryPanier = `
-//         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
-//         FROM produit p
-//         JOIN detail_panier dp ON p.id_produit = dp.id_produit
-//         JOIN panier pa ON dp.id_panier = pa.id_panier
-//         WHERE pa.id_session = ?
-//     `;
-
-//     con.query(queryPanier, [idUtilisateur], (err, produits) => {
-//         if (err) {
-//             console.error("Error fetching products from cart: ", err);
-//             return res.status(500).send("Error fetching products from cart.");
-//         }
-
-//         // Pass the data to the payment page template
-//         res.render("pages/paiement", { 
-//             panier: produits,
-//             utilisateurs: {
-//                 prenom: req.session.firstName,
-//                 nom: req.session.lastName,
-//                 nom_utilisateur: req.session.nom_utilisateur,
-//                 adresse_courriel: req.session.adresse_courriel
-//             }
-//         });
-//     });
-// });
 
 //paiement autofil
 app.get("/paiement", async function(req, res) {
@@ -471,47 +380,49 @@ app.get("/deconnect", function(req, res) {
     });
 })
 
-// //Fonction pour la connexion au compte des utilisateurs SQL
-// app.post("/connexion", function(req, res) {
-//     const requete = "SELECT * FROM mybd.utilisateur WHERE adresse_courriel = ?";
+//NoSQL
+// app.post("/pageConnexion", async function(req, res) {
 //     const courriel = req.body.courriel;
-    
-//     con.query(requete, [courriel], function(err, result) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).send("Erreur lors de la recherche de l'utilisateur.");
+//     console.log(`Tentative de connexion pour l'email: ${courriel}`);
+
+//     try {
+//         const db = getDB();
+//         const utilisateur = await db.collection('utilisateurs').findOne({ adresse_courriel: courriel });
+
+//         if (!utilisateur) {
+//             console.log("Aucun utilisateur trouvé avec cet email");
+//             return res.redirect("/pageConnexion?erreur=1");
 //         }
-//         if (result.length > 0) {
-//             const utilisateur = result[0];
-//             bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, function(err, isMatch) {
-//                 if (err) {
-//                     console.error(err);
-//                     return res.status(500).send("Erreur lors de la vérification du mot de passe.");
-//                 }
-//                 if (isMatch) {
-//                     req.session.userId = utilisateur.id_utilisateur;
-//                     req.session.save(function(err) {
-//                         if (err) {
-//                             console.error(err);
-//                             return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-//                         }
-//                         res.redirect("/pageAffichagePrincipale");
-//                     });
-//                 } else {
-//                     //Mot de passe incorrect
-//                     res.redirect("/pageConnexion?erreur=1");
-//                 }
-//             });
-//         } else {
-//             //Aucun utilisateur trouvé avec cet e-mail
-//             res.redirect("/pageConnexion?erreur=1");
-//         }
-//     });
+
+//         bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, (err, isMatch) => {
+//             if (err) {
+//                 console.error(err);
+//                 return res.status(500).send("Erreur lors de la vérification du mot de passe.");
+//             }
+//             if (isMatch) {
+//                 req.session.userId = utilisateur._id;
+//                 req.session.save(err => {
+//                     if (err) {
+//                         console.error(err);
+//                         return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+//                     }
+//                     return res.redirect("/pageAffichagePrincipale");
+//                 });
+//             } else {
+//                 console.log("Mot de passe incorrect");
+//                 return res.redirect("/pageConnexion?erreur=1");
+//             }
+//         });
+//     } catch (err) {
+//         console.error("Erreur lors de la recherche de l'utilisateur:", err);
+//         res.status(500).send("Erreur lors de la connexion.");
+//     }
 // });
 
-//NoSQL
+//NoSQL version 2
 app.post("/pageConnexion", async function(req, res) {
     const courriel = req.body.courriel;
+    const motdepasse = req.body.motdepasse;
     console.log(`Tentative de connexion pour l'email: ${courriel}`);
 
     try {
@@ -520,7 +431,11 @@ app.post("/pageConnexion", async function(req, res) {
 
         if (!utilisateur) {
             console.log("Aucun utilisateur trouvé avec cet email");
-            return res.redirect("/pageConnexion?erreur=1");
+            return res.render('pages/pageConnexion', { 
+                errorMessage: 'Email inexistant', 
+                courriel: courriel,
+                motdepasse: motdepasse 
+            });
         }
 
         bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, (err, isMatch) => {
@@ -539,7 +454,11 @@ app.post("/pageConnexion", async function(req, res) {
                 });
             } else {
                 console.log("Mot de passe incorrect");
-                return res.redirect("/pageConnexion?erreur=1");
+                return res.render('pages/pageConnexion', { 
+                    errorMessage: 'Mot de passe incorrect', 
+                    courriel: courriel,
+                    motdepasse: motdepasse 
+                });
             }
         });
     } catch (err) {
@@ -548,41 +467,7 @@ app.post("/pageConnexion", async function(req, res) {
     }
 });
 
-//SQL
-// app.get('/detailProduit', function(req, res){
-//     const idProduit = req.query.id;
-//     if (!idProduit) {
-//         return res.status(400).send('ID du produit manquant');
-//     }
-
-//     const queryProduit = 'SELECT * FROM produit WHERE id_produit = ?';
-//     con.query(queryProduit, [idProduit], (err, produitResults) => {
-//         if (err) {
-//             console.error('Erreur lors de la récupération des détails du produit:', err);
-//             return res.status(500).send('Erreur interne du serveur lors de la récupération des détails du produit');
-//         }
-
-//         if (produitResults.length === 0) {
-//             return res.status(404).send('Produit non trouvé.');
-//         }
-
-//         const produit = produitResults[0];
-
-//         const queryCommentaire = 'SELECT * FROM commentaire WHERE id_produit = ? ORDER BY date_du_commentaire DESC';
-//         con.query(queryCommentaire, [idProduit], (err, commentaires) => {
-//             if (err) {
-//                 console.error('Erreur lors de la récupération des commentaires:', err);
-//                 return res.status(500).send('Erreur interne du serveur lors de la récupération des commentaires');
-//             }
-//             res.render('pages/detailProduit', {
-//                 produit: produit,
-//                 commentaires: commentaires
-//             });
-//         });
-//     });
-// });
-
-
+//Fonction pour afficher les produits SQL
 app.get('/detailProduit', async function(req, res) {
     const idProduit = req.query.id;
     if (!idProduit) {
@@ -675,59 +560,8 @@ app.post("/parametreUtilisateur", async function(req, res) {
     }
 });
 
-//old version of updateAddress
-// function updateAddress(req, res) {
-//     const idSession = req.session.userId;
-
-//     const champsAInclure = {
-//         adresse: req.body.adresse,
-//         code_postal: req.body.code_postal,
-//         ville: req.body.ville,
-//         pays: req.body.pays
-//     };
-//     const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== undefined && champsAInclure[cle] !== "");
-//     const parametresAdresse = champsAUpdater.map(cle => champsAInclure[cle]);
-    
-//     if (champsAUpdater.length > 0) {
-//         parametresAdresse.push(idSession); // Ajouter l'ID de session pour la condition WHERE
-//         const requeteAdresse = `SELECT * FROM adresse_de_livraison WHERE id_session = ?`;
-        
-//         con.query(requeteAdresse, [idSession], function(err, result) {
-//             if (err) {
-//                 console.error(err);
-//                 return res.status(500).send("Erreur lors de la vérification de l'adresse.");
-//             }
-            
-//             let queryAdresse;
-//             if (result.length > 0) {
-//                 // Construction de la requête de mise à jour
-//                 queryAdresse = `UPDATE adresse_de_livraison SET ${champsAUpdater.map(cle => `${cle} = ?`).join(', ')} WHERE id_session = ?`;
-//             } else {
-//                 // Construction de la requête d'insertion
-//                 champsAUpdater.unshift('id_session'); // Ajoute 'id_session' au début pour l'insertion
-//                 queryAdresse = `INSERT INTO adresse_de_livraison (${champsAUpdater.join(', ')}) VALUES (${champsAUpdater.map(() => '?').join(', ')})`;
-//                 parametresAdresse.unshift(idSession); // Ajoute l'ID de session au début pour l'insertion
-//             }
-            
-//             // Exécution de la requête de mise à jour ou d'insertion
-//             con.query(queryAdresse, parametresAdresse, function(err, result) {
-//                 if (err) {
-//                     console.error("Erreur SQL :", err);
-//                     return res.status(500).send("Erreur lors de la mise à jour de l'adresse.");
-//                 }
-//                 res.redirect("/parametreUtilisateur");
-//             });
-//         });
-//     } else {
-//         // Si aucun champ n'est à mettre à jour, rediriger directement
-//         res.redirect("/parametreUtilisateur");
-//     }
-// }
-
 function updateAddress(req, res) {
     const idSession = req.session.userId;
-
-   
     const champsAInclure = {
         adresse: req.body.adresse || '', 
         code_postal: req.body.code_postal || '', 
