@@ -75,7 +75,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 
 <h2>Configuration du compte PayPal</h2>
 
-<h3>Vous aurez besoin d'un compte paypal afin d'accèder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
+<h3>Vous aurez besoin d'un compte paypal afin d'accéder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
 
 1.Tout d'abord, rendez-vous chez le site de Paypal[^4] afin de créer un compte.
 
@@ -102,12 +102,12 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 
 <h3>Lorsque vous avez fini de configurer votre compte, faites ces étapes suivantes afin d'accèder à votre compte sandbox pour le fonctionnement de paiement du site web:</h3>
 
-1.Tout d'abord, rendez vous au site de PayPal développeur[^5] pour accèder à votre sandbox compte et connectez vous avec votre compte de Paypal.
+1.Tout d'abord, rendez vous au site de PayPal développeur[^5] pour accéder à votre sandbox compte et connectez-vous avec votre compte de Paypal.
 
-2.Ensuite, cliquez sur «Tools» en de la page accueil et après, cliquez Developer.
+2.Ensuite, cliquez sur «Tools» en haut de la page accueil et après, cliquez Developer.
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/185f7ac1-736d-4241-b4d6-e218e36dd154)
 
-3.Puis, descendez avec votre souris jusqu'à vous appercevez «Sandbox accounts et ensuite, cliquez le.
+3.Puis, descendez avec votre souris jusqu'à vous appercevez «Sandbox accounts» et ensuite, cliquez le.
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/3c8986fc-b379-4cb5-a651-5635afbc24d7)
 
 4.Après, cliquez sur les trois points sur un des deux comptes présentés devant vous et puis cliquez «View/Edit account».
