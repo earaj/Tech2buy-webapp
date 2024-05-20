@@ -642,7 +642,7 @@ app.post("/miseAJourMotDePasse", async function(req, res) {
             { $set: { mot_de_passe: hashedPassword, mot_de_passe_clair: nouveauMotDePasse } }
         );
 
-        return res.status(200).json({ success: 'Mot de passe mis à jour avec succès.' });
+        res.status(200).json({ success: 'Mot de passe mis à jour avec succès.', redirectUrl: '/parametreUtilisateur' });
     } catch (err) {
         console.error(err);
         errors.erreur = 'Erreur lors de la mise à jour du mot de passe.';
