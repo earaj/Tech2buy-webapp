@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/custom.css" />
     <script src="/js/bootstrap.min.js"></script>
-    <!-- Assurez-vous d'inclure vos propres liens vers les fichiers CSS et JS -->
 </head>
 <%- include ("../partials/header.ejs") %>
     <style>
@@ -115,6 +114,12 @@
             color: white;
             opacity: 1;
         }
+
+        .alert-danger {
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 
     <body>
@@ -136,12 +141,20 @@
                                                 Connexion
                                             </p>
 
+                                            <% if (typeof errorMessage !== 'undefined') { %>
+                                                <div class="alert alert-danger">
+                                                    <%= errorMessage %>
+                                                </div>
+                                            <% } %>
+
                                             <div class="d-flex flex-row align-items-center mb-4">
                                                 <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                                 <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                     <label class="form-label" for="courriel">Adresse courriel</label>
                                                     <input type="email" class="form-control input-field" id="courriel"
-                                                        name="courriel" placeholder="Adresse courriel" required style="border: 1px solid black;" />
+                                                        name="courriel" placeholder="Adresse courriel" required 
+                                                        value="<%= typeof courriel !== 'undefined' ? courriel : '' %>" 
+                                                        style="border: 1px solid black;" />
                                                 </div>
                                             </div>
 
@@ -151,7 +164,8 @@
                                                     <label class="form-label" for="motdepasse">Mot de passe</label>
                                                     <input type="password" class="form-control input-field"
                                                         id="motdepasse" name="motdepasse" placeholder="Mot de passe"
-                                                        required  style="border: 1px solid black;"/>
+                                                        required value="<%= typeof motdepasse !== 'undefined' ? motdepasse : '' %>" 
+                                                        style="border: 1px solid black;"/>
                                                 </div>
                                             </div>
 
@@ -168,8 +182,7 @@
                                                 <a href="inscription" style="color: rgb(0, 0, 0)">Créer un compte</a>
                                             </div>
                                         </div>
-                                        <div
-                                            class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
                                             <img src="../Images/loginicon.png" class="img-fluid"
                                                 style="margin-left: 30%" height="250" width="250" alt="" />
                                         </div>
@@ -206,12 +219,8 @@
                 }
             }
 
-            document
-                .getElementById("courriel")
-                .addEventListener("input", validerEmail);
-            document
-                .getElementById("motdepasse")
-                .addEventListener("input", validerPassword);
+            document.getElementById("courriel").addEventListener("input", validerEmail);
+            document.getElementById("motdepasse").addEventListener("input", validerPassword);
         </script>
     </body>
 

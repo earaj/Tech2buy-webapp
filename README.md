@@ -30,7 +30,7 @@ mot de passe: oracle
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/97714714-b2dd-463a-936d-1a906552b834)
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/bf6258b4-77b8-43f9-a9fd-5653b73f293f)
 
-<h3>3- une fois sur mySql roulez cette commande: </h3>
+<h3>3- Une fois sur mySql roulez cette commande: </h3>
 CREATE DATABASE mybd; USE mybd;
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/82d8ee8f-22ce-41db-ad44-a66cba81885a)
@@ -73,6 +73,54 @@ FLUSH PRIVILEGES;
 
 npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer nodemailer-smtp-transport google-auth-library --save
 
+<h2>Configuration du compte PayPal</h2>
+
+<h3>Vous aurez besoin d'un compte paypal afin d'accéder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
+
+1.Tout d'abord, rendez-vous chez le site de Paypal[^4] afin de créer un compte.
+
+2.Ensuite, choisissez Personal Sign up for free.
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/edcbc2d7-2375-4f15-b541-62d720af8801)
+
+3.Puis, choisissez votre pays auquel vous vivez présentement.
+<img width="807" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/79621100-60e0-4a3b-ae6a-157d7eaa91c0">
+
+4.Après, insérez un adresse courriel existant dont vous utilisez.
+<img width="919" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/62e14dd3-d91d-4025-9aba-bbdf16c0cec3">
+
+5.Ensuite, insérez votre numéro téléphone.
+<img width="751" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/5ca24b02-8cfd-4924-b977-0d04bfcd5584">
+
+6.Puis, insérez un mot de passe pour votre compte.
+<img width="695" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/01b9be6e-5960-4aef-867b-00364d8d007e">
+
+7.Après, insérez vos informations personnelles.
+<img width="736" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/3e8fdb20-eb50-4d1d-8979-05cccf368ed1">
+
+8.Finalement, insérez votre adresse, cochez la 1ière case et cliquez «Agree and create account» et ensuite cliquez «Not now».
+<img width="741" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/337f1b86-c4c9-4e39-8179-8d1e5f291e4c">
+
+<h3>Lorsque vous avez fini de configurer votre compte, faites ces étapes suivantes afin d'accèder à votre compte sandbox pour le fonctionnement de paiement du site web:</h3>
+
+1.Tout d'abord, rendez vous au site de PayPal développeur[^5] pour accéder à votre sandbox compte et connectez-vous avec votre compte de Paypal.
+
+2.Ensuite, cliquez sur «Tools» en haut de la page accueil et après, cliquez Developer.
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/185f7ac1-736d-4241-b4d6-e218e36dd154)
+
+3.Puis, descendez avec votre souris jusqu'à vous appercevez «Sandbox accounts» et ensuite, cliquez le.
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/3c8986fc-b379-4cb5-a651-5635afbc24d7)
+
+4.Après, cliquez sur les trois points sur un des deux comptes présentés devant vous et puis cliquez «View/Edit account».
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/f5735304-de4b-4253-9534-178265f14c3b)
+
+
+5.Ensuite, sauvegardez quelque part l'adresse courriel et le mot de passe du compte sandbox qui sont affichés devant vous pour faire le paiement dans le site web plus tard. Si vous voulez, vous pouvez modifier l'adresse courriel et le mot de passe à votre goût.
+<img width="1498" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/ce115644-c5a6-4553-94fd-d5c5f23371e2">
+
+
+6.Finalement, insérer CAD 100,000 dans le compte sandbox pour vous permettre d'achetez d'autant produits vous voulez. Si vous ne reste plus d'argent dans le sandbox compte, faites simplement remettre CAD 100,000.
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/fd51d8f1-812d-46dd-b591-0fa12f60100e)
+
 
 <h2>Lancement de l'application</h2>
 
@@ -83,9 +131,15 @@ http://localhost:4000
 
 <br>
 
+
+
 [^1]: Lien pour installer Docker Desktop sur votre machine : https://docs.docker.com/get-docker/
 [^2]: Lien pour installer Node.js sur votre machine : https://nodejs.org/en/download
 [^3]: Lien pour installer l'éditeur Visual Studio Code : https://code.visualstudio.com/download
+[^4]: Lien pour accèder au site de PayPal : https://www.paypal.com/ky/webapps/mpp/account-selection
+[^5]: Lien pour accèder au site de développeur PayPal : https://developer.paypal.com/home
+
+
 
 <br>
 
