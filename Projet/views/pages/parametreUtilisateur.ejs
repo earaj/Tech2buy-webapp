@@ -217,7 +217,7 @@
 
 $(document).ready(function() {
         $("form").submit(function(event) {
-            event.preventDefault(); 
+            event.preventDefault(); // Prevent default form submission
 
             if (!validation()) {
                 return false;
@@ -230,6 +230,7 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         $("#msgDeValidationMDP").html("<span style='color:green'>" + response.success + "</span>");
+                        window.location.href = "/parametreUtilisateur?passwordUpdateSuccess=true";
                     }
                 },
                 error: function(response) {
