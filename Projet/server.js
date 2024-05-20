@@ -2,17 +2,17 @@
     Importation des modules requis
 */
 
-import express from 'express';
-import { query } from 'express';
+import express from "express";
+import { query } from "express";
 import session from "express-session";
 import path from "path";
 import { fileURLToPath } from "url";
 import mysql from "mysql2";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 const saltRounds = 10;
-import paypal from 'paypal-rest-sdk';
+import paypal from "paypal-rest-sdk";
 
 const app = express();
 const _filename = fileURLToPath(import.meta.url);
@@ -23,46 +23,50 @@ const _dirname = path.dirname(_filename);
 */
 
 paypal.configure({
-    'mode': 'sandbox',
-    'client_id': 'Afll2rmOHzdsz_AXDrNJFGrUjVmsVtj9LKKpOT8ky_VBiEDne2rYVm5j8fvXfgYHpEVbnex3QZ_TgnVF',
-    'client_secret': 'EN0NTWRjsrNiVz8wk_XFYM98rwd3h8skcYN1A_90FFVy6iI58wYRg5IKPCJhTJJH8SEajQIBzfMGEVAQ'
-})
-
+  mode: "sandbox",
+  client_id:
+    "Afll2rmOHzdsz_AXDrNJFGrUjVmsVtj9LKKpOT8ky_VBiEDne2rYVm5j8fvXfgYHpEVbnex3QZ_TgnVF",
+  client_secret:
+    "EN0NTWRjsrNiVz8wk_XFYM98rwd3h8skcYN1A_90FFVy6iI58wYRg5IKPCJhTJJH8SEajQIBzfMGEVAQ",
+});
 
 /*
     Configuration de CORS
 */
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    next();
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  next();
 });
 
 /*
     Connect to server
 */
 
-const server = app.listen(4000,function()
-{
-console.log("serveur fonctionne sur 4000.... ! ")
+const server = app.listen(4000, function () {
+  console.log("serveur fonctionne sur 4000.... ! ");
 });
 
 /*
     Configuration de EJS
 */
 
-app.set("views", path.join(_dirname,"views"));
+app.set("views", path.join(_dirname, "views"));
 app.set("view engine", "ejs");
-app.use(express.urlencoded({extended:false}))
+app.use(express.urlencoded({ extended: false }));
 
-app.use(session({
-    secret: 'votreSecretIci',
-    resave: false, 
-    saveUninitialized: false, 
-    cookie: { secure: false } 
-  }));
-
+app.use(
+  session({
+    secret: "votreSecretIci",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 /*
     Importation de Bootstrap    
@@ -71,20 +75,19 @@ app.use(session({
 app.use("/js", express.static(_dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(_dirname + "/node_modules/bootstrap/dist/css"));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./views/Images"));
-app.use(express.static("./assets"))
-app.use(express.static("./views"))
+app.use(express.static("./assets"));
+app.use(express.static("./views"));
 
-app.use(function(req, res, next) {
-    res.locals.req = req;
-    next();
+app.use(function (req, res, next) {
+  res.locals.req = req;
+  next();
 });
 
-
 app.use((req, res, next) => {
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    next();
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
 });
 
 /*
@@ -92,29 +95,25 @@ app.use((req, res, next) => {
 */
 
 const con = mysql.createConnection({
-    host: "localhost",
-    user: "scott",
-    password: "oracle",
-    database: "mybd"
+  host: "localhost",
+  user: "scott",
+  password: "oracle",
+  database: "mybd",
 });
 
-
-
-con.connect(function(err){
-    if(err) throw err;
-    console.log("connected!");
+con.connect(function (err) {
+  if (err) throw err;
+  console.log("connected!");
 });
-
 
 /*
     Connection au server MongoDB
 */
 
+import { MongoClient, ObjectId } from "mongodb";
 
-import { MongoClient,ObjectId } from 'mongodb';
-
-const url = 'mongodb://localhost:27017';
-const dbName = 'mybd';
+const url = "mongodb://localhost:27017";
+const dbName = "mybd";
 let db;
 
 async function connectDB() {
@@ -127,178 +126,191 @@ async function connectDB() {
   } catch (err) {
     console.error("Erreur lors de la connexion à MongoDB", err);
   }
-};
+}
 
 function getDB() {
   if (!db) {
     throw Error("La base de données n'est pas encore initialisée");
   }
   return db;
-};
-
+}
 
 function setupRoutes() {
-    app.post("/inscription", async function(req, res) {
-        const db = getDB(); 
+  app.post("/inscription", async function (req, res) {
+    const db = getDB();
 
-        const password = req.body.mot_de_passe;
-        const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-        if (!strongRegex.test(password)) {
-            return res.redirect("/inscription?erreur=motdepasseFaible");
+    const password = req.body.mot_de_passe;
+    const strongRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+    if (!strongRegex.test(password)) {
+      return res.redirect("/inscription?erreur=motdepasseFaible");
+    }
+
+    try {
+      const utilisateurExistant = await db
+        .collection("utilisateurs")
+        .findOne({ adresse_courriel: req.body.adresse_courriel });
+      if (utilisateurExistant) {
+        return res.redirect("/inscription?erreur=emailExistant");
+      }
+
+      bcrypt.hash(password, saltRounds, async function (err, hash) {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .send("Erreur lors du hachage du mot de passe.");
         }
+
+        const nouvelUtilisateur = {
+          prenom: req.body.prenom,
+          nom: req.body.nom,
+          nom_utilisateur: req.body.nom_utilisateur,
+          adresse_courriel: req.body.adresse_courriel,
+          mot_de_passe: hash,
+          mot_de_passe_clair: password,
+        };
 
         try {
-            const utilisateurExistant = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
-            if (utilisateurExistant) {
-                return res.redirect("/inscription?erreur=emailExistant");
+          await db.collection("utilisateurs").insertOne(nouvelUtilisateur);
+          req.session.userId = nouvelUtilisateur._id;
+          req.session.save((err) => {
+            if (err) {
+              console.error(err);
+              return res
+                .status(500)
+                .send("Erreur lors de la sauvegarde de la session.");
             }
-
-            bcrypt.hash(password, saltRounds, async function(err, hash) {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).send("Erreur lors du hachage du mot de passe.");
-                }
-
-                const nouvelUtilisateur = {
-                    prenom: req.body.prenom,
-                    nom: req.body.nom,
-                    nom_utilisateur: req.body.nom_utilisateur,
-                    adresse_courriel: req.body.adresse_courriel,
-                    mot_de_passe: hash, 
-                    mot_de_passe_clair: password
-                };
-
-                try {
-                    await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
-                    req.session.userId = nouvelUtilisateur._id;
-                    req.session.save(err => {
-                        if (err) {
-                            console.error(err);
-                            return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-                        }
-                        return res.redirect("/pageAffichagePrincipale");
-                    });
-                } catch (err) {
-                    if (err && err.code === 11000) {
-                        return res.redirect("/inscription?erreur=emailExistant");
-                    } else {
-                        console.error(err);
-                        return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
-                    }
-                }
-            });
+            return res.redirect("/pageAffichagePrincipale");
+          });
         } catch (err) {
-            console.error("Erreur lors de la vérification de l'utilisateur:", err);
-            return res.status(500).send("Erreur serveur lors de la vérification.");
+          if (err && err.code === 11000) {
+            return res.redirect("/inscription?erreur=emailExistant");
+          } else {
+            console.error(err);
+            return res
+              .status(500)
+              .send("Erreur lors de l'inscription de l'utilisateur.");
+          }
         }
-    });
+      });
+    } catch (err) {
+      console.error("Erreur lors de la vérification de l'utilisateur:", err);
+      return res.status(500).send("Erreur serveur lors de la vérification.");
+    }
+  });
 }
 
 connectDB();
-
-
 
 /*
     Description des routes
 */
 
-app.get("/", function (req,res){
-    res.render("pages/index", {
-    });
+app.get("/", function (req, res) {
+  res.render("pages/index", {});
 });
 
 //Permet aller au page connexion
-app.get("/pageConnexion", function(req, res) {
-    res.render("pages/pageConnexion", { erreur: req.query.erreur });
+app.get("/pageConnexion", function (req, res) {
+  res.render("pages/pageConnexion", { erreur: req.query.erreur });
 });
 
 //permet aller au page index
-app.get("/index", function(req, res) {
-    res.render("pages/index", {
-    });
+app.get("/index", function (req, res) {
+  res.render("pages/index", {});
 });
 
-app.get("/inscription", function(req, res) {
-    res.render("pages/inscription", {
-    });
+app.get("/inscription", function (req, res) {
+  res.render("pages/inscription", {});
 });
 
-app.get("/pageAffichagePrincipale", function(req, res) {
-    res.render("pages/pageAffichagePrincipale", {
-    });
+app.get("/pageAffichagePrincipale", function (req, res) {
+  res.render("pages/pageAffichagePrincipale", {});
 });
 
-app.get("/paiementSucces", function(req, res) { 
-    res.render("pages/paiementSucces", {
-    });
+app.get("/paiementSucces", function (req, res) {
+  res.render("pages/paiementSucces", {});
 });
 
-app.get("/resetPassword", function(req, res) {
-    res.render("pages/resetPassword", {
-    });
+app.get("/resetPassword", function (req, res) {
+  res.render("pages/resetPassword", {});
 });
 
-app.get("/parametreUtilisateur", async function(req, res) {
-    if (!req.session.userId) {
-        return res.redirect("/pageConnexion");
+app.get("/parametreUtilisateur", async function (req, res) {
+  if (!req.session.userId) {
+    return res.redirect("/pageConnexion");
+  }
+
+  console.log(
+    "Récupération des informations pour l'ID utilisateur:",
+    req.session.userId
+  );
+
+  try {
+    const utilisateur = await db
+      .collection("utilisateurs")
+      .findOne({ _id: new ObjectId(req.session.userId) });
+
+    if (!utilisateur) {
+      return res.status(404).send("Utilisateur non trouvé.");
     }
 
-    console.log("Récupération des informations pour l'ID utilisateur:", req.session.userId);
-
-    try {
-        const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(req.session.userId) });
-
-        if (!utilisateur) {
-            return res.status(404).send("Utilisateur non trouvé.");
-        }
-
-        const queryAdresse = `
+    const queryAdresse = `
             SELECT adresse, code_postal, ville, pays, province
             FROM adresse_de_livraison
             WHERE id_session = ?
         `;
 
-        con.query(queryAdresse, [req.session.userId], (err, adresseResult) => {
-            if (err) {
-                console.error("Error fetching address: ", err);
-                return res.status(500).send("Erreur lors de la récupération de l'adresse.");
-            }
+    con.query(queryAdresse, [req.session.userId], (err, adresseResult) => {
+      if (err) {
+        console.error("Error fetching address: ", err);
+        return res
+          .status(500)
+          .send("Erreur lors de la récupération de l'adresse.");
+      }
 
-            const adresse_de_livraison = adresseResult.length > 0 ? adresseResult[0] : {};
+      const adresse_de_livraison =
+        adresseResult.length > 0 ? adresseResult[0] : {};
 
-            res.render("pages/parametreUtilisateur", {
-                utilisateur: utilisateur,
-                adresse_de_livraison: adresse_de_livraison
-            });
-        });
-    } catch (err) {
-        console.error("Erreur lors de la récupération des informations utilisateur:", err);
-        return res.status(500).send("Erreur lors de la récupération des données de l'utilisateur.");
-    }
+      res.render("pages/parametreUtilisateur", {
+        utilisateur: utilisateur,
+        adresse_de_livraison: adresse_de_livraison,
+      });
+    });
+  } catch (err) {
+    console.error(
+      "Erreur lors de la récupération des informations utilisateur:",
+      err
+    );
+    return res
+      .status(500)
+      .send("Erreur lors de la récupération des données de l'utilisateur.");
+  }
 });
 
-
-app.get("/MiseAJourMotDePasse", function(req, res) {
-    res.render("pages/parametresUtilisateur", {
-    });
+app.get("/MiseAJourMotDePasse", function (req, res) {
+  res.render("pages/parametresUtilisateur", {});
 });
 
 //paiement autofil
-app.get("/paiement", async function(req, res) {
-    const idUtilisateur = req.session.userId;
+app.get("/paiement", async function (req, res) {
+  const idUtilisateur = req.session.userId;
 
-    if (!idUtilisateur) {
-        return res.redirect("/pageConnexion");
+  if (!idUtilisateur) {
+    return res.redirect("/pageConnexion");
+  }
+
+  try {
+    const utilisateur = await db
+      .collection("utilisateurs")
+      .findOne({ _id: new ObjectId(idUtilisateur) });
+
+    if (!utilisateur) {
+      return res.status(404).send("Utilisateur non trouvé.");
     }
 
-    try {
-        const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(idUtilisateur) });
-
-        if (!utilisateur) {
-            return res.status(404).send("Utilisateur non trouvé.");
-        }
-
-        const queryPanier = `
+    const queryPanier = `
             SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite,adl.adresse, adl.code_postal, adl.ville, adl.pays, adl.province
             FROM produit p
             JOIN detail_panier dp ON p.id_produit = dp.id_produit
@@ -307,49 +319,51 @@ app.get("/paiement", async function(req, res) {
             WHERE pa.id_session = ?
         `;
 
-        con.query(queryPanier, [idUtilisateur], (err, produits) => {
-            if (err) {
-                console.error("Error fetching products from cart: ", err);
-                return res.status(500).send("Error fetching products from cart.");
-            }
+    con.query(queryPanier, [idUtilisateur], (err, produits) => {
+      if (err) {
+        console.error("Error fetching products from cart: ", err);
+        return res.status(500).send("Error fetching products from cart.");
+      }
 
-        const adresse_de_livraison = {
-            pays: "Your Country",
-        };
+      const adresse_de_livraison = {
+        pays: "Your Country",
+      };
 
-            
-            res.render("pages/paiement", {
-                panier: produits,
-                utilisateurs: {
-                    prenom: utilisateur.prenom,
-                    nom: utilisateur.nom,
-                    nom_utilisateur: utilisateur.nom_utilisateur,
-                    adresse_courriel: utilisateur.adresse_courriel
-                },
-                adresse_de_livraison: produits.length > 0 ? produits[0] : null 
-            });
-        });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send("Erreur lors de la récupération des informations de l'utilisateur.");
-    }
+      res.render("pages/paiement", {
+        panier: produits,
+        utilisateurs: {
+          prenom: utilisateur.prenom,
+          nom: utilisateur.nom,
+          nom_utilisateur: utilisateur.nom_utilisateur,
+          adresse_courriel: utilisateur.adresse_courriel,
+        },
+        adresse_de_livraison: produits.length > 0 ? produits[0] : null,
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .send(
+        "Erreur lors de la récupération des informations de l'utilisateur."
+      );
+  }
 });
 
-app.get("/mdpOublie", function(req, res) {
-    res.render("pages/mdpOublie", {
-    });
+app.get("/mdpOublie", function (req, res) {
+  res.render("pages/mdpOublie", {});
 });
 
 //Fonction pour afficher les produits SQL
-app.get("/panier", function(req, res) {
-    const idUtilisateur = req.session.userId;
+app.get("/panier", function (req, res) {
+  const idUtilisateur = req.session.userId;
 
-    if (!idUtilisateur) {
-        //Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
-        return res.redirect("/pageConnexion");
-    }
+  if (!idUtilisateur) {
+    //Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+    return res.redirect("/pageConnexion");
+  }
 
-    const queryPanier = `
+  const queryPanier = `
         SELECT p.id_produit, p.nom_produit, p.description_produit, p.image_url, p.prix_unitaire, dp.quantite
         FROM produit p
         JOIN detail_panier dp ON p.id_produit = dp.id_produit
@@ -357,28 +371,30 @@ app.get("/panier", function(req, res) {
         WHERE pa.id_session = ?
     `;
 
-    con.query(queryPanier, [idUtilisateur], (err, produits) => {
-        if (err) {
-            console.error("Erreur lors de la récupération des produits du panier : ", err);
-            return res.render("pages/panier", { panier: [] });
-        }
+  con.query(queryPanier, [idUtilisateur], (err, produits) => {
+    if (err) {
+      console.error(
+        "Erreur lors de la récupération des produits du panier : ",
+        err
+      );
+      return res.render("pages/panier", { panier: [] });
+    }
 
-        //console.log("Produits du panier :", produits);
-        res.render("pages/panier", { panier: produits });
-    });
-});   
+    //console.log("Produits du panier :", produits);
+    res.render("pages/panier", { panier: produits });
+  });
+});
 
 //Fonction pour déconnecter l'utilisateur
-app.get("/deconnect", function(req, res) {
-
-    req.session.destroy(function(err) {
-        if(err) {
-            console.error("Erreur de deconnexion de session: ", err);
-            return res.status(500).send("Erreur de deconnexion");
-        }
-        res.redirect("/pageConnexion");
-    });
-})
+app.get("/deconnect", function (req, res) {
+  req.session.destroy(function (err) {
+    if (err) {
+      console.error("Erreur de deconnexion de session: ", err);
+      return res.status(500).send("Erreur de deconnexion");
+    }
+    res.redirect("/pageConnexion");
+  });
+});
 
 //NoSQL
 // app.post("/pageConnexion", async function(req, res) {
@@ -420,315 +436,429 @@ app.get("/deconnect", function(req, res) {
 // });
 
 //NoSQL version 2
-app.post("/pageConnexion", async function(req, res) {
-    const courriel = req.body.courriel;
-    const motdepasse = req.body.motdepasse;
-    console.log(`Tentative de connexion pour l'email: ${courriel}`);
+app.post("/pageConnexion", async function (req, res) {
+  const courriel = req.body.courriel;
+  const motdepasse = req.body.motdepasse;
+  console.log(`Tentative de connexion pour l'email: ${courriel}`);
 
-    try {
-        const db = getDB();
-        const utilisateur = await db.collection('utilisateurs').findOne({ adresse_courriel: courriel });
+  try {
+    const db = getDB();
+    const utilisateur = await db
+      .collection("utilisateurs")
+      .findOne({ adresse_courriel: courriel });
 
-        if (!utilisateur) {
-            console.log("Aucun utilisateur trouvé avec cet email");
-            return res.render('pages/pageConnexion', { 
-                errorMessage: 'Email inexistant', 
-                courriel: courriel,
-                motdepasse: motdepasse 
-            });
-        }
-
-        bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, (err, isMatch) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors de la vérification du mot de passe.");
-            }
-            if (isMatch) {
-                req.session.userId = utilisateur._id;
-                req.session.save(err => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-                    }
-                    return res.redirect("/pageAffichagePrincipale");
-                });
-            } else {
-                console.log("Mot de passe incorrect");
-                return res.render('pages/pageConnexion', { 
-                    errorMessage: 'Mot de passe incorrect', 
-                    courriel: courriel,
-                    motdepasse: motdepasse 
-                });
-            }
-        });
-    } catch (err) {
-        console.error("Erreur lors de la recherche de l'utilisateur:", err);
-        res.status(500).send("Erreur lors de la connexion.");
+    if (!utilisateur) {
+      console.log("Aucun utilisateur trouvé avec cet email");
+      return res.render("pages/pageConnexion", {
+        errorMessage: "Email inexistant",
+        courriel: courriel,
+        motdepasse: motdepasse,
+      });
     }
+
+    bcrypt.compare(
+      req.body.motdepasse,
+      utilisateur.mot_de_passe,
+      (err, isMatch) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .send("Erreur lors de la vérification du mot de passe.");
+        }
+        if (isMatch) {
+          req.session.userId = utilisateur._id;
+          req.session.save((err) => {
+            if (err) {
+              console.error(err);
+              return res
+                .status(500)
+                .send("Erreur lors de la sauvegarde de la session.");
+            }
+            return res.redirect("/pageAffichagePrincipale");
+          });
+        } else {
+          console.log("Mot de passe incorrect");
+          return res.render("pages/pageConnexion", {
+            errorMessage: "Mot de passe incorrect",
+            courriel: courriel,
+            motdepasse: motdepasse,
+          });
+        }
+      }
+    );
+  } catch (err) {
+    console.error("Erreur lors de la recherche de l'utilisateur:", err);
+    res.status(500).send("Erreur lors de la connexion.");
+  }
 });
 
 //Fonction pour afficher les produits SQL
-app.get('/detailProduit', async function(req, res) {
-    const idProduit = req.query.id;
-    if (!idProduit) {
-        return res.status(400).send('ID du produit manquant');
+app.get("/detailProduit", async function (req, res) {
+  const idProduit = req.query.id;
+  if (!idProduit) {
+    return res.status(400).send("ID du produit manquant");
+  }
+
+  const db = await getDB(); // Obtenez l'instance de la base de données MongoDB
+
+  con.query(
+    "SELECT * FROM produit WHERE id_produit = ?",
+    [idProduit],
+    async (err, produitResults) => {
+      if (err) {
+        console.error(
+          "Erreur lors de la récupération des détails du produit:",
+          err
+        );
+        return res
+          .status(500)
+          .send(
+            "Erreur interne du serveur lors de la récupération des détails du produit"
+          );
+      }
+
+      if (produitResults.length === 0) {
+        return res.status(404).send("Produit non trouvé.");
+      }
+
+      const produit = produitResults[0];
+
+      try {
+        const commentaires = await db
+          .collection("commentaires")
+          .find({ id_produit: idProduit })
+          .toArray();
+        res.render("pages/detailProduit", {
+          produit: produit,
+          commentaires: commentaires,
+        });
+      } catch (err) {
+        console.error("Erreur lors de la récupération des commentaires:", err);
+        return res
+          .status(500)
+          .send(
+            "Erreur interne du serveur lors de la récupération des commentaires"
+          );
+      }
     }
-
-    const db = await getDB(); // Obtenez l'instance de la base de données MongoDB
-
-    con.query('SELECT * FROM produit WHERE id_produit = ?', [idProduit], async (err, produitResults) => {
-        if (err) {
-            console.error('Erreur lors de la récupération des détails du produit:', err);
-            return res.status(500).send('Erreur interne du serveur lors de la récupération des détails du produit');
-        }
-
-        if (produitResults.length === 0) {
-            return res.status(404).send('Produit non trouvé.');
-        }
-
-        const produit = produitResults[0];
-
-        try {
-            const commentaires = await db.collection('commentaires').find({ id_produit: idProduit }).toArray();
-            res.render('pages/detailProduit', {
-                produit: produit,
-                commentaires: commentaires
-            });
-        } catch (err) {
-            console.error('Erreur lors de la récupération des commentaires:', err);
-            return res.status(500).send('Erreur interne du serveur lors de la récupération des commentaires');
-        }
-    });
+  );
 });
-
 
 //Fonction pour la recherche des produits
-app.get('/recherche', (req, res) => {
-    const searchTerm = req.query.query;
-    let query = 'SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?';
-    if (req.query.sortBy === 'priceAsc') {
-        query += " ORDER BY prix_unitaire ASC";
+app.get("/recherche", (req, res) => {
+  const searchTerm = req.query.query;
+  let query =
+    "SELECT * FROM produit WHERE nom_produit LIKE ? OR description_produit LIKE ?";
+  if (req.query.sortBy === "priceAsc") {
+    query += " ORDER BY prix_unitaire ASC";
+  } else if (req.query.sortBy === "priceDesc") {
+    query += " ORDER BY prix_unitaire DESC";
+  } else if (req.query.sortBy === "nomDesc") {
+    query += " ORDER BY nom_produit DESC";
+  } else if (req.query.sortBy === "nomAsc") {
+    query += " ORDER BY nom_produit ASC";
+  }
+  con.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, rows) => {
+    if (err) {
+      console.error("Erreur lors de la recherche :", err);
+      return res.status(500).send("Erreur interne du serveur");
     }
-    else if (req.query.sortBy === 'priceDesc') {
-        query += " ORDER BY prix_unitaire DESC";
-    }
-    else if (req.query.sortBy === 'nomDesc') {
-        query += " ORDER BY nom_produit DESC";
-    }
-    else if (req.query.sortBy === 'nomAsc') {
-        query += " ORDER BY nom_produit ASC";
-    } 
-    con.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, rows) => {
-        if (err) {
-            console.error('Erreur lors de la recherche :', err);
-            return res.status(500).send('Erreur interne du serveur');
-        }
-      
-        res.render('pages/recherche', { items: rows, searchTerm: searchTerm });
-    });
+
+    res.render("pages/recherche", { items: rows, searchTerm: searchTerm });
+  });
 });
 
-app.post("/parametreUtilisateur", async function(req, res) {
-    if (!req.session.userId) {
-        return res.redirect("/pageConnexion");
+app.post("/parametreUtilisateur", async function (req, res) {
+  if (!req.session.userId) {
+    return res.redirect("/pageConnexion");
+  }
+
+  //Préparez l'objet de mise à jour basé sur les champs reçus dans req.body
+  let miseAJour = {};
+  if (req.body.prenom) miseAJour.prenom = req.body.prenom;
+  if (req.body.nom) miseAJour.nom = req.body.nom;
+  if (req.body.nom_utilisateur)
+    miseAJour.nom_utilisateur = req.body.nom_utilisateur;
+  if (req.body.adresse_courriel)
+    miseAJour.adresse_courriel = req.body.adresse_courriel;
+  if (req.body.mot_de_passe)
+    miseAJour.mot_de_passe = await bcrypt.hash(
+      req.body.mot_de_passe,
+      saltRounds
+    );
+
+  try {
+    const result = await db
+      .collection("utilisateurs")
+      .updateOne(
+        { _id: new ObjectId(req.session.userId) },
+        { $set: miseAJour }
+      );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send("Utilisateur non trouvé.");
     }
 
-    //Préparez l'objet de mise à jour basé sur les champs reçus dans req.body
-    let miseAJour = {};
-    if (req.body.prenom) miseAJour.prenom = req.body.prenom;
-    if (req.body.nom) miseAJour.nom = req.body.nom;
-    if (req.body.nom_utilisateur) miseAJour.nom_utilisateur = req.body.nom_utilisateur;
-    if (req.body.adresse_courriel) miseAJour.adresse_courriel = req.body.adresse_courriel;
-    if (req.body.mot_de_passe) miseAJour.mot_de_passe = await bcrypt.hash(req.body.mot_de_passe, saltRounds);
-
-    try {
-        const result = await db.collection('utilisateurs').updateOne(
-            { _id: new ObjectId(req.session.userId) },
-            { $set: miseAJour }
-        );
-
-        if (result.matchedCount === 0) {
-            return res.status(404).send("Utilisateur non trouvé.");
-        }
-
-        updateAddress(req, res);
-
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send("Erreur lors de la mise à jour des paramètres de l'utilisateur.");
-    }
+    updateAddress(req, res);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .send("Erreur lors de la mise à jour des paramètres de l'utilisateur.");
+  }
 });
 
 function updateAddress(req, res) {
-    const idSession = req.session.userId;
-    const champsAInclure = {
-        adresse: req.body.adresse || '', 
-        code_postal: req.body.code_postal || '', 
-        ville: req.body.ville || '',       
-        pays: req.body.pays || '' ,
-        province: req.body.province || ''       
-    };
+  const idSession = req.session.userId;
+  const champsAInclure = {
+    adresse: req.body.adresse || "",
+    code_postal: req.body.code_postal || "",
+    ville: req.body.ville || "",
+    pays: req.body.pays || "",
+    province: req.body.province || "",
+  };
 
-    const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== '');
-    const parametresAdresse = champsAUpdater.map(cle => champsAInclure[cle]);
+  const champsAUpdater = Object.keys(champsAInclure).filter(
+    (cle) => champsAInclure[cle] !== ""
+  );
+  const parametresAdresse = champsAUpdater.map((cle) => champsAInclure[cle]);
 
-    if (champsAUpdater.length > 0) {
-        parametresAdresse.push(idSession); 
-        const requeteAdresse = `SELECT * FROM adresse_de_livraison WHERE id_session = ?`;
-        
-        con.query(requeteAdresse, [idSession], function(err, result) {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors de la vérification de l'adresse.");
-            }
-            
-            let queryAdresse;
-            if (result.length > 0) {
-                queryAdresse = `UPDATE adresse_de_livraison SET ${champsAUpdater.map(cle => `${cle} = ?`).join(', ')} WHERE id_session = ?`;
-            } else {
-                champsAUpdater.unshift('id_session'); 
-                queryAdresse = `INSERT INTO adresse_de_livraison (${champsAUpdater.join(', ')}) VALUES (${champsAUpdater.map(() => '?').join(', ')})`;
-                parametresAdresse.unshift(idSession); 
-            }
-            
-            con.query(queryAdresse, parametresAdresse, function(err, result) {
-                if (err) {
-                    console.error("Erreur SQL :", err);
-                    return res.status(500).send("Erreur lors de la mise à jour de l'adresse.");
-                }
-                res.redirect("/parametreUtilisateur");
-            });
-        });
-    } else {
-        // Si aucun champ n'est à mettre à jour, rediriger directement
+  if (champsAUpdater.length > 0) {
+    parametresAdresse.push(idSession);
+    const requeteAdresse = `SELECT * FROM adresse_de_livraison WHERE id_session = ?`;
+
+    con.query(requeteAdresse, [idSession], function (err, result) {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .send("Erreur lors de la vérification de l'adresse.");
+      }
+
+      let queryAdresse;
+      if (result.length > 0) {
+        queryAdresse = `UPDATE adresse_de_livraison SET ${champsAUpdater.map((cle) => `${cle} = ?`).join(", ")} WHERE id_session = ?`;
+      } else {
+        champsAUpdater.unshift("id_session");
+        queryAdresse = `INSERT INTO adresse_de_livraison (${champsAUpdater.join(", ")}) VALUES (${champsAUpdater.map(() => "?").join(", ")})`;
+        parametresAdresse.unshift(idSession);
+      }
+
+      con.query(queryAdresse, parametresAdresse, function (err, result) {
+        if (err) {
+          console.error("Erreur SQL :", err);
+          return res
+            .status(500)
+            .send("Erreur lors de la mise à jour de l'adresse.");
+        }
         res.redirect("/parametreUtilisateur");
-    }
+      });
+    });
+  } else {
+    // Si aucun champ n'est à mettre à jour, rediriger directement
+    res.redirect("/parametreUtilisateur");
+  }
 }
 
+app.post("/miseAJourMotDePasse", async function (req, res) {
+  if (!req.session.userId) {
+    return res.redirect("/pageConnexion");
+  }
 
-app.post("/miseAJourMotDePasse", async function(req, res) {
-    if (!req.session.userId) {
-        return res.redirect("/pageConnexion");
+  const motDePasseActuel = req.body.mot_de_passe_actuel;
+  const nouveauMotDePasse = req.body.nouveau_mot_de_passe;
+  const confirmerNouveauMotDePasse = req.body.confirmer_nouveau_mot_de_passe;
+
+  if (nouveauMotDePasse !== confirmerNouveauMotDePasse) {
+    return res.redirect(
+      "/parametreUtilisateur?erreurConfirmationNouveauMotDePasse=Les nouveaux mots de passe ne correspondent pas."
+    );
+  }
+
+  try {
+    const utilisateur = await db
+      .collection("utilisateurs")
+      .findOne({ _id: new ObjectId(req.session.userId) });
+
+    if (!utilisateur) {
+      return res.redirect(
+        "/parametreUtilisateur?erreur=Utilisateur non trouvé."
+      );
     }
 
-    const motDePasseActuel = req.body.mot_de_passe_actuel;
-    const nouveauMotDePasse = req.body.nouveau_mot_de_passe;
-    const confirmerNouveauMotDePasse = req.body.confirmer_nouveau_mot_de_passe;
-
-    if (nouveauMotDePasse !== confirmerNouveauMotDePasse) {
-        return res.redirect("/parametreUtilisateur?erreurConfirmationNouveauMotDePasse=Les nouveaux mots de passe ne correspondent pas.");
+    const isMatch = await bcrypt.compare(
+      motDePasseActuel,
+      utilisateur.mot_de_passe
+    );
+    if (!isMatch) {
+      return res.redirect(
+        "/parametreUtilisateur?erreurMotDePasseActuel=Le mot de passe actuel est incorrect."
+      );
     }
 
-    try {
-        const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(req.session.userId) });
+    const hashedPassword = await bcrypt.hash(nouveauMotDePasse, saltRounds);
 
-        if (!utilisateur) {
-            return res.redirect("/parametreUtilisateur?erreur=Utilisateur non trouvé.");
+    await db
+      .collection("utilisateurs")
+      .updateOne(
+        { _id: new ObjectId(req.session.userId) },
+        {
+          $set: {
+            mot_de_passe: hashedPassword,
+            mot_de_passe_clair: nouveauMotDePasse,
+          },
         }
+      );
 
-        const isMatch = await bcrypt.compare(motDePasseActuel, utilisateur.mot_de_passe);
-        if (!isMatch) {
-            return res.redirect("/parametreUtilisateur?erreurMotDePasseActuel=Le mot de passe actuel est incorrect.");
-        }
-
-        const hashedPassword = await bcrypt.hash(nouveauMotDePasse, saltRounds);
-
-        await db.collection('utilisateurs').updateOne(
-            { _id: new ObjectId(req.session.userId) },
-            { $set: { mot_de_passe: hashedPassword, mot_de_passe_clair: nouveauMotDePasse } }
-        );
-
-        res.redirect("/parametreUtilisateur?passwordUpdateSuccess=true");
-    } catch (err) {
-        console.error(err);
-        return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la mise à jour du mot de passe.");
-    }
+    res.redirect("/parametreUtilisateur?passwordUpdateSuccess=true");
+  } catch (err) {
+    console.error(err);
+    return res.redirect(
+      "/parametreUtilisateur?erreur=Erreur lors de la mise à jour du mot de passe."
+    );
+  }
 });
 
-
 //BONNE VERSION NoSQL
-app.post("/ajouterAuPanier", function(req, res) {
-    if (!req.session.userId) {
-        console.log("Aucun utilisateur connecté");
-        return res.redirect("/pageConnexion");
-    }
+app.post("/ajouterAuPanier", function (req, res) {
+  if (!req.session.userId) {
+    console.log("Aucun utilisateur connecté");
+    return res.redirect("/pageConnexion");
+  }
 
-    const idSession = req.session.userId;
-    console.log("ID de session:", idSession);
-    const id_produit = req.body.id_produit;
-    const quantite = parseInt(req.body.quantite) || 1;
+  const idSession = req.session.userId;
+  console.log("ID de session:", idSession);
+  const id_produit = req.body.id_produit;
+  const quantite = parseInt(req.body.quantite) || 1;
 
-    
-    con.query("SELECT id_panier FROM panier WHERE id_session = ?", [idSession], (err, panier) => {
-        if (err) {
-            console.error("Erreur lors de la récupération de l'ID du panier :", err);
-            return res.status(500).send("Erreur serveur lors de la récupération de l'ID du panier.");
-        }
+  con.query(
+    "SELECT id_panier FROM panier WHERE id_session = ?",
+    [idSession],
+    (err, panier) => {
+      if (err) {
+        console.error(
+          "Erreur lors de la récupération de l'ID du panier :",
+          err
+        );
+        return res
+          .status(500)
+          .send("Erreur serveur lors de la récupération de l'ID du panier.");
+      }
 
-        let id_panier;
-        if (panier.length === 0) {
-            console.log(`Aucun panier trouvé pour l'ID de session ${idSession}, création d'un nouveau panier.`);
-            con.query("INSERT INTO panier (id_session, date_ajout) VALUES (?, NOW())", [idSession], (err, result) => {
-                if (err) {
-                    console.error("Erreur lors de la création du panier :", err);
-                    return res.status(500).send("Erreur serveur lors de la création du panier.");
-                }
-                id_panier = result.insertId;
-                console.log(`Panier créé avec l'ID: ${id_panier}`);
-                ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
-            });
-        } else {
-            id_panier = panier[0].id_panier;
-            console.log(`Panier trouvé pour l'ID de session ${idSession} avec l'ID: ${id_panier}`);
-            ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
-        }
-    });
-
-    function ajouterOuMettreAJourProduit(id_panier, id_produit, quantite) {
-        console.log(`Ajout ou mise à jour du produit ${id_produit} dans le panier ${id_panier}`);
-        con.query("SELECT id_detail_panier, quantite FROM detail_panier WHERE id_panier = ? AND id_produit = ?", [id_panier, id_produit], (err, detailPanier) => {
+      let id_panier;
+      if (panier.length === 0) {
+        console.log(
+          `Aucun panier trouvé pour l'ID de session ${idSession}, création d'un nouveau panier.`
+        );
+        con.query(
+          "INSERT INTO panier (id_session, date_ajout) VALUES (?, NOW())",
+          [idSession],
+          (err, result) => {
             if (err) {
-                console.error("Erreur lors de la vérification du produit dans le panier :", err);
-                return res.status(500).send("Erreur lors de la vérification du produit dans le panier.");
+              console.error("Erreur lors de la création du panier :", err);
+              return res
+                .status(500)
+                .send("Erreur serveur lors de la création du panier.");
             }
-
-            if (detailPanier.length > 0) {
-                const updatedQuantite = detailPanier[0].quantite + quantite;
-                console.log(`Mise à jour de la quantité pour le produit ${id_produit} dans le panier ${id_panier}`);
-                con.query("UPDATE detail_panier SET quantite = ? WHERE id_detail_panier = ?", [updatedQuantite, detailPanier[0].id_detail_panier], (err, updateResult) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la quantité du produit :", err);
-                        return res.status(500).send("Erreur lors de la mise à jour de la quantité du produit.");
-                    }
-                    console.log(`Quantité mise à jour pour le produit ${id_produit}. Redirection en cours.`);
-                    res.redirect("back");
-                });
-            } else {
-                console.log(`Ajout du nouveau produit ${id_produit} dans le panier ${id_panier}`);
-                con.query("INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)", [id_panier, id_produit, quantite], (err, insertResult) => {
-                    if (err) {
-                        console.error("Erreur lors de l'ajout du produit au panier :", err);
-                        return res.status(500).send("Erreur lors de l'ajout du produit au panier.");
-                    }
-                    console.log(`Produit ${id_produit} ajouté au panier. Redirection en cours.`);
-                    res.redirect("back");
-                });
-            }
-        });
+            id_panier = result.insertId;
+            console.log(`Panier créé avec l'ID: ${id_panier}`);
+            ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
+          }
+        );
+      } else {
+        id_panier = panier[0].id_panier;
+        console.log(
+          `Panier trouvé pour l'ID de session ${idSession} avec l'ID: ${id_panier}`
+        );
+        ajouterOuMettreAJourProduit(id_panier, id_produit, quantite);
+      }
     }
-    
+  );
+
+  function ajouterOuMettreAJourProduit(id_panier, id_produit, quantite) {
+    console.log(
+      `Ajout ou mise à jour du produit ${id_produit} dans le panier ${id_panier}`
+    );
+    con.query(
+      "SELECT id_detail_panier, quantite FROM detail_panier WHERE id_panier = ? AND id_produit = ?",
+      [id_panier, id_produit],
+      (err, detailPanier) => {
+        if (err) {
+          console.error(
+            "Erreur lors de la vérification du produit dans le panier :",
+            err
+          );
+          return res
+            .status(500)
+            .send("Erreur lors de la vérification du produit dans le panier.");
+        }
+
+        if (detailPanier.length > 0) {
+          const updatedQuantite = detailPanier[0].quantite + quantite;
+          console.log(
+            `Mise à jour de la quantité pour le produit ${id_produit} dans le panier ${id_panier}`
+          );
+          con.query(
+            "UPDATE detail_panier SET quantite = ? WHERE id_detail_panier = ?",
+            [updatedQuantite, detailPanier[0].id_detail_panier],
+            (err, updateResult) => {
+              if (err) {
+                console.error(
+                  "Erreur lors de la mise à jour de la quantité du produit :",
+                  err
+                );
+                return res
+                  .status(500)
+                  .send(
+                    "Erreur lors de la mise à jour de la quantité du produit."
+                  );
+              }
+              console.log(
+                `Quantité mise à jour pour le produit ${id_produit}. Redirection en cours.`
+              );
+              res.redirect("back");
+            }
+          );
+        } else {
+          console.log(
+            `Ajout du nouveau produit ${id_produit} dans le panier ${id_panier}`
+          );
+          con.query(
+            "INSERT INTO detail_panier (id_panier, id_produit, quantite) VALUES (?, ?, ?)",
+            [id_panier, id_produit, quantite],
+            (err, insertResult) => {
+              if (err) {
+                console.error(
+                  "Erreur lors de l'ajout du produit au panier :",
+                  err
+                );
+                return res
+                  .status(500)
+                  .send("Erreur lors de l'ajout du produit au panier.");
+              }
+              console.log(
+                `Produit ${id_produit} ajouté au panier. Redirection en cours.`
+              );
+              res.redirect("back");
+            }
+          );
+        }
+      }
+    );
+  }
 });
 
 //Supprimer un produit du panier
-app.post("/supprimerDuPanier", function(req, res) {
-    const idUtilisateur = req.session.userId;
-    const idProduit = req.body.id_produit;
+app.post("/supprimerDuPanier", function (req, res) {
+  const idUtilisateur = req.session.userId;
+  const idProduit = req.body.id_produit;
 
-    if (!idUtilisateur || !idProduit) {
-        return res.redirect("/pageConnexion");
-    }
+  if (!idUtilisateur || !idProduit) {
+    return res.redirect("/pageConnexion");
+  }
 
-    const querySupprimerProduit = `
+  const querySupprimerProduit = `
         DELETE FROM detail_panier 
         WHERE id_panier = (
             SELECT id_panier FROM panier WHERE id_session = ?
@@ -736,306 +866,360 @@ app.post("/supprimerDuPanier", function(req, res) {
         AND id_produit = ?
     `;
 
-    con.query(querySupprimerProduit, [idUtilisateur, idProduit], (err, result) => {
-        if (err) {
-            console.error("Ne peut pas supprime l'article: ", err);
-            return res.redirect("/panier");
-        }
-        res.redirect("/panier");
-    });
+  con.query(
+    querySupprimerProduit,
+    [idUtilisateur, idProduit],
+    (err, result) => {
+      if (err) {
+        console.error("Ne peut pas supprime l'article: ", err);
+        return res.redirect("/panier");
+      }
+      res.redirect("/panier");
+    }
+  );
 });
-
-
-
 
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
-app.post('/reset-password', async (req, res) => {
-    const email = req.body.email;
-    const resetLink = `http://localhost:4000/reset/${email}`;
+app.post("/reset-password", async (req, res) => {
+  const email = req.body.email;
+  const resetLink = `http://localhost:4000/reset/${email}`;
 
-    await sendResetEmail(email, resetLink);
-    res.redirect('/resetPassword');
+  await sendResetEmail(email, resetLink);
+  res.redirect("/resetPassword");
 });
 
-
-
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-service: 'gmail',
-    auth: {
-type: 'login',
-user: 'techbuy849@gmail.com',
-pass: 'uevh snco rzra tpjw'
-}
+  service: "gmail",
+  auth: {
+    type: "login",
+    user: "techbuy849@gmail.com",
+    pass: "uevh snco rzra tpjw",
+  },
 });
 async function sendResetEmail(email, link) {
-    const mailOptions = {
-from: 'techbuy849@gmail.com',
-        to: email,
-        subject: 'Réinitialisation de votre mot de passe',
-        html: `<p>Vous avez demandé une réinitialisation de mot de passe pour votre compte.</p>
+  const mailOptions = {
+    from: "techbuy849@gmail.com",
+    to: email,
+    subject: "Réinitialisation de votre mot de passe",
+    html: `<p>Vous avez demandé une réinitialisation de mot de passe pour votre compte.</p>
 <p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe:</p>
-<a href="${link}">Réinitialiser le mot de passe</a>`
-};
-try {
+<a href="${link}">Réinitialiser le mot de passe</a>`,
+  };
+  try {
     await transporter.sendMail(mailOptions);
-console.log('Courriel a ete envoie!');
-} catch (error) {
-console.error('Erreur:', error);
+    console.log("Courriel a ete envoie!");
+  } catch (error) {
+    console.error("Erreur:", error);
+  }
 }
-}
 
-app.post('/reset-password', async (req, res) => {
-    const email = req.body.email;
+app.post("/reset-password", async (req, res) => {
+  const email = req.body.email;
 
-const resetLink = `http://localhost:4000/reset/${email}`;
+  const resetLink = `http://localhost:4000/reset/${email}`;
 
-await sendResetEmail(email, resetLink);
-res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
+  await sendResetEmail(email, resetLink);
+  res.send(
+    "Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email."
+  );
 });
 
-app.get('/reset/:email', (req, res) => {
-    const email = req.params.email;
-    res.render('pages/reset', { email });
+app.get("/reset/:email", (req, res) => {
+  const email = req.params.email;
+  res.render("pages/reset", { email });
 });
-
-
-
-
 
 //https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs
 
-app.post('/submitComment', async function(req, res) {
-    const idProduit = req.body.idProduit;
-    const commentaireText = req.body.commentText;
-    const idUtilisateur = req.session.userId;
+app.post("/submitComment", async function (req, res) {
+  const idProduit = req.body.idProduit;
+  const commentaireText = req.body.commentText;
+  const idUtilisateur = req.session.userId;
 
-    if (!idProduit || !commentaireText || !idUtilisateur) {
-        return res.status(400).send('Informations manquantes pour publier le commentaire.');
+  if (!idProduit || !commentaireText || !idUtilisateur) {
+    return res
+      .status(400)
+      .send("Informations manquantes pour publier le commentaire.");
+  }
+
+  try {
+    const db = getDB();
+    const utilisateur = await db
+      .collection("utilisateurs")
+      .findOne({ _id: new ObjectId(idUtilisateur) });
+
+    if (!utilisateur) {
+      return res.status(404).send("Utilisateur non trouvé.");
     }
 
-    try {
-        const db = getDB();
-        const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(idUtilisateur) });
+    const nomUtilisateur = utilisateur.nom_utilisateur;
 
-        if (!utilisateur) {
-            return res.status(404).send("Utilisateur non trouvé.");
-        }
-
-        const nomUtilisateur = utilisateur.nom_utilisateur; 
-
-        const nouveauCommentaire = {
-            id_utilisateur: idUtilisateur,
-            nom_utilisateur: nomUtilisateur, 
-            id_produit: idProduit,
-            commentaire: commentaireText,
-            date_du_commentaire: new Date()
-        };
-
-        await db.collection('commentaires').insertOne(nouveauCommentaire);
-
-        res.redirect('/detailProduit?id=' + idProduit);
-    } catch (err) {
-        console.error('Erreur lors de l\'insertion du commentaire:', err);
-        return res.status(500).send('Erreur lors de l\'enregistrement du commentaire.');
-    }
-});
-
-
-app.post('/deleteComment', async function(req, res) {
-    const commentId = req.body.commentId;
-    const productId = req.body.productId;
-
-    try {
-        const db = getDB();
-        await db.collection('commentaires').deleteOne({ _id: new ObjectId(commentId) });
-        res.redirect('/detailProduit?id=' + productId);
-    } catch (err) {
-        console.error('Erreur lors de la suppression du commentaire:', err);
-        res.status(500).send('Erreur lors de la suppression du commentaire.');
-    }
-});
-
-app.post('/payer', (req, res) => {
-    console.log(req.body);
-
-    const items = Object.keys(req.body)
-        .filter(key => key.startsWith('items['))
-        .reduce((acc, key) => {
-            const match = key.match(/^items\[(\d+)]\[(.+)]$/);
-            const index = parseInt(match[1], 10);
-            const property = match[2];
-
-            if (!acc[index]) {
-                acc[index] = { currency: 'CAD' };
-            }
-
-            acc[index][property] = req.body[key];
-            return acc;
-        }, []);
-
-        items.forEach(item => {
-            item.price = parseFloat(item.price).toFixed(2);
-        });
-        
-        const total = items.reduce((acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity), 0);
-        const formattedTotal = total.toFixed(2);
-        console.log("Total formatted for PayPal:", formattedTotal);
-        req.session.total = total;
-        req.session.items = items;
-
-        const create_payment_json = {
-            "intent": "sale",
-            "payer": {
-                "payment_method": "paypal"
-            },
-            "redirect_urls": {
-                "return_url": "http://localhost:4000/success",
-                "cancel_url": "http://localhost:4000/paiement"
-            },
-            "transactions": [{
-                "item_list": {
-                    "items": items
-                },
-                "amount": {
-                    "currency": "CAD",
-                    "total": formattedTotal
-                }
-            }]
-        };
-        
-
-    paypal.payment.create(create_payment_json, function(error, payment){
-        if (error) {
-            console.error('PayPal Error:', error);
-            return res.status(500).send('Error creating payment');
-        } else {
-            const approvalUrl = payment.links.find(link => link.rel === 'approval_url').href;
-            return res.redirect(approvalUrl);
-        }
-    });
-});
-
-
-app.get('/success', (req, res) => { 
-    const payerId = req.query.PayerID;
-    const paymentId = req.query.paymentId;
-
-    //Récupération du montant total de la session ou de la base de données
-    const total = req.session.total;
-    console.log("total session: " + total)
-
-    //Validation du format du montant
-    const totalString = typeof total === 'number' ? total.toFixed(2) : total;
-
-    const execute_payment_json = {
-        "payer_id": payerId,
-        "transactions": [{
-            "amount": {
-                "currency": "CAD",
-                "total": totalString
-            }
-        }]
+    const nouveauCommentaire = {
+      id_utilisateur: idUtilisateur,
+      nom_utilisateur: nomUtilisateur,
+      id_produit: idProduit,
+      commentaire: commentaireText,
+      date_du_commentaire: new Date(),
     };
 
-    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-        if (error) {
-            console.error(error.response);
-            res.status(500).send('Error during payment execution');
-        } else {
-            //Logique après le paiement réussi
-            console.log("Get Payment Response");
-            console.log(JSON.stringify(payment));
+    await db.collection("commentaires").insertOne(nouveauCommentaire);
 
-            const items = req.session.items || [];
-
-            if (items.length === 0) {
-                return res.status(400).send('No items found in session');
-            }
-            
-            //Enregistrer la commande dans la base de données
-            const idSession = req.session.userId;
-            const dateCommande = new Date().toISOString().split('T')[0];
-            const statutCommande = "Payed";
-
-            //Insertion de la commande
-            const insertCommandeSql = `INSERT INTO commande (id_session, date_commande, statut_commande, prix_total) VALUES (?, ?, ?, ?)`;
-            con.query(insertCommandeSql, [idSession, dateCommande, statutCommande, totalString], (err, result) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).send('Error saving order to database');
-                }
-
-                const idCommande = result.insertId;
-
-                //Insertion des détails de la commande
-                const insertDetailSql = `INSERT INTO detail_commande (id_commande, id_produit, quantite, prix_unitaire) VALUES ?`;
-                const detailData = items.map(item => [
-                    idCommande,
-                    parseInt(item.sku),
-                    parseInt(item.quantity),
-                    parseFloat(item.price)
-                ]);
-
-                con.query(insertDetailSql, [detailData], (err, result) => {
-                    if (err) {
-                        console.error(err);
-                        return res.status(500).send('Error saving order details to database');
-                    }
-
-                    //Redirection vers la page de succès
-                    res.redirect('/paiementSucces');
-                });
-            });
-        }
-    });
+    res.redirect("/detailProduit?id=" + idProduit);
+  } catch (err) {
+    console.error("Erreur lors de l'insertion du commentaire:", err);
+    return res
+      .status(500)
+      .send("Erreur lors de l'enregistrement du commentaire.");
+  }
 });
 
+app.post("/deleteComment", async function (req, res) {
+  const commentId = req.body.commentId;
+  const productId = req.body.productId;
+
+  try {
+    const db = getDB();
+    await db
+      .collection("commentaires")
+      .deleteOne({ _id: new ObjectId(commentId) });
+    res.redirect("/detailProduit?id=" + productId);
+  } catch (err) {
+    console.error("Erreur lors de la suppression du commentaire:", err);
+    res.status(500).send("Erreur lors de la suppression du commentaire.");
+  }
+});
+
+app.post("/payer", (req, res) => {
+  console.log(req.body);
+
+  const items = Object.keys(req.body)
+    .filter((key) => key.startsWith("items["))
+    .reduce((acc, key) => {
+      const match = key.match(/^items\[(\d+)]\[(.+)]$/);
+      const index = parseInt(match[1], 10);
+      const property = match[2];
+
+      if (!acc[index]) {
+        acc[index] = { currency: "CAD" };
+      }
+
+      acc[index][property] = req.body[key];
+      return acc;
+    }, []);
+
+  items.forEach((item) => {
+    item.price = parseFloat(item.price).toFixed(2);
+  });
+
+  const total = items.reduce(
+    (acc, item) => acc + parseFloat(item.price) * parseInt(item.quantity),
+    0
+  );
+  const formattedTotal = total.toFixed(2);
+  console.log("Total formatted for PayPal:", formattedTotal);
+  req.session.total = total;
+  req.session.items = items;
+
+  const create_payment_json = {
+    intent: "sale",
+    payer: {
+      payment_method: "paypal",
+    },
+    redirect_urls: {
+      return_url: "http://localhost:4000/success",
+      cancel_url: "http://localhost:4000/paiement",
+    },
+    transactions: [
+      {
+        item_list: {
+          items: items,
+        },
+        amount: {
+          currency: "CAD",
+          total: formattedTotal,
+        },
+      },
+    ],
+  };
+
+  paypal.payment.create(create_payment_json, function (error, payment) {
+    if (error) {
+      console.error("PayPal Error:", error);
+      return res.status(500).send("Error creating payment");
+    } else {
+      const approvalUrl = payment.links.find(
+        (link) => link.rel === "approval_url"
+      ).href;
+      return res.redirect(approvalUrl);
+    }
+  });
+});
+
+app.get("/success", (req, res) => {
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+
+  //Récupération du montant total de la session ou de la base de données
+  const total = req.session.total;
+  console.log("total session: " + total);
+
+  //Validation du format du montant
+  const totalString = typeof total === "number" ? total.toFixed(2) : total;
+
+  const execute_payment_json = {
+    payer_id: payerId,
+    transactions: [
+      {
+        amount: {
+          currency: "CAD",
+          total: totalString,
+        },
+      },
+    ],
+  };
+
+  paypal.payment.execute(
+    paymentId,
+    execute_payment_json,
+    function (error, payment) {
+      if (error) {
+        console.error(error.response);
+        res.status(500).send("Error during payment execution");
+      } else {
+        //Logique après le paiement réussi
+        console.log("Get Payment Response");
+        console.log(JSON.stringify(payment));
+
+        const items = req.session.items || [];
+
+        if (items.length === 0) {
+          return res.status(400).send("No items found in session");
+        }
+
+        //Enregistrer la commande dans la base de données
+        const idSession = req.session.userId;
+        const dateCommande = new Date().toISOString().split("T")[0];
+        const statutCommande = "Payed";
+
+        //Insertion de la commande
+        const insertCommandeSql = `INSERT INTO commande (id_session, date_commande, statut_commande, prix_total) VALUES (?, ?, ?, ?)`;
+        con.query(
+          insertCommandeSql,
+          [idSession, dateCommande, statutCommande, totalString],
+          (err, result) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).send("Error saving order to database");
+            }
+
+            const idCommande = result.insertId;
+
+            //Insertion des détails de la commande
+            const insertDetailSql = `INSERT INTO detail_commande (id_commande, id_produit, quantite, prix_unitaire) VALUES ?`;
+            const detailData = items.map((item) => [
+              idCommande,
+              parseInt(item.sku),
+              parseInt(item.quantity),
+              parseFloat(item.price),
+            ]);
+
+            con.query(insertDetailSql, [detailData], (err, result) => {
+              if (err) {
+                console.error(err);
+                return res
+                  .status(500)
+                  .send("Error saving order details to database");
+              }
+
+              //Redirection vers la page de succès
+              res.redirect("/paiementSucces");
+            });
+          }
+        );
+      }
+    }
+  );
+});
 
 //Valider mot de passe
 
 app.use(express.json());
 
-app.post('/validate_password_endpoint', [
-    body('password').isLength({ min: 8 }).withMessage("Le mot de passe doit contenir au moins 8 caractères"),
-    body('password').matches(/[a-z]/).withMessage("Le mot de passe doit contenir au moins une lettre minuscule"),
-    body('password').matches(/[A-Z]/).withMessage("Le mot de passe doit contenir au moins une lettre majuscule"),
-    body('password').matches(/[0-9]/).withMessage("Le mot de passe doit contenir au moins un chiffre"),
-    body('password').matches(/[^a-zA-Z0-9]/).withMessage("Le mot de passe doit contenir au moins un caractère spécial")
- ], (req, res) => {
+app.post(
+  "/validate_password_endpoint",
+  [
+    body("password")
+      .isLength({ min: 8 })
+      .withMessage("Le mot de passe doit contenir au moins 8 caractères"),
+    body("password")
+      .matches(/[a-z]/)
+      .withMessage(
+        "Le mot de passe doit contenir au moins une lettre minuscule"
+      ),
+    body("password")
+      .matches(/[A-Z]/)
+      .withMessage(
+        "Le mot de passe doit contenir au moins une lettre majuscule"
+      ),
+    body("password")
+      .matches(/[0-9]/)
+      .withMessage("Le mot de passe doit contenir au moins un chiffre"),
+    body("password")
+      .matches(/[^a-zA-Z0-9]/)
+      .withMessage(
+        "Le mot de passe doit contenir au moins un caractère spécial"
+      ),
+  ],
+  (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map(error => error.msg);
-        return res.status(400).json({ valid: false, message: errorMessages });
+      const errorMessages = errors.array().map((error) => error.msg);
+      return res.status(400).json({ valid: false, message: errorMessages });
     } else {
-        return res.json({ valid: true });
+      return res.json({ valid: true });
     }
- });
+  }
+);
 
+app.get("/miseAJourPasswordSucces", function (req, res) {
+  res.render("pages/miseAJourPasswordSucces", {
+  });
+});
+app.post("/updatePasswordDeLink/:email", async (req, res) => {
+  const email = req.params.email;
+  const newPassword = req.body.newPassword;
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
- app.post('/updatePasswordDeLink/:email', async (req, res) => {
-    const email = req.params.email; 
-    const newPassword = req.body.newPassword;
-    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-
-    const db = getDB();
-    try {
-        const result = await db.collection('utilisateurs').updateOne(
-            { adresse_courriel: email },
-            { $set: { mot_de_passe: hashedPassword,
-                        mot_de_passe_clair: newPassword 
-            } }
-        );
-        
-        if (result.modifiedCount === 0) {
-            console.log("Pas de documents correspondant à la requête de mise à jour.");
-            return res.status(400).send("Pas de documents correspondant à la requête de mise à jour.");
+  const db = getDB();
+  try {
+    const result = await db
+      .collection("utilisateurs")
+      .updateOne(
+        { adresse_courriel: email },
+        {
+          $set: {
+            mot_de_passe: hashedPassword,
+            mot_de_passe_clair: newPassword,
+          },
         }
-    
-        return res.status(200).send("Mot de passe mis à jour avec succès.");
-    } catch (error) {
-        console.error("Erreur ", error);
-        return res.status(500).send("Erreur lors de la mise à jour du mot de passe.");
+      );
+
+    if (result.modifiedCount === 0) {
+      console.log(
+        "Pas de documents correspondant à la requête de mise à jour."
+      );
+      return res
+        .status(400)
+        .send("Pas de documents correspondant à la requête de mise à jour.");
     }
+
+    res.redirect("/miseAJourPasswordSucces");
+  } catch (error) {
+    console.error("Erreur ", error);
+    return res
+      .status(500)
+      .send("Erreur lors de la mise à jour du mot de passe.");
+  }
 });
