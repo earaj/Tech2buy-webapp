@@ -553,7 +553,6 @@ app.post("/parametreUtilisateur", async function(req, res) {
 
         updateAddress(req, res);
 
-        //return res.redirect("/parametreUtilisateur");
     } catch (err) {
         console.error(err);
         return res.status(500).send("Erreur lors de la mise à jour des paramètres de l'utilisateur.");
@@ -720,7 +719,7 @@ app.post("/ajouterAuPanier", function(req, res) {
     
 });
 
-//Supprimer une produit de panier
+//Supprimer un produit du panier
 app.post("/supprimerDuPanier", function(req, res) {
     const idUtilisateur = req.session.userId;
     const idProduit = req.body.id_produit;
@@ -750,13 +749,11 @@ app.post("/supprimerDuPanier", function(req, res) {
 
 
 //Envoie d<email de réinitialisation de mot de passe (avant faite : npm install nodemailer nodemailer-smtp-transport google-auth-library)
-
 app.post('/reset-password', async (req, res) => {
     const email = req.body.email;
     const resetLink = `http://localhost:4000/reset/${email}`;
 
     await sendResetEmail(email, resetLink);
-    //res.send('Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse email.');
     res.redirect('/resetPassword');
 });
 
