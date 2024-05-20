@@ -608,27 +608,31 @@ function updateAddress(req, res) {
 
 app.post("/miseAJourMotDePasse", async function(req, res) {
     if (!req.session.userId) {
-        return res.redirect("/pageConnexion");
+        return res.status(401).json({ redirectUrl: "/pageConnexion" });
     }
 
     const motDePasseActuel = req.body.mot_de_passe_actuel;
     const nouveauMotDePasse = req.body.nouveau_mot_de_passe;
     const confirmerNouveauMotDePasse = req.body.confirmer_nouveau_mot_de_passe;
 
+    let errors = {};
+
     if (nouveauMotDePasse !== confirmerNouveauMotDePasse) {
-        return res.redirect("/parametreUtilisateur?erreurConfirmationNouveauMotDePasse=Les nouveaux mots de passe ne correspondent pas.");
+        errors.erreurConfirmationNouveauMotDePasse = 'Les nouveaux mots de passe ne correspondent pas.';
     }
 
     try {
         const utilisateur = await db.collection('utilisateurs').findOne({ _id: new ObjectId(req.session.userId) });
 
         if (!utilisateur) {
-            return res.redirect("/parametreUtilisateur?erreur=Utilisateur non trouvé.");
+            errors.erreur = 'Utilisateur non trouvé.';
+            return res.status(404).json(errors);
         }
 
         const isMatch = await bcrypt.compare(motDePasseActuel, utilisateur.mot_de_passe);
         if (!isMatch) {
-            return res.redirect("/parametreUtilisateur?erreurMotDePasseActuel=Le mot de passe actuel est incorrect.");
+            errors.erreurMotDePasseActuel = 'Le mot de passe actuel est incorrect.';
+            return res.status(400).json(errors);
         }
 
         const hashedPassword = await bcrypt.hash(nouveauMotDePasse, saltRounds);
@@ -638,12 +642,14 @@ app.post("/miseAJourMotDePasse", async function(req, res) {
             { $set: { mot_de_passe: hashedPassword, mot_de_passe_clair: nouveauMotDePasse } }
         );
 
-        res.redirect("/parametreUtilisateur?passwordUpdateSuccess=true");
+        return res.status(200).json({ success: 'Mot de passe mis à jour avec succès.' });
     } catch (err) {
         console.error(err);
-        return res.redirect("/parametreUtilisateur?erreur=Erreur lors de la mise à jour du mot de passe.");
+        errors.erreur = 'Erreur lors de la mise à jour du mot de passe.';
+        return res.status(500).json(errors);
     }
 });
+
 
 
 //BONNE VERSION NoSQL
