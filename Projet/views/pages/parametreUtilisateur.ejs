@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css" />
     <script src="/js/bootstrap.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="output-onlinepngtools 1.png" style="height: 20px; width: 30px;">
 </head>
 <style>
     body {
@@ -169,14 +170,8 @@
                             <form method="POST" action="/miseAJourMotDePasse" onsubmit="return validation()">
                                 <div class="form-group">
                                     <label for="mot_de_passe_actuel">Mot de passe actuel</label>
-                                    <!-- <input type="password" class="form-control" id="mot_de_passe_actuel"
-                                        name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel..."> -->
-                                        <input type="password" class="form-control <%= typeof erreurMotDePasseActuel !== 'undefined' ? 'is-invalid' : '' %>" id="mot_de_passe_actuel" name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel...">
-                                        <% if (typeof erreurMotDePasseActuel !== 'undefined') { %>
-                                            <div class="invalid-feedback">
-                                                <%= erreurMotDePasseActuel %>
-                                            </div>
-                                        <% } %>
+                                    <input type="password" class="form-control" id="mot_de_passe_actuel" name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel...">
+                                    <span id="erreurMotDePasseActuel"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="nouveau_mot_de_passe">Nouveau mot de passe</label>
@@ -220,6 +215,41 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+
+$(document).ready(function() {
+        $("form").submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            if (!validation()) {
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/miseAJourMotDePasse",
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $("#msgDeValidationMDP").html("<span style='color:green'>" + response.success + "</span>");
+                        window.location.href = "/parametreUtilisateur?passwordUpdateSuccess=true";
+                    }
+                },
+                error: function(response) {
+                    const errors = response.responseJSON;
+                    if (errors.erreurMotDePasseActuel) {
+                        $("#erreurMotDePasseActuel").html("<span style='color:red'>" + errors.erreurMotDePasseActuel + "</span>");
+                    }
+                    if (errors.erreurConfirmationNouveauMotDePasse) {
+                        $("#erreurConfirmationNouveauMotDePasse").html("<span style='color:red'>" + errors.erreurConfirmationNouveauMotDePasse + "</span>");
+                    }
+                    if (errors.erreur) {
+                        $("#msgDeValidationMDP").html("<span style='color:red'>" + errors.erreur + "</span>");
+                    }
+                }
+            });
+        });
+    });
+
     function validatePasswordFields() {
         var newPassword = $("#nouveau_mot_de_passe").val();
         var confirmPassword = $("#confirmer_nouveau_mot_de_passe").val();
