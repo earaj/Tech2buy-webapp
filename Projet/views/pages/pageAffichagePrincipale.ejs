@@ -9,6 +9,7 @@
     <script src="/js/bootstrap.bundle.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/faa5602375.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="output-onlinepngtools 1.png" style="height: 20px; width: 30px;">
 
 </head>
 <style>
@@ -57,7 +58,6 @@
         margin: auto;
     }
 
-    /* Assurez-vous que le carousel s'affiche correctement sur tous les appareils */
     @media (max-width: 768px) {
         #featuredCarousel .carousel-inner img {
             max-height: 200px;
@@ -76,11 +76,10 @@
         background-image: radial-gradient(circle at 99% 33%, rgba(115,114,114, 0.03) 0%, rgba(115,114,114, 0.03) 37%,transparent 37%, transparent 100%),radial-gradient(circle at 46% 16%, rgba(115,114,114, 0.03) 0%, rgba(115,114,114, 0.03) 43%,transparent 43%, transparent 100%),radial-gradient(circle at 99% 25%, rgba(115,114,114, 0.03) 0%, rgba(115,114,114, 0.03) 22%,transparent 22%, transparent 100%),radial-gradient(circle at 57% 88%, rgba(115,114,114, 0.03) 0%, rgba(115,114,114, 0.03) 86%,transparent 86%, transparent 100%),radial-gradient(circle at 82% 78%, rgba(115,114,114, 0.03) 0%, rgba(115,114,114, 0.03) 22%,transparent 22%, transparent 100%),linear-gradient(90deg, rgb(204,223,251),rgb(204,223,251));
     }
 </style>
-
+<header>
+    <%- include("../partials/headTech2buy.ejs") %>
+</header>
 <body>
-    <header>
-        <%- include("../partials/headTech2buy.ejs") %>
-    </header>
     <div class="container-fluid mt-3">
         <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -127,7 +126,7 @@
                     <img src="../Images/microsoftsurface.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Produit ordinateur portable</h5>
-                        <p class="card-text">Venez découvrir notre grande sélection d'ordinateur portable</p>
+                        <p class="card-text">Venez découvrir notre grande sélection d'ordinateur</p>
                         <a href="#" class="btn btn-primary" onclick="searchFor('laptop');">Voir plus</a>
                     </div>
                 </div>
@@ -153,16 +152,19 @@
 
         <div class="row mt-4">
             <div class="col-md-6 mb-3">
-                <h2>Nouveaux Téléphones. Nouveaux Ordinateurs. Nouveaux Écouteurs.</h2>
+                <h2>Nouveaux Téléphones. Nouveaux Ordinateurs. Nouvelles Montres.</h2>
                 <h3>Chez Tech2Buy</h3>
             </div>
             <div class="col-md-6">
-                <a onclick="searchFor('SmartWatch');">
+                <a onclick="searchFor('montre');">
                     <img src="../Images/UNPK_Watch6-PR_main1.jpg" class="img-fluid" alt="Responsive image"></a>
             </div>
         </div>
     </div>
 </body>
+<footer>
+    <%- include("../partials/footer.ejs") %>
+</footer>
 <script>
     function searchFor(term) {
         var xhr = new XMLHttpRequest();
@@ -181,8 +183,4 @@
         xhr.send();
     }
 </script>
-<footer>
-    <%- include("../partials/footer.ejs") %>
-</footer>
-
 </html>

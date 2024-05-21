@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +7,7 @@
     <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="commun.css" />
+    <link rel="icon" type="image/x-icon" href="output-onlinepngtools 1.png" style="height: 20px; width: 30px;">
     <style>
         .background-section {
             position: fixed;
@@ -110,12 +110,10 @@
         }
     </style>
 </head>
-
+<header>
+    <%- include("../partials/headTech2buy.ejs") %>
+</header>
 <body>
-    <header>
-        <%- include("../partials/headTech2buy.ejs") %>
-    </header>
-
     <div class="wrapper">
     <div class="container content">
         <div class="row">
@@ -181,10 +179,8 @@
         </div>
     </div>
     </div>
-
-    <footer>
-            <%- include ("../partials/footer.ejs") %>
-    </footer>
 </body>
-
+<footer>
+    <%- include ("../partials/footer.ejs") %>
+</footer>
 </html>
