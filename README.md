@@ -2,7 +2,7 @@
 
 Pour déployer l'application, vous aurez besoin d'installer ces environnements suivants: **Docker Desktop**[^1], **Node.js**[^2] et **Visual Studio Code**[^3]. Assurez vous que le sous-système windows pour linux soit à jour pour assurer le bon fonctionnement de Docker Desktop. Pour ce faire, roulez cette commande dans l'invite de commande:<strong> wsl --update </strong>
 
-Lorsque les environnements sont tous installés, veuillez commencer à suivre les étapes suivantes :
+Lorsque tous les environnements sont installés, veuillez commencer à suivre les étapes suivantes :
 <h2>Installation du projet</h2> 
 
 <h3>1- Cliquez sur "Download ZIP" pour télécharger le fichier ZIP de l'application web</h3>
