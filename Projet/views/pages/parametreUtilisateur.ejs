@@ -167,7 +167,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Mot de passe</h5>
-                            <form method="POST" action="/miseAJourMotDePasse" onsubmit="return validation()">
+                            <form id="updatePasswordForm" method="POST" action="/miseAJourMotDePasse" onsubmit="return validation()">
                                 <div class="form-group">
                                     <label for="mot_de_passe_actuel">Mot de passe actuel</label>
                                     <input type="password" class="form-control" id="mot_de_passe_actuel" name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel...">
@@ -215,14 +215,16 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    $(document).ready(function() {
 
-$(document).ready(function() {
-        $("form").submit(function(event) {
-            event.preventDefault(); // Prevent default form submission
+        $("#updatePasswordForm").submit(function(event) {
+            event.preventDefault(); 
+
 
             if (!validation()) {
                 return false;
             }
+
 
             $.ajax({
                 type: "POST",
@@ -231,7 +233,6 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.success) {
                         $("#msgDeValidationMDP").html("<span style='color:green'>" + response.success + "</span>");
-                        window.location.href = "/parametreUtilisateur?passwordUpdateSuccess=true";
                     }
                 },
                 error: function(response) {
@@ -248,35 +249,35 @@ $(document).ready(function() {
                 }
             });
         });
-    });
 
-    function validatePasswordFields() {
-        var newPassword = $("#nouveau_mot_de_passe").val();
-        var confirmPassword = $("#confirmer_nouveau_mot_de_passe").val();
+        function validatePasswordFields() {
+            var newPassword = $("#nouveau_mot_de_passe").val();
+            var confirmPassword = $("#confirmer_nouveau_mot_de_passe").val();
 
-        if (newPassword !== confirmPassword) {
-            $("#msgDeValidationMDP").html("Les nouveaux mots de passe ne se correspondent pas.");
-            return false;
-        } else {
-            $("#msgDeValidationMDP").html("");
+            if (newPassword !== confirmPassword) {
+                $("#msgDeValidationMDP").html("Les nouveaux mots de passe ne correspondent pas.");
+                return false;
+            } else {
+                $("#msgDeValidationMDP").html("");
+                return true;
+            }
+        }
+
+        function validation() {
+            if (!validatePasswordFields()) {
+                return false;
+            }
+
+            var newPassword = $("#nouveau_mot_de_passe").val();
+
+            var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+            if (!strongRegex.test(newPassword)) {
+                $("#msgDeValidationMDP").html("Le nouveau mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
+                return false;
+            }
             return true;
         }
-    }
-
-    function validation() {
-        if (!validatePasswordFields()) {
-            return false;
-        }
-
-        var newPassword = $("#nouveau_mot_de_passe").val();
-
-        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-        if (!strongRegex.test(newPassword)) {
-            $("#msgDeValidationMDP").html("Le nouveau mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.");
-            return false;
-        }
-        return true;
-    }
+    });
 </script>
 <script>
     function validatePostalCode() {

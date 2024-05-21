@@ -101,3 +101,10 @@ VALUES
 (98, 'Suunto 9 Baro', 'Montre GPS multisports avec autonomie prolongee', 599, 4, 'Black', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'Suunto OS', '1.39 pouces', 'suunto-9-baro.jpg'),
 (99, 'Garmin Venu Sq', 'Montre intelligente avec ecran AMOLED et suivi de la sante', 199, 10, 'Gray', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'Garmin OS', '1.3 pouces', 'garmin-venu-sq.jpg'),
 (100, 'Mobvoi TicWatch E3', 'Montre intelligente avec Wear OS et suivi de fitness', 199, 10, 'Black', 'N/A', 'Qualcomm Snapdragon Wear 4100', 'Integre', '1GB', '8GB', 'Wear OS', '1.3 pouces', 'ticwatch-e3.jpg');
+(101, 'Samsung Galaxy S24', 'Smartphone avec AI avancée et caméra de 50MP', 799, 10, 'Noir', '70.6x146.3x8.3 mm', 'Snapdragon 8 Gen 3', 'N/A', '8GB', '128GB', 'Android 14', '6.2 pouces', 'samsung-galaxy-s24.jpg'),
+(102, 'Samsung Galaxy S24+', 'Smartphone avec AI avancée et grand écran', 999, 8, 'Noir', '76.2x157.8x7.6 mm', 'Snapdragon 8 Gen 3', 'N/A', '8GB', '256GB', 'Android 14', '6.7 pouces', 'samsung-galaxy-s24-plus.jpg'),
+(103, 'Samsung Galaxy S24 Ultra', 'Smartphone haut de gamme avec caméra de 200MP', 1199, 5, 'Noir', '79.9x163.3x8.9 mm', 'Snapdragon 8 Gen 3', 'N/A', '12GB', '512GB', 'Android 14', '6.8 pouces', 'samsung-galaxy-s24-ultra.jpg'),
+(104, 'iPhone 15', 'Smartphone avec puce A16 Bionic et caméra avancée', 799, 10, 'Blanc', '71.5x146.7x7.4 mm', 'A16 Bionic', 'N/A', '6GB', '128GB', 'iOS 17', '6.1 pouces', 'iphone-15.jpg'),
+(105, 'iPhone 15 Plus', 'Smartphone avec écran plus grand et puce A16 Bionic', 899, 8, 'Noir', '78.1x160.8x7.4 mm', 'A16 Bionic', 'N/A', '6GB', '128GB', 'iOS 17', '6.7 pouces', 'iphone-15-plus.jpg'),
+(106, 'iPhone 15 Pro', 'Smartphone avec puce A17 Bionic et triple caméra', 999, 6, 'Gris', '70.9x147.5x7.8 mm', 'A17 Bionic', 'N/A', '8GB', '256GB', 'iOS 17', '6.1 pouces', 'iphone-15-pro.jpg'),
+(107, 'iPhone 15 Pro Max', 'Smartphone avec grand écran et puce A17 Bionic', 1099, 4, 'Noir', '77.6x160.8x7.8 mm', 'A17 Bionic', 'N/A', '8GB', '512GB', 'iOS 17', '6.7 pouces', 'iphone-15-pro-max.jpg');
