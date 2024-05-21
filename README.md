@@ -1,6 +1,6 @@
 <h1>TECH2BUY</h1>
 
-Pour déployer l'application, vous aurez besoin d'installer ces environnements suivants: **Docker Desktop**[^1], **Node.js**[^2] et **Visual Studio Code**[^3]. Assurez vous que le sous-système windows pour linux soit à jour pour assurer le bon fonctionnement de Docker Desktop. pour ce faire roulez cette commande dans l'invite de commande:<strong> wsl --update </strong>
+Pour déployer l'application, vous aurez besoin d'installer ces environnements suivants: **Docker Desktop**[^1], **Node.js**[^2] et **Visual Studio Code**[^3]. Assurez vous que le sous-système windows pour linux soit à jour pour assurer le bon fonctionnement de Docker Desktop. Pour ce faire, roulez cette commande dans l'invite de commande:<strong> wsl --update </strong>
 
 Lorsque les environnements sont tous installés, veuillez commencer à suivre les étapes suivantes :
 <h2>Installation du projet</h2> 
@@ -44,7 +44,7 @@ CREATE DATABASE mybd; USE mybd;
 
 <h3>4- Toujours dans le dossier "Script", ouvrez le fichier "InsertionDonnees.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
 
-<h3>5- roulez ce script dans le terminal du conteneur pour ajouter l'utulisateur scott:</h3>
+<h3>5- Roulez ce script dans le terminal du conteneur pour ajouter l'utulisateur scott:</h3>
 CREATE USER 'scott'@'%' IDENTIFIED WITH mysql_native_password BY 'oracle';
 GRANT ALL PRIVILEGES ON *.* TO 'scott'@'%';
 FLUSH PRIVILEGES;
@@ -54,9 +54,9 @@ FLUSH PRIVILEGES;
 
 <h2>Configuration MongoDB</h2>
 
-<h3>5- Dans le terminale, roulez cette commande: docker run --name mongo -d -p 27017:27017 mongodb/mongodb-community-server:latest
+<h3>5- Dans le terminal, roulez cette commande: docker run --name mongo -d -p 27017:27017 mongodb/mongodb-community-server:latest
 
-<h3>6- Sur DockerDesktop, un nouveau conteneur nommé "mongo" sera créé. Lancez le conteneur
+<h3>6- Sur DockerDesktop, un nouveau conteneur nommé "mongo" sera créé. Lancez ce conteneur.
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/7f51e8c6-f42c-4843-ba2f-bda4d4647107)
 
@@ -69,7 +69,7 @@ FLUSH PRIVILEGES;
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/f743e3d7-56fc-485e-9da6-aa88697d37f4)
 
-<h3>8- Dans ce repertoire, tapez ceci pour installer les paquets nécéssaire au fonctionnement de l'application:</h3>
+<h3>8- Dans ce répertoire, tapez ceci pour installer les paquets nécessaires au fonctionnement de l'application:</h3>
 
 npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer nodemailer-smtp-transport google-auth-library --save
 
@@ -100,25 +100,25 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 8.Finalement, insérez votre adresse, cochez la 1ière case et cliquez «Agree and create account» et ensuite cliquez «Not now».
 <img width="741" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/337f1b86-c4c9-4e39-8179-8d1e5f291e4c">
 
-<h3>Lorsque vous avez fini de configurer votre compte, faites ces étapes suivantes afin d'accèder à votre compte sandbox pour le fonctionnement de paiement du site web:</h3>
+<h3>Lorsque vous avez fini de configurer votre compte PayPal, suivez les étapes suivantes afin d'accéder à votre compte sandbox pour le fonctionnement du paiement sur le site web:</h3>
 
-1.Tout d'abord, rendez vous au site de PayPal développeur[^5] pour accéder à votre sandbox compte et connectez-vous avec votre compte de Paypal.
+1.Tout d'abord, rendez-vous sur le site de PayPal Développeur[^5] pour accéder à votre compte sandbox et connectez-vous avec votre compte PayPal.
 
-2.Ensuite, cliquez sur «Tools» en haut de la page accueil et après, cliquez Developer.
+2.Ensuite, cliquez sur « Tools » en haut de la page d'accueil, puis cliquez sur « Developer ».
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/185f7ac1-736d-4241-b4d6-e218e36dd154)
 
-3.Puis, descendez avec votre souris jusqu'à vous appercevez «Sandbox accounts» et ensuite, cliquez le.
+3.Puis, descendez avec votre souris jusqu'à apercevoir « Sandbox accounts », puis cliquez dessus.
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/3c8986fc-b379-4cb5-a651-5635afbc24d7)
 
-4.Après, cliquez sur les trois points sur un des deux comptes présentés devant vous et puis cliquez «View/Edit account».
+4.Ensuite, cliquez sur les trois points sur l'un des deux comptes présentés devant vous, puis cliquez sur « View/Edit account ».
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/f5735304-de4b-4253-9534-178265f14c3b)
 
 
-5.Ensuite, sauvegardez quelque part l'adresse courriel et le mot de passe du compte sandbox qui sont affichés devant vous pour faire le paiement dans le site web plus tard. Si vous voulez, vous pouvez modifier l'adresse courriel et le mot de passe à votre goût.
+5.Ensuite, sauvegardez quelque part l'adresse courriel et le mot de passe du compte sandbox affichés devant vous pour effectuer le paiement sur le site web plus tard. Si vous le souhaitez, vous pouvez modifier l'adresse courriel et le mot de passe à votre convenance.
 <img width="1498" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/ce115644-c5a6-4553-94fd-d5c5f23371e2">
 
 
-6.Finalement, insérer CAD 100,000 dans le compte sandbox pour vous permettre d'achetez d'autant produits vous voulez. Si vous ne reste plus d'argent dans le sandbox compte, faites simplement remettre CAD 100,000.
+6.Finalement, insérez CAD 100,000 dans le compte sandbox pour vous permettre d'acheter autant de produits que vous le souhaitez. Si vous n'avez plus d'argent dans le compte sandbox, ajoutez simplement à nouveau CAD 100,000.
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/fd51d8f1-812d-46dd-b591-0fa12f60100e)
 
 
