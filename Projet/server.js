@@ -977,6 +977,11 @@ app.post('/validate_password_endpoint', [
     }
  });
 
+ app.get("/miseAJourPasswordSucces", function (req, res) {
+    res.render("pages/miseAJourPasswordSucces", {
+    });
+  });
+
 //Fonction pour mettre à jour le mot de passe après avoir reçu le lien de réinitialisation
  app.post('/updatePasswordDeLink/:email', async (req, res) => {
     const email = req.params.email; 
@@ -996,8 +1001,8 @@ app.post('/validate_password_endpoint', [
             console.log("Pas de documents correspondant à la requête de mise à jour.");
             return res.status(400).send("Pas de documents correspondant à la requête de mise à jour.");
         }
+        res.redirect("/miseAJourPasswordSucces");
     
-        return res.status(200).send("Mot de passe mis à jour avec succès.");
     } catch (error) {
         console.error("Erreur ", error);
         return res.status(500).send("Erreur lors de la mise à jour du mot de passe.");
