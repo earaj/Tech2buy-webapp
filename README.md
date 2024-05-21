@@ -103,6 +103,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 <h3>Lorsque vous avez fini de configurer votre compte PayPal, suivez les étapes suivantes afin d'accéder à votre compte sandbox pour le fonctionnement du paiement sur le site web :</h3>
 
 1.Tout d'abord, rendez-vous sur le site de PayPal Développeur[^5] pour accéder à votre compte sandbox et connectez-vous avec votre compte PayPal.
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/bc86ba14-0e7d-4632-a76d-82f3222d96e2)
 
 2.Ensuite, cliquez sur « Tools » en haut de la page d'accueil, puis cliquez sur « Developer ».
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/185f7ac1-736d-4241-b4d6-e218e36dd154)
