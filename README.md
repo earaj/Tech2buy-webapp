@@ -36,15 +36,15 @@ CREATE DATABASE mybd; USE mybd;
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/82d8ee8f-22ce-41db-ad44-a66cba81885a)
 
 
-<h3>3- Rendez vous dans le dossier "Script", puis ouvrez le fichier "script.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
+<h3>3- Rendez-vous dans le dossier 'Script', puis ouvrez le fichier 'script.sql'. Copiez le contenu du fichier et collez-le dans le CLI du conteneur, puis exécutez-le.</h3>
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/40d4b4aa-a77b-470f-a5bc-8a2ce8f386dc)
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/8e66b81b-936d-42dc-a389-3f575c9ac8da)
 
 
-<h3>4- Toujours dans le dossier "Script", ouvrez le fichier "InsertionDonnees.sql". copiez le contenu du fichier et collez le dans le CLI du conteneur, puis, roulez le.</h3>
+<h3>4- Toujours dans le dossier 'Script', ouvrez le fichier 'InsertionDonnees.sql'. Copiez le contenu du fichier et collez-le dans le CLI du conteneur, puis exécutez-le.</h3>
 
-<h3>5- Roulez ce script dans le terminal du conteneur pour ajouter l'utulisateur scott:</h3>
+<h3>5- Roulez ce script dans le terminal du conteneur pour ajouter l'utilisateur scott:</h3>
 CREATE USER 'scott'@'%' IDENTIFIED WITH mysql_native_password BY 'oracle';
 GRANT ALL PRIVILEGES ON *.* TO 'scott'@'%';
 FLUSH PRIVILEGES;
@@ -56,7 +56,7 @@ FLUSH PRIVILEGES;
 
 <h3>5- Dans le terminal, roulez cette commande: docker run --name mongo -d -p 27017:27017 mongodb/mongodb-community-server:latest
 
-<h3>6- Sur DockerDesktop, un nouveau conteneur nommé "mongo" sera créé. Lancez ce conteneur.
+<h3>6- Sur Docker Desktop, un nouveau conteneur nommé 'mongo' sera créé. Lancez ce conteneur.
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/7f51e8c6-f42c-4843-ba2f-bda4d4647107)
 
@@ -69,13 +69,13 @@ FLUSH PRIVILEGES;
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/f743e3d7-56fc-485e-9da6-aa88697d37f4)
 
-<h3>8- Dans ce répertoire, tapez ceci pour installer les paquets nécessaires au fonctionnement de l'application:</h3>
+<h3>8- Dans ce répertoire, tapez ceci pour installer les paquets nécessaires au fonctionnement de l'application :</h3>
 
 npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer nodemailer-smtp-transport google-auth-library --save
 
 <h2>Configuration du compte PayPal</h2>
 
-<h3>Vous aurez besoin d'un compte paypal afin d'accéder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes: </h3>
+<h3>Vous aurez besoin d'un compte paypal afin d'accéder au mode de paiement du site web. Si vous avez déjà un compte de PayPal, vous pouvez passez les étapes suivantes : </h3>
 
 1.Tout d'abord, rendez-vous chez le site de Paypal[^4] afin de créer un compte.
 
@@ -100,7 +100,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 8.Finalement, insérez votre adresse, cochez la 1ière case et cliquez «Agree and create account» et ensuite cliquez «Not now».
 <img width="741" alt="image" src="https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/116312683/337f1b86-c4c9-4e39-8179-8d1e5f291e4c">
 
-<h3>Lorsque vous avez fini de configurer votre compte PayPal, suivez les étapes suivantes afin d'accéder à votre compte sandbox pour le fonctionnement du paiement sur le site web:</h3>
+<h3>Lorsque vous avez fini de configurer votre compte PayPal, suivez les étapes suivantes afin d'accéder à votre compte sandbox pour le fonctionnement du paiement sur le site web :</h3>
 
 1.Tout d'abord, rendez-vous sur le site de PayPal Développeur[^5] pour accéder à votre compte sandbox et connectez-vous avec votre compte PayPal.
 
@@ -124,7 +124,7 @@ npm install mysql2 bcrypt express paypal-rest-sdk dateformat mongodb nodemailer 
 
 <h2>Lancement de l'application</h2>
 
-<h3>8- Toujours dans le même répertoire dans terminal, tapez:</h3>
+<h3>8- Toujours dans le même répertoire dans terminal, tapez :</h3>
 node server.js
 <h3>9- Allez dans un navigateur et tapez: </h3>
 http://localhost:4000
