@@ -207,12 +207,10 @@ app.get("/", function (req,res){
     });
 });
 
-//Permet aller au page connexion
 app.get("/pageConnexion", function(req, res) {
     res.render("pages/pageConnexion", { erreur: req.query.erreur });
 });
 
-//permet aller au page index
 app.get("/index", function(req, res) {
     res.render("pages/index", {
     });
@@ -363,7 +361,6 @@ app.get("/panier", function(req, res) {
             return res.render("pages/panier", { panier: [] });
         }
 
-        //console.log("Produits du panier :", produits);
         res.render("pages/panier", { panier: produits });
     });
 });   
@@ -380,46 +377,7 @@ app.get("/deconnect", function(req, res) {
     });
 })
 
-//NoSQL
-// app.post("/pageConnexion", async function(req, res) {
-//     const courriel = req.body.courriel;
-//     console.log(`Tentative de connexion pour l'email: ${courriel}`);
-
-//     try {
-//         const db = getDB();
-//         const utilisateur = await db.collection('utilisateurs').findOne({ adresse_courriel: courriel });
-
-//         if (!utilisateur) {
-//             console.log("Aucun utilisateur trouvé avec cet email");
-//             return res.redirect("/pageConnexion?erreur=1");
-//         }
-
-//         bcrypt.compare(req.body.motdepasse, utilisateur.mot_de_passe, (err, isMatch) => {
-//             if (err) {
-//                 console.error(err);
-//                 return res.status(500).send("Erreur lors de la vérification du mot de passe.");
-//             }
-//             if (isMatch) {
-//                 req.session.userId = utilisateur._id;
-//                 req.session.save(err => {
-//                     if (err) {
-//                         console.error(err);
-//                         return res.status(500).send("Erreur lors de la sauvegarde de la session.");
-//                     }
-//                     return res.redirect("/pageAffichagePrincipale");
-//                 });
-//             } else {
-//                 console.log("Mot de passe incorrect");
-//                 return res.redirect("/pageConnexion?erreur=1");
-//             }
-//         });
-//     } catch (err) {
-//         console.error("Erreur lors de la recherche de l'utilisateur:", err);
-//         res.status(500).send("Erreur lors de la connexion.");
-//     }
-// });
-
-//NoSQL version 2
+//Fonction pour se connecter
 app.post("/pageConnexion", async function(req, res) {
     const courriel = req.body.courriel;
     const motdepasse = req.body.motdepasse;
@@ -605,7 +563,7 @@ function updateAddress(req, res) {
     }
 }
 
-
+//Fonction pour la mise à jour du mot de passe
 app.post("/miseAJourMotDePasse", async function(req, res) {
     if (!req.session.userId) {
         return res.status(401).json({ redirectUrl: "/pageConnexion" });
@@ -650,9 +608,7 @@ app.post("/miseAJourMotDePasse", async function(req, res) {
     }
 });
 
-
-
-//BONNE VERSION NoSQL
+//Fonction pour ajouter des produits au panier
 app.post("/ajouterAuPanier", function(req, res) {
     if (!req.session.userId) {
         console.log("Aucun utilisateur connecté");
@@ -812,6 +768,7 @@ app.get('/reset/:email', (req, res) => {
 
 //https://stackoverflow.com/questions/19877246/nodemailer-with-gmail-and-nodejs
 
+//Fonction pour ajouter un commentaire
 app.post('/submitComment', async function(req, res) {
     const idProduit = req.body.idProduit;
     const commentaireText = req.body.commentText;
@@ -848,7 +805,7 @@ app.post('/submitComment', async function(req, res) {
     }
 });
 
-
+//Fonction pour supprimer un commentaire
 app.post('/deleteComment', async function(req, res) {
     const commentId = req.body.commentId;
     const productId = req.body.productId;
@@ -863,6 +820,7 @@ app.post('/deleteComment', async function(req, res) {
     }
 });
 
+//Fonction pour payer avec PayPal
 app.post('/payer', (req, res) => {
     console.log(req.body);
 
@@ -1019,7 +977,7 @@ app.post('/validate_password_endpoint', [
     }
  });
 
-
+//Fonction pour mettre à jour le mot de passe après avoir reçu le lien de réinitialisation
  app.post('/updatePasswordDeLink/:email', async (req, res) => {
     const email = req.params.email; 
     const newPassword = req.body.newPassword;
