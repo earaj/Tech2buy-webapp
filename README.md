@@ -39,7 +39,8 @@ CREATE DATABASE mybd; USE mybd;
 <h3>3- Rendez-vous dans le dossier 'Script', puis ouvrez le fichier 'script.sql'. Copiez le contenu du fichier et collez-le dans le CLI du conteneur, puis exécutez-le.</h3>
 
 ![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/40d4b4aa-a77b-470f-a5bc-8a2ce8f386dc)
-![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/8e66b81b-936d-42dc-a389-3f575c9ac8da)
+![image](https://github.com/ridhadosh/TP_Web_Projet_de_Site-Ridha-Thanushan-Dave-Earaj/assets/118306367/5f564bb2-940d-4525-a8a3-79707ef67c92)
+
 
 
 <h3>4- Toujours dans le dossier 'Script', ouvrez le fichier 'InsertionDonnees.sql'. Copiez le contenu du fichier et collez-le dans le CLI du conteneur, puis exécutez-le.</h3>

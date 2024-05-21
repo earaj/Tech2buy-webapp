@@ -77,7 +77,7 @@ VALUES
 (74, 'Nikon Z50', 'Appareil photo sans miroir compact avec capteur APS-C', 859, 6, 'Black', '126.5x93.5x60 mm', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', '3.2 pouces', 'nikon-z50.jpg'),
 (75, 'Sony Alpha a6400', 'Appareil photo sans miroir avec AF ultra-rapide', 899, 7, 'Black', '120x66.9x59.7 mm', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', '3 pouces', 'sony-alpha-a6400.jpg'),
 (76, 'Panasonic Lumix GH5', 'Appareil photo sans miroir avec video 4K 60p', 1299, 5, 'Black', '138.5x98.1x87.4 mm', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', '3.2 pouces', 'panasonic-lumix-gh5.jpg'),
-(77, 'Apple Mac Pro', 'Ordinateur de bureau puissant avec design modulaire', 5999, 2, 'Silver', '52.9x45.0x21.8 cm', 'Intel Xeon W', 'AMD Radeon Pro 580X', '32GB', '256GB SSD', 'macOS', 'N/A', 'mac-pro.jpg'),
+(77, 'Apple Macbook Pro 16', 'Ordinateur de bureau puissant avec design modulaire', 5999, 2, 'Silver', '52.9x45.0x21.8 cm', 'Apple M3 Pro Max', 'Apple M3 Pro Max intgr', '32GB', '512GB SSD', 'macOS', 'N/A', 'mac-pro.jpg'),
 (78, 'iMac Pro', 'Ordinateur tout-en-un avec performances professionnelles', 4999, 3, 'Space Gray', '65.0x51.6x20.3 cm', 'Intel Xeon W', 'AMD Radeon Pro Vega 56', '32GB', '1TB SSD', 'macOS', '27 pouces', 'imac-pro.jpg'),
 (79, 'Corsair One i160', 'PC gaming compact avec refroidissement liquide', 3599, 4, 'Black', '20.0x17.6x38.0 cm', 'Intel Core i9-9900K', 'NVIDIA RTX 2080 Ti', '32GB', '960GB SSD', 'Windows 10', 'N/A', 'corsair-one-i160.jpg'),
 (80, 'HP Z2 Mini G5', 'Workstation mini avec performance puissante', 1399, 6, 'Black', '21.6x21.6x5.8 cm', 'Intel Core i7-10700', 'NVIDIA Quadro T2000', '32GB', '512GB SSD', 'Windows 10', 'N/A', 'hp-z2-mini-g5.jpg'),
@@ -100,7 +100,7 @@ VALUES
 (97, 'Polar Vantage V2', 'Montre multisports avec GPS et mesures de performance', 499, 5, 'Black', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'Polar OS', '1.2 pouces', 'polar-vantage-v2.jpg'),
 (98, 'Suunto 9 Baro', 'Montre GPS multisports avec autonomie prolongee', 599, 4, 'Black', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'Suunto OS', '1.39 pouces', 'suunto-9-baro.jpg'),
 (99, 'Garmin Venu Sq', 'Montre intelligente avec ecran AMOLED et suivi de la sante', 199, 10, 'Gray', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'Garmin OS', '1.3 pouces', 'garmin-venu-sq.jpg'),
-(100, 'Mobvoi TicWatch E3', 'Montre intelligente avec Wear OS et suivi de fitness', 199, 10, 'Black', 'N/A', 'Qualcomm Snapdragon Wear 4100', 'Integre', '1GB', '8GB', 'Wear OS', '1.3 pouces', 'ticwatch-e3.jpg');
+(100, 'Mobvoi TicWatch E3', 'Montre intelligente avec Wear OS et suivi de fitness', 199, 10, 'Black', 'N/A', 'Qualcomm Snapdragon Wear 4100', 'Integre', '1GB', '8GB', 'Wear OS', '1.3 pouces', 'ticwatch-e3.jpg'),
 (101, 'Samsung Galaxy S24', 'Smartphone avec AI avancée et caméra de 50MP', 799, 10, 'Noir', '70.6x146.3x8.3 mm', 'Snapdragon 8 Gen 3', 'N/A', '8GB', '128GB', 'Android 14', '6.2 pouces', 'samsung-galaxy-s24.jpg'),
 (102, 'Samsung Galaxy S24+', 'Smartphone avec AI avancée et grand écran', 999, 8, 'Noir', '76.2x157.8x7.6 mm', 'Snapdragon 8 Gen 3', 'N/A', '8GB', '256GB', 'Android 14', '6.7 pouces', 'samsung-galaxy-s24-plus.jpg'),
 (103, 'Samsung Galaxy S24 Ultra', 'Smartphone haut de gamme avec caméra de 200MP', 1199, 5, 'Noir', '79.9x163.3x8.9 mm', 'Snapdragon 8 Gen 3', 'N/A', '12GB', '512GB', 'Android 14', '6.8 pouces', 'samsung-galaxy-s24-ultra.jpg'),
