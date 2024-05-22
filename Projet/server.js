@@ -140,25 +140,25 @@ function getDB() {
 function setupRoutes() {
     app.post("/inscription", async function(req, res) {
         const db = getDB(); 
-
+    
         const password = req.body.mot_de_passe;
         const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
         if (!strongRegex.test(password)) {
-            return res.redirect("/inscription?erreur=motdepasseFaible");
+            return res.status(400).json({ erreur: 'motdepasseFaible', message: 'Le mot de passe doit comporter au moins 8 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial.' });
         }
-
+    
         try {
             const utilisateurExistant = await db.collection('utilisateurs').findOne({ adresse_courriel: req.body.adresse_courriel });
             if (utilisateurExistant) {
-                return res.redirect("/inscription?erreur=emailExistant");
+                return res.status(400).json({ erreur: 'emailExistant', message: 'Cet email existe déjà.' });
             }
-
+    
             bcrypt.hash(password, saltRounds, async function(err, hash) {
                 if (err) {
                     console.error(err);
-                    return res.status(500).send("Erreur lors du hachage du mot de passe.");
+                    return res.status(500).json({ message: "Erreur lors du hachage du mot de passe." });
                 }
-
+    
                 const nouvelUtilisateur = {
                     prenom: req.body.prenom,
                     nom: req.body.nom,
@@ -167,31 +167,32 @@ function setupRoutes() {
                     mot_de_passe: hash, 
                     mot_de_passe_clair: password
                 };
-
+    
                 try {
                     await db.collection('utilisateurs').insertOne(nouvelUtilisateur);
                     req.session.userId = nouvelUtilisateur._id;
                     req.session.save(err => {
                         if (err) {
                             console.error(err);
-                            return res.status(500).send("Erreur lors de la sauvegarde de la session.");
+                            return res.status(500).json({ message: "Erreur lors de la sauvegarde de la session." });
                         }
-                        return res.redirect("/pageAffichagePrincipale");
+                        return res.status(200).json({ success: true });
                     });
                 } catch (err) {
                     if (err && err.code === 11000) {
-                        return res.redirect("/inscription?erreur=emailExistant");
+                        return res.status(400).json({ erreur: 'emailExistant', message: 'Cet email existe déjà.' });
                     } else {
                         console.error(err);
-                        return res.status(500).send("Erreur lors de l'inscription de l'utilisateur.");
+                        return res.status(500).json({ message: "Erreur lors de l'inscription de l'utilisateur." });
                     }
                 }
             });
         } catch (err) {
             console.error("Erreur lors de la vérification de l'utilisateur:", err);
-            return res.status(500).send("Erreur serveur lors de la vérification.");
+            return res.status(500).json({ message: "Erreur serveur lors de la vérification." });
         }
     });
+    
 }
 
 connectDB();
@@ -235,6 +236,7 @@ app.get("/resetPassword", function(req, res) {
     res.render("pages/resetPassword", {
     });
 });
+
 
 app.get("/parametreUtilisateur", async function(req, res) {
     if (!req.session.userId) {
@@ -486,12 +488,12 @@ app.get('/recherche', (req, res) => {
     });
 });
 
+//Fonction pour mettre à jour les paramètres de l'utilisateur
 app.post("/parametreUtilisateur", async function(req, res) {
     if (!req.session.userId) {
         return res.redirect("/pageConnexion");
     }
 
-    //Préparez l'objet de mise à jour basé sur les champs reçus dans req.body
     let miseAJour = {};
     if (req.body.prenom) miseAJour.prenom = req.body.prenom;
     if (req.body.nom) miseAJour.nom = req.body.nom;
@@ -520,14 +522,14 @@ app.post("/parametreUtilisateur", async function(req, res) {
 function updateAddress(req, res) {
     const idSession = req.session.userId;
     const champsAInclure = {
-        adresse: req.body.adresse || '', 
-        code_postal: req.body.code_postal || '', 
-        ville: req.body.ville || '',       
-        pays: req.body.pays || '' ,
-        province: req.body.province || ''       
+        adresse: req.body.adresse || null, 
+        code_postal: req.body.code_postal || null, 
+        ville: req.body.ville || null,       
+        pays: req.body.pays || null,
+        province: req.body.province || null       
     };
 
-    const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== '');
+    const champsAUpdater = Object.keys(champsAInclure).filter(cle => champsAInclure[cle] !== null);
     const parametresAdresse = champsAUpdater.map(cle => champsAInclure[cle]);
 
     if (champsAUpdater.length > 0) {
@@ -558,10 +560,10 @@ function updateAddress(req, res) {
             });
         });
     } else {
-        // Si aucun champ n'est à mettre à jour, rediriger directement
         res.redirect("/parametreUtilisateur");
     }
 }
+
 
 //Fonction pour la mise à jour du mot de passe
 app.post("/miseAJourMotDePasse", async function(req, res) {
@@ -706,6 +708,35 @@ app.post("/supprimerDuPanier", function(req, res) {
         res.redirect("/panier");
     });
 });
+
+//Modifier la quantité d'un produit dans le panier
+app.post("/modifierQuantite", function(req, res) {
+    const idUtilisateur = req.session.userId;
+    const idProduit = req.body.id_produit;
+    const quantite = req.body.quantite;
+
+    if (!idUtilisateur || !idProduit || !quantite) {
+        return res.redirect("/pageConnexion");
+    }
+
+    const queryModifierQuantite = `
+        UPDATE detail_panier
+        SET quantite = ?
+        WHERE id_panier = (
+            SELECT id_panier FROM panier WHERE id_session = ?
+        )
+        AND id_produit = ?
+    `;
+
+    con.query(queryModifierQuantite, [quantite, idUtilisateur, idProduit], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la mise à jour de la quantité: ", err);
+            return res.redirect("/panier");
+        }
+        res.redirect("/panier");
+    });
+});
+
 
 
 
