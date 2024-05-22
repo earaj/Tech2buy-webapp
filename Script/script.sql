@@ -1,10 +1,10 @@
 CREATE TABLE adresse_de_livraison (
     id_adresselivraison INT NOT NULL AUTO_INCREMENT,
-    adresse             VARCHAR(50) NOT NULL,
-    code_postal         VARCHAR(6) NOT NULL,
-    ville               VARCHAR(50) NOT NULL,
-    pays                VARCHAR(50) NOT NULL,
-    province            VARCHAR(255) NOT NULL,
+    adresse             VARCHAR(50)  DEFAULT NULL,
+    code_postal         VARCHAR(6)  DEFAULT NULL,
+    ville               VARCHAR(50)  DEFAULT NULL,
+    pays                VARCHAR(50) DEFAULT NULL,
+    province            VARCHAR(255)  DEFAULT NULL,
     id_session          VARCHAR(255),
     PRIMARY KEY (id_adresselivraison)
 );
